@@ -75,9 +75,10 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-let start = new Date().getTime();
+
 
 const jobs = new CronJob('1 * * * * *', function() {
+  let start = new Date().getTime();
   axios.post("https://www.binance.com/bapi/nft/v1/friendly/nft/product-list", data,  { headers: header}).then((response) => {
     // console.log(response.data.data);
     let end = new Date().getTime();
