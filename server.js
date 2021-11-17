@@ -183,7 +183,7 @@ bot.on("callback_query", async (ctx) => {
   }
 });
 
-const jobs = new CronJob("0 * 1 * * *", async function () {
+const jobs = new CronJob("* * 1 * * *", async function () {
   let price = axios
     .get(
       "https://api.coingecko.com/api/v3/simple/price?ids=binancecoin,mochi-market&vs_currencies=bnb,usd"
