@@ -165,15 +165,15 @@ bot.on("callback_query", async (ctx) => {
   }
 });
 
-const jobs = new CronJob('* 10 * * * *', function() {
+const jobs = new CronJob('* 1 * * * *', function() {
   let price = axios.get("https://api.coingecko.com/api/v3/simple/price?ids=binancecoin,mochi-market&vs_currencies=bnb,usd").then((res) => {
     console.log(res.data.binancecoin);
     priceBnb = res.data.binancecoin.usd
   })
   for (let index = 0; index < 49; index++) {
     setTimeout(() => {
-      dsf();
-    }, 3000 * index);
+      dsf().then(console.log('Закончили цикл'));
+    }, 5000 * index);
     async function dsf() {
       return new Promise((resolve) => {
       let start = new Date().getTime();
