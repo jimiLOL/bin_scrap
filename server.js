@@ -183,7 +183,7 @@ bot.on("callback_query", async (ctx) => {
   }
 });
 
-const jobs = new CronJob("* 30 * * * *", async function () {
+const jobs = new CronJob("0 */20 * * * *", async function () {
   let price = axios
     .get(
       "https://api.coingecko.com/api/v3/simple/price?ids=binancecoin,mochi-market&vs_currencies=bnb,usd"
@@ -202,7 +202,8 @@ const jobs = new CronJob("* 30 * * * *", async function () {
   for (let index = 0; index < count; index++) {
     console.log(index);
     // await sdW();
-    setTimeout(() => sdW(), 5000 * index);
+    // setTimeout(() => , 5000 * index);
+    await sdW()
    
 
     async function sdW() {
@@ -216,8 +217,15 @@ const jobs = new CronJob("* 30 * * * *", async function () {
       if (slug) {
         console.log("Nнашли post в базе");
         // console.log(slug);
-        slug.forEach((element, index) => {
-          setTimeout(() => dsf(element.tokenId), 10000 * index);
+        slug.forEach(async (element, index) => {
+          // setTimeout(() => dsf(element.tokenId), 10000 * index);
+          let prom = new Promise((resolve, resect) =>{
+            dsf(element.tokenId).then(resolve())
+          })
+          let start = new Date().getTime();
+          await Promise.all([prom]);
+          let end = new Date().getTime();
+            console.log(`Время цикла: ${end - start}ms`);
         });
       }
     })
@@ -271,8 +279,12 @@ const jobs = new CronJob("* 30 * * * *", async function () {
               if (call) {
                 console.log('Произвели обновление данных');
               }
+              let end = new Date().getTime();
+              console.log(`Время от начал функции "dsf" до колбека: ${end - start}ms`);
+              resolve();
 
             })
+            
 
            } else {
             axios
@@ -378,6 +390,21 @@ const jobs = new CronJob("* 30 * * * *", async function () {
                 setTimeout(() => sendTel(msde, start), sleepS * index);
                 
               }
+              if (element.attributes[2]?.value == 'Super') {
+                
+                let msde = `🚀Тэкс...! Тут Super\n<b>Продовец: </b>${
+                  element.seller
+                }\n<b>Цена: </b>${
+                  element.price * priceBnb
+                }$\n<b>Генезис: </b>${
+                  element.attributes[13].value
+                }\nlink^ https://app.mochi.market/token/56/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${
+                  element.tokenId
+                }/${element.sellId}\nТекущий курс BNB^ ${priceBnb}`;
+                let start = new Date().getTime();
+                setTimeout(() => sendTel(msde, start), sleepS * index);
+                
+              }
 
               const newNftPokemon = new NftPokemon({
                 buyers: element?.buyers || [],
@@ -412,10 +439,13 @@ const jobs = new CronJob("* 30 * * * *", async function () {
                 if (call) {
                   console.log('Произвели обновление данных');
                 }
+                let end = new Date().getTime();
+                console.log(`Время от начала функции "dsf" до колбека: ${end - start}ms`);
+                resolve();
 
               })
 
-              resolve();
+              
 
               return response;
               // response[0].forEach(element => {
@@ -434,8 +464,7 @@ const jobs = new CronJob("* 30 * * * *", async function () {
             
      
 
-            let end = new Date().getTime();
-            console.log(`Данные: ${end - start}ms`);
+           
           });
       });
     }
