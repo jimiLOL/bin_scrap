@@ -177,7 +177,7 @@ const jobs = new CronJob('0 */10 * * * *', function() {
     async function dsf() {
       return new Promise((resolve) => {
       let start = new Date().getTime();
-      console.log(`https://api.mochi.market/sellOrder/byCollection/56/0xc33d69a337b796a9f0f7588169cd874c3987bde9?skip=${skip}&limit=20`);
+      
       axios
         .get(
           `https://api.mochi.market/sellOrder/byCollection/56/0xc33d69a337b796a9f0f7588169cd874c3987bde9?skip=${skip}&limit=20`,
