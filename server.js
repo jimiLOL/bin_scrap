@@ -390,7 +390,7 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
                 setTimeout(() => sendTel(msde, start), sleepS * index);
                 
               }
-              if (element.attributes[2]?.value == 'Super') {
+              if (element.price * priceBnb <= 5000 && element.attributes[2]?.value == 'Super') {
                 
                 let msde = `🚀Тэкс...! Тут Super\n<b>Продовец: </b>${
                   element.seller
