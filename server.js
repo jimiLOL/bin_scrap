@@ -227,7 +227,7 @@ asw = [];}
 
 axios.get("https://api.nftrade.com/api/v1/tokens", { headers: header2 },  { params: { contractAddress: '0xc33d69a337b796a9f0f7588169cd874c3987bde9', limit: 10 }}).then((resnftrade) => {
   resnftrade.data.forEach(function (value) {
-    console.log(value);
+    console.log(value.tokenID);
     if (value.tokenId == "11123") {
       console.log(value);
 
