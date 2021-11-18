@@ -184,25 +184,22 @@ bot.on("callback_query", async (ctx) => {
   }
 });
 
-// let header2 = {
-//   :authority: api.nftrade.com
-// :path: /api/v1/tokens?contracts[]=9ba5f0f2-109a-463f-962a-60001bd5ecf6&limit=8
-// :scheme: https
-// 'accept': 'application/json, text/plain, */*',
-// 'accept-encoding': 'gzip',
-// 'accept-language': 'ru,ru-RU;q=0.9,en-US;q=0.8,en;q=0.7,zh-TW;q=0.6,zh-CN;q=0.5,zh;q=0.4',
-// 'dnt': '1',
-// 'if-none-match': 'W/"28a2-lLp05LSjxWN5r6vjxVCK9IzTWNw"',
-// 'origin': 'https://nftrade.com',
-// 'referer': 'https://nftrade.com/',
-// 'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="96", "Google Chrome";v="96"',
-// 'sec-ch-ua-mobile': '?0',
-// 'sec-ch-ua-platform': '"Windows"',
-// 'sec-fetch-dest': 'empty',
-// 'sec-fetch-mode': 'cors',
-// 'sec-fetch-site': 'same-site'
-// 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36'
-// }
+let header2 = {
+'accept': 'application/json, text/plain, */*',
+'accept-encoding': 'gzip',
+'accept-language': 'ru,ru-RU;q=0.9,en-US;q=0.8,en;q=0.7,zh-TW;q=0.6,zh-CN;q=0.5,zh;q=0.4',
+'dnt': '1',
+'if-none-match': 'W/"28a2-lLp05LSjxWN5r6vjxVCK9IzTWNw"',
+'origin': 'https://nftrade.com',
+'referer': 'https://nftrade.com/',
+'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="96", "Google Chrome";v="96"',
+'sec-ch-ua-mobile': '?0',
+'sec-ch-ua-platform': '"Windows"',
+'sec-fetch-dest': 'empty',
+'sec-fetch-mode': 'cors',
+'sec-fetch-site': 'same-site',
+'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36'
+}
 
 async function delDublicate() {
 let asw = [];
@@ -228,9 +225,9 @@ for (let index = 0; index < 347; index++) {
 asw = [];}
 
 
-// axios.get("https://api.nftrade.com/api/v1/tokens", { headers: header },  { params: { contractAddress: '0xc33d69a337b796a9f0f7588169cd874c3987bde9', limit: 10 }}).then((resnftrade) => {
-//  console.log(resnftrade.data.indexOf(tokenID));
-// })
+axios.get("https://api.nftrade.com/api/v1/tokens", { headers: header2 },  { params: { contractAddress: '0xc33d69a337b796a9f0f7588169cd874c3987bde9', limit: 10 }}).then((resnftrade) => {
+ console.log(resnftrade.data.indexOf(tokenID));
+})
 
 const jobs = new CronJob("0 */20 * * * *", async function () {
   delDublicate();
