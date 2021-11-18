@@ -227,7 +227,7 @@ asw = [];}
 
 axios.get("https://api.nftrade.com/api/v1/tokens", { headers: header2 },  { params: { contractAddress: '0xc33d69a337b796a9f0f7588169cd874c3987bde9', limit: 10 }}).then((resnftrade) => {
   resnftrade.data.forEach(function (value) {
-    console.log(value.tokenId);
+    console.log(value);
     if (value.tokenId == "11123") {
       console.log(value);
 
@@ -260,7 +260,7 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
    
 
     async function sdW() {
-    let data = await NftPokemon.find({}, {tokenId: 1}, (err, slug) => {
+    let data = await NftPokemon.find({}, {tokenId: 1, attributes: 1}, (err, slug) => {
       if (err) {
         console.log(err);
       }
@@ -273,7 +273,7 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
         slug.forEach(async (element, index) => {
           // setTimeout(() => dsf(element.tokenId), 10000 * index);
           let prom = new Promise((resolve, resect) =>{
-            dsf(element.tokenId).then(resolve())
+            dsf(element.tokenId, element.attributes).then(resolve())
           })
           let start = new Date().getTime();
           await Promise.all([prom]);
@@ -286,7 +286,7 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
       .limit(100);
     }
 
-    async function dsf(slug, index) {
+    async function dsf(slug, attributes) {
       return new Promise((resolve) => {
         let start = new Date().getTime();
         
@@ -328,6 +328,7 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
               image: element?.image,
               video: element?.video,
               name: element?.name,
+              attributes: attributes,
               description: element?.description,
               tokenURI: element?.tokenURI,
               thumb: element?.thumb,
@@ -485,6 +486,7 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
                 sellTime: element?.sellTime,
                 image: element?.image,
                 video: element?.video,
+                attributes: attributes,
                 name: element?.name,
                 description: element?.description,
                 tokenURI: element?.tokenURI,
