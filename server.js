@@ -20,7 +20,6 @@ const moment = require("moment");
 const CronJob = require("cron").CronJob;
 const { default: axios } = require("axios");
 
-
 require("dotenv/config");
 
 app.use(cors());
@@ -185,57 +184,98 @@ bot.on("callback_query", async (ctx) => {
 });
 
 let header2 = {
-'accept': 'application/json, text/plain, */*',
-'accept-encoding': 'gzip',
-'accept-language': 'ru,ru-RU;q=0.9,en-US;q=0.8,en;q=0.7,zh-TW;q=0.6,zh-CN;q=0.5,zh;q=0.4',
-'dnt': '1',
-'if-none-match': 'W/"28a2-lLp05LSjxWN5r6vjxVCK9IzTWNw"',
-'origin': 'https://nftrade.com',
-'referer': 'https://nftrade.com/',
-'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="96", "Google Chrome";v="96"',
-'sec-ch-ua-mobile': '?0',
-'sec-ch-ua-platform': '"Windows"',
-'sec-fetch-dest': 'empty',
-'sec-fetch-mode': 'cors',
-'sec-fetch-site': 'same-site',
-'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36'
-}
+  accept: "application/json, text/plain, */*",
+  "accept-encoding": "gzip",
+  "accept-language":
+    "ru,ru-RU;q=0.9,en-US;q=0.8,en;q=0.7,zh-TW;q=0.6,zh-CN;q=0.5,zh;q=0.4",
+  dnt: "1",
+  "if-none-match": 'W/"28a2-lLp05LSjxWN5r6vjxVCK9IzTWNw"',
+  origin: "https://nftrade.com",
+  referer: "https://nftrade.com/",
+  "sec-ch-ua":
+    '" Not A;Brand";v="99", "Chromium";v="96", "Google Chrome";v="96"',
+  "sec-ch-ua-mobile": "?0",
+  "sec-ch-ua-platform": '"Windows"',
+  "sec-fetch-dest": "empty",
+  "sec-fetch-mode": "cors",
+  "sec-fetch-site": "same-site",
+  "user-agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36",
+};
 
 async function delDublicate() {
-let asw = [];
-for (let index = 0; index < 347; index++) {
+  let asw = [];
+  for (let index = 0; index < 347; index++) {
+    NftPokemon.find({}, (err, call) => {
+      call.forEach(function (value) {
+        // value = value.trim();
 
-  NftPokemon.find({}, (err, call) => {
-    call.forEach(function (value) {
-      // value = value.trim();
-  
-      if (asw.indexOf(value.tokenId) === -1) {
-        asw.push(value.tokenId);
-      } else {
-        NftPokemon.deleteOne({tokenId: value.tokenId}, (err, cal) => {
-          if (err) console.log('Ошибка при удалении');
-          console.log('Удалили id^ ' + value.tokenId);
-        })
-        // console.log(value.tokenId)
+        if (asw.indexOf(value.tokenId) === -1) {
+          asw.push(value.tokenId);
+        } else {
+          NftPokemon.deleteOne({ tokenId: value.tokenId }, (err, cal) => {
+            if (err) console.log("Ошибка при удалении");
+            console.log("Удалили id^ " + value.tokenId);
+          });
+          // console.log(value.tokenId)
+        }
+      });
+    })
+      .skip(20 * index)
+      .limit(20);
+  }
+  asw = [];
+}
+
+async function addDB(element, attributes) {
+  const newNftPokemon = new NftPokemon({
+    buyers: element?.buyers || [],
+    buyTimes: element?.buyTimes || [],
+    chainId: element?.chainId,
+    contractName: element?.contractName,
+    sellId: element?.sellId || null,
+    collectionAddress:
+      element?.collectionAddress ||
+      "0xc33d69a337b796a9f0f7588169cd874c3987bde9",
+    collectionName: element?.collectionName,
+    tokenId: element?.tokenId || element?.tokenID,
+    amount: element?.amount,
+    soldAmount: element?.soldAmount,
+    seller: element?.seller || null,
+    price: element?.price,
+    isActive: element?.isActive,
+    sellTime: element?.sellTime,
+    image: element?.image,
+    video: element?.video,
+    name: element?.name,
+    attributes: attributes,
+    description: element?.description,
+    tokenURI: element?.tokenURI,
+    thumb: element?.thumb,
+    extraMetadata: element?.extraMetadata || [],
+    otherSellOrders: element?.otherSellOrders || [],
+  });
+  NftPokemon.findOneAndUpdate(
+    { tokenId: element.tokenId },
+    newNftPokemon,
+    (err, call) => {
+      if (err) {
+        console.log("Произошла ошибка при обновлении данных");
+        console.log(err);
       }
-    });
-  }).skip(20*index).limit(20)
-  
-};
-asw = [];}
-
-
-axios.get("https://api.nftrade.com/api/v1/tokens", { headers: header2 },  { params: { contractAddress: '0xc33d69a337b796a9f0f7588169cd874c3987bde9', limit: 10 }}).then((resnftrade) => {
-  resnftrade.data.forEach(function (value) {
-    console.log(value.tokenID);
-    if (value.tokenId == "11123") {
-      console.log(value);
-
+      if (call) {
+        console.log("Произвели обновление данных");
+      }
+      let end = new Date().getTime();
+      console.log(
+        `Время от начал функции "dsf" до колбека: ${end - start}ms`
+      );
+      resolve();
     }
-  })
-})
+  );
+}
 
-const jobs = new CronJob("0 */20 * * * *", async function () {
+const jobs = new CronJob("0 */2 * * * *", async function () {
   delDublicate();
   let price = axios
     .get(
@@ -256,40 +296,42 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
     console.log(index);
     // await sdW();
     // setTimeout(() => , 5000 * index);
-    await sdW()
-   
+    await sdW();
 
     async function sdW() {
-    let data = await NftPokemon.find({}, {tokenId: 1, attributes: 1}, (err, slug) => {
-      if (err) {
-        console.log(err);
-      }
-      if (!slug) {
-        console.log("Не нашли post в базе");
-      }
-      if (slug) {
-        console.log("Nнашли post в базе");
-        // console.log(slug);
-        slug.forEach(async (element, index) => {
-          // setTimeout(() => dsf(element.tokenId), 10000 * index);
-          let prom = new Promise((resolve, resect) =>{
-            dsf(element.tokenId, element.attributes).then(resolve())
-          })
-          let start = new Date().getTime();
-          await Promise.all([prom]);
-          let end = new Date().getTime();
-            console.log(`Время цикла: ${end - start}ms`);
-        });
-      }
-    })
-      .skip(100 * index)
-      .limit(100);
+      let data = await NftPokemon.find(
+        {},
+        { tokenId: 1, attributes: 1 },
+        (err, slug) => {
+          if (err) {
+            console.log(err);
+          }
+          if (!slug) {
+            console.log("Не нашли post в базе");
+          }
+          if (slug) {
+            console.log("Nнашли post в базе");
+            // console.log(slug);
+            slug.forEach(async (element, index) => {
+              // setTimeout(() => dsf(element.tokenId), 10000 * index);
+              let prom = new Promise((resolve, resect) => {
+                dsf(element.tokenId, element.attributes).then(resolve());
+              });
+              let start = new Date().getTime();
+              await Promise.all([prom]);
+              let end = new Date().getTime();
+              console.log(`Время цикла: ${end - start}ms`);
+            });
+          }
+        }
+      )
+        .skip(100 * index)
+        .limit(100);
     }
 
     async function dsf(slug, attributes) {
       return new Promise((resolve) => {
         let start = new Date().getTime();
-        
 
         axios
           .get(
@@ -297,238 +339,166 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
             { headers: header }
           )
           .then((res) => {
-       
-           if (res.data.sellId == null) {
-            element = res.data;
+            if (res.data.sellId == null) {
+              element = res.data;
+
+              axios
+                .get(
+                  "https://api.nftrade.com/api/v1/tokens",
+                  { headers: header2 },
+                  {
+                    params: {
+                      contractAddress:
+                        "0xc33d69a337b796a9f0f7588169cd874c3987bde9",
+                      limit: 500,
+                    },
+                  }
+                )
+                .then((resnftrade) => {
+                  resnftrade.data.forEach(async function (value) {
+                    console.log(value.tokenID);
+                    await addDB(value, attributes)
 
 
-      
-
-
-
-
-
-
-
-
-            const newNftPokemon = new NftPokemon({
-              buyers: element?.buyers || [],
-              buyTimes: element?.buyTimes || [],
-              chainId: element?.chainId,
-              sellId: element?.sellId || null,
-              collectionAddress: element?.collectionAddress || '0xc33d69a337b796a9f0f7588169cd874c3987bde9',
-              collectionName: element?.collectionName,
-              tokenId: element?.tokenId,
-              amount: element?.amount,
-              soldAmount: element?.soldAmount,
-              seller: element?.seller || null,
-              price: element?.price,
-              isActive: element?.isActive,
-              sellTime: element?.sellTime,
-              image: element?.image,
-              video: element?.video,
-              name: element?.name,
-              attributes: attributes,
-              description: element?.description,
-              tokenURI: element?.tokenURI,
-              thumb: element?.thumb,
-              extraMetadata: element?.extraMetadata || [],
-              otherSellOrders: element?.otherSellOrders || []
-            });
-            NftPokemon.findOneAndUpdate({tokenId: element.tokenId}, newNftPokemon, (err, call) => {
-              if (err) {
-                console.log('Произошла ошибка при обновлении данных');
-                console.log(err);
-              }
-              if (call) {
-                console.log('Произвели обновление данных');
-              }
-              let end = new Date().getTime();
-              console.log(`Время от начал функции "dsf" до колбека: ${end - start}ms`);
-              resolve();
-
-            })
-            
-
-           } else {
-            axios
-            .get(
-              `https://api.mochi.market/sellOrder/bySellId/56/${res.data.sellId}`,
-              { headers: header }
-            )
-            .then((response) => {
-              let ctype = response.headers["content-type"];
-
-              if (response.data.length > 0) {
-                console.log(response.data.attributes.length);
-              } else {
-                console.log("Пустой массив");
-                console.log(response.data.length);
-                // sendTel(
-                //   "Сервер не ответил на наш запро, походу пердолбили....",
-                //   2
-                // );
-              }
-
-              let element = response.data;
-
-              if (element?.attributes[13]?.value == undefined) {
-                console.log(element);
-              }
-
-              if (
-                element.price * priceBnb <= priceBuy_1 &&
-                element.attributes[13]?.value == 1
-              ) {
-                console.log(element.price * priceBnb);
-                console.log(element.seller);
-                console.log(element.attributes[13].value);
-                let msde = `Тэкс...!\n<b>Продовец: </b>${
-                  element.seller
-                }\n<b>Цена: </b>${
-                  element.price * priceBnb
-                }$\n<b>Генезис: </b>${
-                  element.attributes[13].value
-                }\nlink^ https://app.mochi.market/token/56/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${
-                  element.tokenId
-                }/${element.sellId}\nТекущий курс BNB^ ${priceBnb}`;
-                let start = new Date().getTime();
-                setTimeout(() => sendTel(msde, start), sleepS * index);
-              }
-              if (
-                element.price * priceBnb <= priceBuy_2 &&
-                element.attributes[13]?.value == 2
-              ) {
-                console.log(element.price * priceBnb);
-                console.log(element.seller);
-                console.log(element.attributes[13].value);
-                let msde = `Тэкс...!\n<b>Продовец: </b>${
-                  element.seller
-                }\n<b>Цена: </b>${
-                  element.price * priceBnb
-                }$\n<b>Генезис: </b>${
-                  element.attributes[13].value
-                }\nlink^ https://app.mochi.market/token/56/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${
-                  element.tokenId
-                }/${element.sellId}\nТекущий курс BNB^ ${priceBnb}`;
-                let start = new Date().getTime();
-
-                setTimeout(() => sendTel(msde, start), sleepS * index);
-              }
-              if (
-                element.price * priceBnb <= priceBuy_3 &&
-                element.attributes[13]?.value == 3
-              ) {
-                console.log(element.price * priceBnb);
-                console.log(element.seller);
-                console.log(element.attributes[13].value);
-                let msde = `Тэкс...!\n<b>Продовец: </b>${
-                  element.seller
-                }\n<b>Цена: </b>${
-                  element.price * priceBnb
-                }$\n<b>Генезис: </b>${
-                  element.attributes[13].value
-                }\nlink^ https://app.mochi.market/token/56/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${
-                  element.tokenId
-                }/${element.sellId}\nТекущий курс BNB^ ${priceBnb}`;
-                let start = new Date().getTime();
-                setTimeout(() => sendTel(msde, start), sleepS * index);
-              }
-              if (
-                element.price * priceBnb <= priceBuy_0 &&
-                element.attributes[13]?.value == 0
-              ) {
-                console.log(element.price * priceBnb);
-                console.log(element.seller);
-                console.log(element.attributes[13].value);
-                let msde = `Тэкс...!\n<b>Продовец: </b>${
-                  element.seller
-                }\n<b>Цена: </b>${
-                  element.price * priceBnb
-                }$\n<b>Генезис: </b>${
-                  element.attributes[13].value
-                }\nlink^ https://app.mochi.market/token/56/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${
-                  element.tokenId
-                }/${element.sellId}\nТекущий курс BNB^ ${priceBnb}`;
-                let start = new Date().getTime();
-                setTimeout(() => sendTel(msde, start), sleepS * index);
-                
-              }
-              if (element.price * priceBnb <= 5000 && element.attributes[2]?.value == 'Super') {
-                
-                let msde = `🚀Тэкс...! Тут Super\n<b>Продовец: </b>${
-                  element.seller
-                }\n<b>Цена: </b>${
-                  element.price * priceBnb
-                }$\n<b>Генезис: </b>${
-                  element.attributes[13].value
-                }\nlink^ https://app.mochi.market/token/56/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${
-                  element.tokenId
-                }/${element.sellId}\nТекущий курс BNB^ ${priceBnb}`;
-                let start = new Date().getTime();
-                setTimeout(() => sendTel(msde, start), sleepS * index);
-                
-              }
-
-              const newNftPokemon = new NftPokemon({
-                buyers: element?.buyers || [],
-                buyTimes: element?.buyTimes || [],
-                chainId: element?.chainId,
-                sellId: element?.sellId || null,
-                collectionAddress: element?.collectionAddress || '0xc33d69a337b796a9f0f7588169cd874c3987bde9',
-                collectionName: element?.collectionName,
-                tokenId: element?.tokenId,
-                amount: element?.amount,
-                soldAmount: element?.soldAmount,
-                seller: element?.seller || null,
-                price: element?.price,
-                isActive: element?.isActive,
-                sellTime: element?.sellTime,
-                image: element?.image,
-                video: element?.video,
-                attributes: attributes,
-                name: element?.name,
-                description: element?.description,
-                tokenURI: element?.tokenURI,
-                thumb: element?.thumb,
-                extraMetadata: element?.extraMetadata || [],
-                otherSellOrders: element?.otherSellOrders || []
-              })
-
-              NftPokemon.findOneAndUpdate({tokenId: element.tokenId}, newNftPokemon, (err, call) => {
-                if (err) {
-                  console.log('Произошла ошибка при обновлении данных');
-                  console.log(err);
-                }
-                if (call) {
-                  console.log('Произвели обновление данных');
-                }
-                let end = new Date().getTime();
-                console.log(`Время от начала функции "dsf" до колбека: ${end - start}ms`);
-                resolve();
-
-              })
+                    
+                  });
+                });
 
               
+            } else {
+              axios
+                .get(
+                  `https://api.mochi.market/sellOrder/bySellId/56/${res.data.sellId}`,
+                  { headers: header }
+                )
+                .then((response) => {
+                  let ctype = response.headers["content-type"];
 
-              return response;
-              // response[0].forEach(element => {
-              //   console.log(element);
+                  if (response.data.length > 0) {
+                    console.log(response.data.attributes.length);
+                  } else {
+                    console.log("Пустой массив");
+                    console.log(response.data.length);
+                    // sendTel(
+                    //   "Сервер не ответил на наш запро, походу пердолбили....",
+                    //   2
+                    // );
+                  }
 
-              // });
-            }).catch(
-              function (error) {
-                console.log('Show error notification!')
-                console.log(error);
-                return Promise.reject(error)
-              }
-            );
-           }
-            
-            
-     
+                  let element = response.data;
 
-           
+                  if (element?.attributes[13]?.value == undefined) {
+                    console.log(element);
+                  }
+
+                  if (
+                    element.price * priceBnb <= priceBuy_1 &&
+                    element.attributes[13]?.value == 1
+                  ) {
+                    console.log(element.price * priceBnb);
+                    console.log(element.seller);
+                    console.log(element.attributes[13].value);
+                    let msde = `Тэкс...!\n<b>Продовец: </b>${
+                      element.seller
+                    }\n<b>Цена: </b>${
+                      element.price * priceBnb
+                    }$\n<b>Генезис: </b>${
+                      element.attributes[13].value
+                    }\nlink^ https://app.mochi.market/token/56/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${
+                      element.tokenId
+                    }/${element.sellId}\nТекущий курс BNB^ ${priceBnb}`;
+                    let start = new Date().getTime();
+                    setTimeout(() => sendTel(msde, start), sleepS * index);
+                  }
+                  if (
+                    element.price * priceBnb <= priceBuy_2 &&
+                    element.attributes[13]?.value == 2
+                  ) {
+                    console.log(element.price * priceBnb);
+                    console.log(element.seller);
+                    console.log(element.attributes[13].value);
+                    let msde = `Тэкс...!\n<b>Продовец: </b>${
+                      element.seller
+                    }\n<b>Цена: </b>${
+                      element.price * priceBnb
+                    }$\n<b>Генезис: </b>${
+                      element.attributes[13].value
+                    }\nlink^ https://app.mochi.market/token/56/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${
+                      element.tokenId
+                    }/${element.sellId}\nТекущий курс BNB^ ${priceBnb}`;
+                    let start = new Date().getTime();
+
+                    setTimeout(() => sendTel(msde, start), sleepS * index);
+                  }
+                  if (
+                    element.price * priceBnb <= priceBuy_3 &&
+                    element.attributes[13]?.value == 3
+                  ) {
+                    console.log(element.price * priceBnb);
+                    console.log(element.seller);
+                    console.log(element.attributes[13].value);
+                    let msde = `Тэкс...!\n<b>Продовец: </b>${
+                      element.seller
+                    }\n<b>Цена: </b>${
+                      element.price * priceBnb
+                    }$\n<b>Генезис: </b>${
+                      element.attributes[13].value
+                    }\nlink^ https://app.mochi.market/token/56/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${
+                      element.tokenId
+                    }/${element.sellId}\nТекущий курс BNB^ ${priceBnb}`;
+                    let start = new Date().getTime();
+                    setTimeout(() => sendTel(msde, start), sleepS * index);
+                  }
+                  if (
+                    element.price * priceBnb <= priceBuy_0 &&
+                    element.attributes[13]?.value == 0
+                  ) {
+                    console.log(element.price * priceBnb);
+                    console.log(element.seller);
+                    console.log(element.attributes[13].value);
+                    let msde = `Тэкс...!\n<b>Продовец: </b>${
+                      element.seller
+                    }\n<b>Цена: </b>${
+                      element.price * priceBnb
+                    }$\n<b>Генезис: </b>${
+                      element.attributes[13].value
+                    }\nlink^ https://app.mochi.market/token/56/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${
+                      element.tokenId
+                    }/${element.sellId}\nТекущий курс BNB^ ${priceBnb}`;
+                    let start = new Date().getTime();
+                    setTimeout(() => sendTel(msde, start), sleepS * index);
+                  }
+                  if (
+                    element.price * priceBnb <= 5000 &&
+                    element.attributes[2]?.value == "Super"
+                  ) {
+                    let msde = `🚀Тэкс...! Тут Super\n<b>Продовец: </b>${
+                      element.seller
+                    }\n<b>Цена: </b>${
+                      element.price * priceBnb
+                    }$\n<b>Генезис: </b>${
+                      element.attributes[13].value
+                    }\nlink^ https://app.mochi.market/token/56/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${
+                      element.tokenId
+                    }/${element.sellId}\nТекущий курс BNB^ ${priceBnb}`;
+                    let start = new Date().getTime();
+                    setTimeout(() => sendTel(msde, start), sleepS * index);
+                  }
+
+                  addDB(element, attributes)
+
+                  return response;
+                  // response[0].forEach(element => {
+                  //   console.log(element);
+
+                  // });
+                })
+                .catch(function (error) {
+                  console.log("Show error notification!");
+                  console.log(error);
+                  return Promise.reject(error);
+                });
+            }
           });
       });
     }
