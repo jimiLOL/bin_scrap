@@ -275,7 +275,7 @@ async function addDB(element, attributes) {
   );
 }
 
-const jobs = new CronJob("0 */2 * * * *", async function () {
+const jobs = new CronJob("0 */20 * * * *", async function () {
   delDublicate();
   let price = axios
     .get(
