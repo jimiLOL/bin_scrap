@@ -20,6 +20,7 @@ const moment = require("moment");
 const CronJob = require("cron").CronJob;
 const { default: axios } = require("axios");
 
+
 require("dotenv/config");
 
 app.use(cors());
@@ -183,7 +184,56 @@ bot.on("callback_query", async (ctx) => {
   }
 });
 
+// let header2 = {
+//   :authority: api.nftrade.com
+// :path: /api/v1/tokens?contracts[]=9ba5f0f2-109a-463f-962a-60001bd5ecf6&limit=8
+// :scheme: https
+// 'accept': 'application/json, text/plain, */*',
+// 'accept-encoding': 'gzip',
+// 'accept-language': 'ru,ru-RU;q=0.9,en-US;q=0.8,en;q=0.7,zh-TW;q=0.6,zh-CN;q=0.5,zh;q=0.4',
+// 'dnt': '1',
+// 'if-none-match': 'W/"28a2-lLp05LSjxWN5r6vjxVCK9IzTWNw"',
+// 'origin': 'https://nftrade.com',
+// 'referer': 'https://nftrade.com/',
+// 'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="96", "Google Chrome";v="96"',
+// 'sec-ch-ua-mobile': '?0',
+// 'sec-ch-ua-platform': '"Windows"',
+// 'sec-fetch-dest': 'empty',
+// 'sec-fetch-mode': 'cors',
+// 'sec-fetch-site': 'same-site'
+// 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36'
+// }
+
+async function delDublicate() {
+let asw = [];
+for (let index = 0; index < 347; index++) {
+
+  NftPokemon.find({}, (err, call) => {
+    call.forEach(function (value) {
+      // value = value.trim();
+  
+      if (asw.indexOf(value.tokenId) === -1) {
+        asw.push(value.tokenId);
+      } else {
+        NftPokemon.deleteOne({tokenId: value.tokenId}, (err, cal) => {
+          if (err) console.log('Ошибка при удалении');
+          console.log('Удалили id^ ' + value.tokenId);
+        })
+        // console.log(value.tokenId)
+      }
+    });
+  }).skip(20*index).limit(20)
+  
+};
+asw = [];}
+
+
+// axios.get("https://api.nftrade.com/api/v1/tokens", { headers: header },  { params: { contractAddress: '0xc33d69a337b796a9f0f7588169cd874c3987bde9', limit: 10 }}).then((resnftrade) => {
+//  console.log(resnftrade.data.indexOf(tokenID));
+// })
+
 const jobs = new CronJob("0 */20 * * * *", async function () {
+  delDublicate();
   let price = axios
     .get(
       "https://api.coingecko.com/api/v3/simple/price?ids=binancecoin,mochi-market&vs_currencies=bnb,usd"
@@ -236,7 +286,7 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
     async function dsf(slug, index) {
       return new Promise((resolve) => {
         let start = new Date().getTime();
-        console.log(`https://api.mochi.market/nft/56/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${slug}`);
+        
 
         axios
           .get(
@@ -247,6 +297,17 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
        
            if (res.data.sellId == null) {
             element = res.data;
+
+
+      
+
+
+
+
+
+
+
+
             const newNftPokemon = new NftPokemon({
               buyers: element?.buyers || [],
               buyTimes: element?.buyTimes || [],
@@ -267,7 +328,6 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
               description: element?.description,
               tokenURI: element?.tokenURI,
               thumb: element?.thumb,
-              attributes: element?.attributes,
               extraMetadata: element?.extraMetadata || [],
               otherSellOrders: element?.otherSellOrders || []
             });
@@ -426,7 +486,6 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
                 description: element?.description,
                 tokenURI: element?.tokenURI,
                 thumb: element?.thumb,
-                attributes: element?.attributes,
                 extraMetadata: element?.extraMetadata || [],
                 otherSellOrders: element?.otherSellOrders || []
               })
