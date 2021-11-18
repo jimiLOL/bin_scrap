@@ -226,7 +226,7 @@ asw = [];}
 
 
 axios.get("https://api.nftrade.com/api/v1/tokens", { headers: header2 },  { params: { contractAddress: '0xc33d69a337b796a9f0f7588169cd874c3987bde9', limit: 10 }}).then((resnftrade) => {
- console.log(resnftrade.data.indexOf(tokenID));
+ console.log(resnftrade.data);
 })
 
 const jobs = new CronJob("0 */20 * * * *", async function () {
