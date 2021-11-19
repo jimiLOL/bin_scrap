@@ -212,7 +212,7 @@ for (let index = 0; index < 11; index++) {
     if (ctx?.message?.text.indexOf("Прайс") === 0) {
       console.log("Запрос на изменение цены");
       ctx.reply(
-        `Пороги: Ген_0: ${price.priceBuy_0}$, Ген_1: ${price.priceBuy_1}$, Ген_2: ${price.priceBuy_2}$, Ген_3: ${price.priceBuy_3}$`
+        `Пороги: Ген_0: ${price.priceBuy_0}$, Ген_1: ${price.priceBuy_1}$, Ген_2: ${price.priceBuy_2}$, Ген_3: ${price.priceBuy_3}$\n -- все значения: ${price}`
       );
     }
     console.log(isNumber(ctx?.message?.text));
