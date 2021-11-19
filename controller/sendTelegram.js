@@ -205,11 +205,11 @@ for (let index = 0; index < 11; index++) {
   bot.launch();
   bot.on("text", async (ctx) => {
     console.log(ctx.chat);
-    if (ctx?.message?.text.indexOf("цена") === 0 && data?.id_step != 0) {
+    if (ctx?.message?.text.indexOf("цена") === 0) {
       console.log("Запрос на изменение цены");
       ctx.reply("Подходим выбираем", navigationButton);
     }
-    if (ctx?.message?.text.indexOf("Прайс") === 0 && data?.id_step != 0) {
+    if (ctx?.message?.text.indexOf("Прайс") === 0) {
       console.log("Запрос на изменение цены");
       ctx.reply(
         `Пороги: Ген_0: ${price.priceBuy_0}$, Ген_1: ${price.priceBuy_1}$, Ген_2: ${price.priceBuy_2}$, Ген_3: ${price.priceBuy_3}$`
