@@ -169,20 +169,7 @@ for (let index = 0; index < 11; index++) {
      
       setTimeout(() => sendTel(msde), sleepS * index);
     }
-    if (
-      element.price == 15 &&
-      element.attributes[13]?.value == 7
-    ) {
-      let msde = `Тест...! Тут \n<b>Продовец: </b>${
-        element.seller || 'ХЗ'
-      }\n<b>Цена: </b>${
-        element.price * price.priceBnb
-      }$\n<b>Генезис: </b>${
-        element.attributes[13].value
-      }\nlink^ ${lingene(link)}\nТекущий курс BNB^ ${price.priceBnb}`;
-      let start = new Date().getTime();
-      setTimeout(() => sendTel(msde), sleepS * index);
-    }
+    
     function lingene(link) {
       if (element.tokenId != undefined) {
         return `${link}/${element.tokenId}/${element.sellId}`
