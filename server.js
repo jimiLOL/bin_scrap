@@ -239,7 +239,7 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
 
                   
 
-                    addDB(element, attributes, 'mochi');
+                    addDB(element, attributes, 'mochi', element?.extraMetadata);
                     resolve();
 
 
