@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const ShemaNftPokemon = new Schema({
     _id: mongoose.Types.ObjectId,
+    marketpalce: String,
         buyers: Array,
         buyTimes: Array,
         chainId: {
