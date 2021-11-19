@@ -205,7 +205,7 @@ for (let index = 0; index < 11; index++) {
   bot.launch();
   bot.on("text", async (ctx) => {
     console.log(ctx.chat);
-    if (ctx?.message?.text.indexOf("цена") === 0) {
+    if (ctx?.message?.text.indexOf("Цена") === 0) {
       console.log("Запрос на изменение цены");
       ctx.reply("Подходим выбираем", navigationButton);
     }
@@ -237,7 +237,7 @@ for (let index = 0; index < 11; index++) {
         `Все поменял значение\n Пороги: Ген_0: ${price.priceBuy_0}$, Ген_1: ${price.priceBuy_1}$, Ген_2: ${price.priceBuy_2}$, Ген_3: ${price.priceBuy_3}$`
       );
     } else if (
-      ctx?.message?.text.indexOf("цена") === -1 &&
+      ctx?.message?.text.indexOf("Цена") === -1 &&
       ctx?.message?.text.indexOf("Прайс") === -1
     ) {
       ctx.telegram.sendMessage(
@@ -252,7 +252,7 @@ for (let index = 0; index < 11; index++) {
   
       ctx.telegram.sendMessage(ctx.chat.id, "Вводи в USD", {
         parse_mode: "HTML",
-        ...Markup.keyboard([["Прайс", "цена"]])
+        ...Markup.keyboard([["Прайс", "Цена"]])
           .oneTime()
           .resize(),
       });
@@ -262,7 +262,7 @@ for (let index = 0; index < 11; index++) {
   
       ctx.telegram.sendMessage(ctx.chat.id, "Вводи в USD", {
         parse_mode: "HTML",
-        ...Markup.keyboard([["Прайс", "цена"]])
+        ...Markup.keyboard([["Прайс", "Цена"]])
           .oneTime()
           .resize(),
       });
@@ -271,7 +271,7 @@ for (let index = 0; index < 11; index++) {
       gen = "gen2";
       ctx.telegram.sendMessage(ctx.chat.id, "Вводи в USD", {
         parse_mode: "HTML",
-        ...Markup.keyboard([["Прайс", "цена"]])
+        ...Markup.keyboard([["Прайс", "Цена"]])
           .oneTime()
           .resize(),
       });
@@ -280,7 +280,7 @@ for (let index = 0; index < 11; index++) {
       gen = "gen2";
       ctx.telegram.sendMessage(ctx.chat.id, "Вводи в USD", {
         parse_mode: "HTML",
-        ...Markup.keyboard([["Прайс", "цена"]])
+        ...Markup.keyboard([["Прайс", "Цена"]])
           .oneTime()
           .resize(),
       });
