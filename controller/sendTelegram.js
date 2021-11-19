@@ -8,17 +8,17 @@ const sleepS = 1000;
 
 
 let priceBnb = 582;
-let priceBuy_0 = 10000;
-let priceBuy_1 = 30000;
-let priceBuy_2 = 15000;
-let priceBuy_3 = 10000;
-let priceBuy_4 = 1900;
-let priceBuy_5 = 1900;
-let priceBuy_6 = 1900;
-let priceBuy_7 = 1900;
-let priceBuy_8 = 1900;
-let priceBuy_9 = 1900;
-let priceBuy_10 = 1900;
+let priceBuy_0 = 1000;
+let priceBuy_1 = 3000;
+let priceBuy_2 = 1500;
+let priceBuy_3 = 1000;
+let priceBuy_4 = 190;
+let priceBuy_5 = 190;
+let priceBuy_6 = 190;
+let priceBuy_7 = 190;
+let priceBuy_8 = 190;
+let priceBuy_9 = 190;
+let priceBuy_10 = 190;
 let price = {
   priceBnb: priceBnb,
   priceBuy_0: priceBuy_0,
@@ -212,7 +212,7 @@ for (let index = 0; index < 11; index++) {
     if (ctx?.message?.text.indexOf("Прайс") === 0) {
       console.log("Запрос на изменение цены");
       ctx.reply(
-        `Пороги: Ген_0: ${price.priceBuy_0}$, Ген_1: ${price.priceBuy_1}$, Ген_2: ${price.priceBuy_2}$, Ген_3: ${price.priceBuy_3}$\n -- все значения: ${price}`
+        `Пороги: Ген_0: ${price.priceBuy_0}$, Ген_1: ${price.priceBuy_1}$, Ген_2: ${price.priceBuy_2}$, Ген_3: ${price.priceBuy_3}$\n`
       );
     }
     console.log(isNumber(ctx?.message?.text));
@@ -232,6 +232,7 @@ for (let index = 0; index < 11; index++) {
       if (gen == "gen3") {
         price.priceBuy_3 = ctx?.message?.text;
       }
+ 
       ctx.telegram.sendMessage(
         ctx.chat.id,
         `Все поменял значение\n Пороги: Ген_0: ${price.priceBuy_0}$, Ген_1: ${price.priceBuy_1}$, Ген_2: ${price.priceBuy_2}$, Ген_3: ${price.priceBuy_3}$`
@@ -277,7 +278,7 @@ for (let index = 0; index < 11; index++) {
       });
     }
     if (ctx?.callbackQuery.data == "gen3") {
-      gen = "gen2";
+      gen = "gen3";
       ctx.telegram.sendMessage(ctx.chat.id, "Вводи в USD", {
         parse_mode: "HTML",
         ...Markup.keyboard([["Прайс", "Цена"]])
