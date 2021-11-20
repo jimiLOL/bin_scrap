@@ -195,6 +195,7 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
                 let end = new Date().getTime();
                 console.log(`Время цикла: ${end - start}ms`);
               });
+              slug = 0;
               resolve()
              
             }
