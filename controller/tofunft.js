@@ -25,7 +25,25 @@ const header = {
 'x-tofu-signature':'0000001637416599i+vDhJu++L1D293vsHNopQNE1+BqE8bya6R27+NIuQM='
 };
 
+let body = {
+    "filters": {
+      "attributes": {},
+      "contracts": [
+        232
+      ]
+    },
+    "offset": 20,
+    "limit": 20
+  };
 async function getInfotofunft() {
+    axios.post('https://tofunft.com/api/searchOrders', body, {headers: header}).then((res) => {
+          console.log(res);
+      }).catch(function (error) {
+        console.log("Show error notification getInfotofunft!");
+      
+        console.log(error);
+        return Promise.reject(error);
+      });;
 
 }
 

@@ -26,6 +26,7 @@ const { senDataTelegram, techbicaleventTelegram } = require('./controller/sendTe
 const {nftTradeGet} = require('./controller/nftrade');
 const {addDB} = require('./controller/addDB');
 const { getinfoLootex } = require('./controller/lootex');
+const { getInfotofunft } = require('./controller/tofunft.js')
 
 
 require("dotenv/config");
@@ -89,7 +90,7 @@ let data = {
 
 
 
-
+getInfotofunft();
 
 async function delDublicate() {
   let asw = [];
