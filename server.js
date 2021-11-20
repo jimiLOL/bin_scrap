@@ -183,16 +183,17 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
               slug.forEach(async (element, index) => {
                 // setTimeout(() => dsf(element.tokenId), 10000 * index);
                 let start = new Date().getTime();
-                let prom = new Promise((resolve, reject) => {
-                  setTimeout(() => dsf(element.tokenId, element.attributes, index).then(resolve()).catch(reject()), 600 * index);
+                // let prom = new Promise((resolve, reject) => {
+                //   setTimeout(() => dsf(element.tokenId, element.attributes, index).then(resolve()).catch(reject()), 600 * index);
       
-                });
-                let prom2 = new Promise((resolve, reject) => {
-                     setTimeout(() => getinfoLootex(element.tokenId, index).then(resolve()).catch(reject()), 4000 * index);
+                // });
+                // let prom2 = new Promise((resolve, reject) => {
+                //      setTimeout(() => getinfoLootex(element.tokenId, index).then(resolve()).catch(reject()), 4000 * index);
   
-                });
+                // });
+                await dsf(element.tokenId, element.attributes, index)
                 
-                await Promise.all([prom, prom2]);
+                // await Promise.all([prom, prom2]);
                 let end = new Date().getTime();
                 console.log(`Время цикла: ${end - start}ms`);
               });
