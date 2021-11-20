@@ -23,8 +23,8 @@ const header = {
 async function getinfoLootex(tokenId, index) {
     return new Promise((resolve, reject) => {
     axios.get(`https://api.dex.lootex.io/v2/assets/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${tokenId}?force=true`, {headers: header}).then((res)=>{
-        console.log(res.data);
-        if (res.data.length > 0) {
+     
+        if (res.data.length != undefined || res.data.length != null) {
             res.data[0].orders.forEach(element => {
                 if (element?.side == 'MAKER') {
                     updatePriceDB(res.data?.tokenId, element?.price, 'lootex');
