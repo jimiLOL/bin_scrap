@@ -30,7 +30,7 @@ async function getinfoLootex(tokenId) {
         if (res.data.length > 0) {
             res.data.forEach(element => {
                 if (element?.side == 'MAKER') {
-                    updatePriceDB(element?.tokenId, element?.price);
+                    updatePriceDB(element?.tokenId, element?.price, 'lootex');
                 
                 }
                

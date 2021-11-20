@@ -12,13 +12,13 @@ let priceBuy_0 = 1000;
 let priceBuy_1 = 3000;
 let priceBuy_2 = 1500;
 let priceBuy_3 = 1000;
-let priceBuy_4 = 190;
-let priceBuy_5 = 190;
-let priceBuy_6 = 190;
-let priceBuy_7 = 190;
-let priceBuy_8 = 190;
-let priceBuy_9 = 190;
-let priceBuy_10 = 190;
+let priceBuy_4 = 200;
+let priceBuy_5 = 200;
+let priceBuy_6 = 200;
+let priceBuy_7 = 200;
+let priceBuy_8 = 200;
+let priceBuy_9 = 200;
+let priceBuy_10 = 200;
 let price = {
   priceBnb: priceBnb,
   priceBuy_0: priceBuy_0,

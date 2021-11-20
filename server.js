@@ -25,7 +25,7 @@ const { reject } = require("core-js/fn/promise");
 const { senDataTelegram, techbicaleventTelegram } = require('./controller/sendTelegram');
 const {nftTradeGet} = require('./controller/nftrade');
 const {addDB} = require('./controller/addDB');
-const { lootex } = require('./controller/lootex');
+const { getinfoLootex } = require('./controller/lootex');
 
 
 require("dotenv/config");
@@ -152,7 +152,10 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
 
   for (let index = 0; index < count; index++) {
 
-    techbicaleventTelegram(index)
+
+    setTimeout(() => techbicaleventTelegram(index), 200 * index);
+
+    
    
     await sdW();
     await nftTradeGet(index);
@@ -181,7 +184,7 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
                 let start = new Date().getTime();
                 let prom = new Promise((resolve, resect) => {
                   setTimeout(() => dsf(element.tokenId, element.attributes, index).then(resolve()), 400 * index);
-                  setTimeout(() => lootex(element.tokenId).then(resolve()), 400 * index);
+                  setTimeout(() => getinfoLootex(element.tokenId).then(resolve()), 400 * index);
                   // dsf(element.tokenId, element.attributes, index).then(resolve());
                 });
                 
