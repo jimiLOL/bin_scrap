@@ -153,7 +153,7 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
   for (let index = 0; index < count; index++) {
 
 
-    setTimeout(() => techbicaleventTelegram(index), 200 * index);
+   
 
     
    
@@ -271,6 +271,7 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
                 })
                 .catch(function (error) {
                   console.log("Show error notification!");
+                  setTimeout(() => techbicaleventTelegram(index, error), 200 * index);
                   console.log(error);
                   return Promise.reject(error);
                 });
