@@ -181,16 +181,9 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
               console.log("Нашли post в базе");
               // console.log(slug);
               slug.forEach(async (element, index) => {
-                // setTimeout(() => dsf(element.tokenId), 10000 * index);
+        
                 let start = new Date().getTime();
-                // let prom = new Promise((resolve, reject) => {
-                //   .then(resolve()).catch(reject())
-      
-                // });
-                // let prom2 = new Promise((resolve, reject) => {
-                //   .then(resolve()).catch(reject())
-  
-                // });
+             
                 
                 let [as] = await Promise.all([dsf(element.tokenId, element.attributes, index), timeout(1000)]);
                 let end = new Date().getTime();
