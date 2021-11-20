@@ -183,11 +183,11 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
                 // setTimeout(() => dsf(element.tokenId), 10000 * index);
                 let start = new Date().getTime();
                 let prom = new Promise((resolve, resect) => {
-                  setTimeout(() => dsf(element.tokenId, element.attributes, index).then(resolve()), 400 * index);
+                  setTimeout(() => dsf(element.tokenId, element.attributes, index), 400 * index);
       
                 });
                 let prom2 = new Promise((resolve, resect) => {
-                     setTimeout(() => getinfoLootex(element.tokenId).then(resolve()), 400 * index);
+                     setTimeout(() => getinfoLootex(element.tokenId), 400 * index);
   
                 });
                 
@@ -273,9 +273,9 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
               
                 })
                 .catch(function (error) {
-                  console.log("Show error notification!");
+                  console.log("Show error notification! mocha");
                   setTimeout(() => techbicaleventTelegram(index, error, 'mocha'), 200 * index);
-                  console.log(error);
+                  // console.log(error);
                   return Promise.reject(error);
                 });
             }
