@@ -92,6 +92,7 @@ async function nftTradeGet(index) {
             // console.log('orderId == null');
           }
         });
+        resnftrade.data = 0;
       }
     });
 }
