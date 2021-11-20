@@ -50,4 +50,22 @@ async function addDB(element, attributes, marketpalce, extraMetadata) {
     );
   }
   
-module.exports = {addDB}  
+
+  async function updatePriceDB(tokenId, price) {
+    NftPokemon.findOneAndUpdate(
+      { tokenId: tokenId },
+      {$set: {price: price}},
+      (err, call) => {
+        if (err) {
+          console.log("Произошла ошибка при обновлении price");
+          console.log(err);
+        }
+        if (call) {
+          console.log("Произвели обновление price");
+        }
+         
+       
+      }
+    );
+  }
+module.exports = {addDB, updatePriceDB}  

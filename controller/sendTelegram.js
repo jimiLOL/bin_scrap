@@ -41,7 +41,7 @@ const jobss = new CronJob("0 */2 * * * *", async function () {
     "https://api.coingecko.com/api/v3/simple/price?ids=binancecoin,mochi-market&vs_currencies=bnb,usd"
   )
   .then((res) => {
-    console.log(res.data.binancecoin);
+    // console.log(res.data.binancecoin);
     price.priceBnb = res.data.binancecoin.usd;
   });
 })
@@ -49,10 +49,8 @@ jobss.start()
 
 
 async function techbicaleventTelegram(index) {
-  ctx.telegram.sendMessage(
-    '1552654998',
-    `Текущий глобальный индекс: ${index}`
-  );
+  bot.telegram.sendMessage(1552654998, `Текущий глобальный индекс: ${index}`, { parse_mode: "HTML" });
+  
 
 }
 
@@ -62,11 +60,11 @@ for (let index = 0; index < 11; index++) {
     element.price * price.priceBnb <= price['priceBuy_' + index] &&
     element.attributes[13]?.value == index
   ) {
-    console.log(element.price * price.priceBnb);
-    console.log(element.seller);
-    console.log(element.attributes[13].value);
+    // console.log(element.price * price.priceBnb);
+    
+    // console.log(element.attributes[13].value);
     let msde = `Тэкс...!\n<b>Продовец: </b>${
-      element.seller
+      element?.seller
     }\n<b>Цена: </b>${
       element.price * price.priceBnb
     }$\n<b>Генезис: </b>${
@@ -84,11 +82,11 @@ for (let index = 0; index < 11; index++) {
       element.price * price.priceBnb <= price.priceBuy_1 &&
       element.attributes[13]?.value == 1
     ) {
-      console.log(element.price * price.priceBnb);
-      console.log(element.seller);
-      console.log(element.attributes[13].value);
+      // console.log(element.price * price.priceBnb);
+      
+      // console.log(element.attributes[13].value);
       let msde = `Тэкс...!\n<b>Продовец: </b>${
-        element.seller
+        element?.seller
       }\n<b>Цена: </b>${
         element.price * price.priceBnb
       }$\n<b>Генезис: </b>${
@@ -101,11 +99,11 @@ for (let index = 0; index < 11; index++) {
       element.price * price.priceBnb <= price.priceBuy_2 &&
       element.attributes[13]?.value == 2
     ) {
-      console.log(element.price * price.priceBnb);
-      console.log(element.seller);
-      console.log(element.attributes[13].value);
+      // console.log(element.price * price.priceBnb);
+      
+      // console.log(element.attributes[13].value);
       let msde = `Тэкс...!\n<b>Продовец: </b>${
-        element.seller || 'ХЗ'
+        element?.seller || 'ХЗ'
       }\n<b>Цена: </b>${
         element.price * price.priceBnb
       }$\n<b>Генезис: </b>${
@@ -119,11 +117,11 @@ for (let index = 0; index < 11; index++) {
       element.price * price.priceBnb <= price.priceBuy_3 &&
       element.attributes[13]?.value == 3
     ) {
-      console.log(element.price * price.priceBnb);
-      console.log(element.seller);
-      console.log(element.attributes[13].value);
+      // console.log(element.price * price.priceBnb);
+      
+      // console.log(element.attributes[13].value);
       let msde = `Тэкс...!\n<b>Продовец: </b>${
-        element.seller || 'ХЗ'
+        element?.seller || 'ХЗ'
       }\n<b>Цена: </b>${
         element.price * price.priceBnb
       }$\n<b>Генезис: </b>${
@@ -136,11 +134,11 @@ for (let index = 0; index < 11; index++) {
       element.price * price.priceBnb <= price.priceBuy_0 &&
       element.attributes[13]?.value == 0
     ) {
-      console.log(element.price * price.priceBnb);
-      console.log(element.seller);
-      console.log(element.attributes[13].value);
+      // console.log(element.price * price.priceBnb);
+      
+      // console.log(element.attributes[13].value);
       let msde = `Тэкс...!\n<b>Продовец: </b>${
-        element.seller || 'ХЗ'
+        element?.seller || 'ХЗ'
       }\n<b>Цена: </b>${
         element.price * price.priceBnb
       }$\n<b>Генезис: </b>${
@@ -154,7 +152,7 @@ for (let index = 0; index < 11; index++) {
       element.attributes[2]?.value == "Super"
     ) {
       let msde = `🚀Тэкс...! Тут Super\n<b>Продовец: </b>${
-        element.seller || 'ХЗ'
+        element?.seller || 'ХЗ'
       }\n<b>Цена: </b>${
         element.price * price.priceBnb
       }$\n<b>Генезис: </b>${
@@ -168,7 +166,7 @@ for (let index = 0; index < 11; index++) {
       element.attributes[13]?.value == 10
     ) {
       let msde = `🚀Тэкс...!\n<b>Продовец: </b>${
-        element.seller || 'ХЗ'
+        element?.seller || 'ХЗ'
       }\n<b>Цена: </b>${
         element.price * price.priceBnb
       }$\n<b>Генезис: </b>${
@@ -212,18 +210,18 @@ for (let index = 0; index < 11; index++) {
   bot.help((ctx) => ctx.reply("Регулирование минимальной цены - /price"));
   bot.launch();
   bot.on("text", async (ctx) => {
-    console.log(ctx.chat);
+    // console.log(ctx.chat);
     if (ctx?.message?.text.indexOf("Цена") === 0) {
-      console.log("Запрос на изменение цены");
+      // console.log("Запрос на изменение цены");
       ctx.reply("Подходим выбираем", navigationButton);
     }
     if (ctx?.message?.text.indexOf("Прайс") === 0) {
-      console.log("Запрос на изменение цены");
+      // console.log("Запрос на изменение цены");
       ctx.reply(
         `Пороги: Ген_0: ${price.priceBuy_0}$, Ген_1: ${price.priceBuy_1}$, Ген_2: ${price.priceBuy_2}$, Ген_3: ${price.priceBuy_3}$\n`
       );
     }
-    console.log(isNumber(ctx?.message?.text));
+    // console.log(isNumber(ctx?.message?.text));
   
     if (isNumber(ctx?.message?.text)) {
    
