@@ -142,7 +142,7 @@ function timeout(ms) {
 
 
 
-const jobs = new CronJob("0 */4 * * * *", async function () {
+const jobs = new CronJob("0 */2 * * * *", async function () {
    
   await delDublicate();
 
@@ -159,7 +159,7 @@ const jobs = new CronJob("0 */4 * * * *", async function () {
    
 
     
-    let [sa] = await Promise.all([sdW(), nftTradeGet(index), timeout(3000)])
+    let [sa] = await Promise.all([sdW(), nftTradeGet(index), timeout(10000)])
   
  
 
@@ -192,7 +192,7 @@ const jobs = new CronJob("0 */4 * * * *", async function () {
   
                 // });
                 
-                let [as] = await Promise.all([dsf(element.tokenId, element.attributes, index), getinfoLootex(element.tokenId, index), timeout(1000)]);
+                let [as] = await Promise.all([dsf(element.tokenId, element.attributes, index), getinfoLootex(element.tokenId, index), timeout(2000)]);
                 let end = new Date().getTime();
                 console.log(`Время цикла: ${end - start}ms`);
               });
