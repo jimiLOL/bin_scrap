@@ -90,6 +90,7 @@ let data = {
 
 
 // getInfotofunft();
+getinfoLootex(198, 1),
 
 
 async function delDublicate() {
@@ -192,7 +193,7 @@ const jobs = new CronJob("0 */2 * * * *", async function () {
   
                 // });
                 
-                let [as] = await Promise.all([dsf(element.tokenId, element.attributes, index), getinfoLootex(element.tokenId, index), timeout(2000)]);
+                let [as] = await Promise.all([dsf(element.tokenId, element.attributes, index), timeout(2000)]);
                 let end = new Date().getTime();
                 console.log(`Время цикла: ${end - start}ms`);
               });
