@@ -187,12 +187,12 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
                   setTimeout(() => dsf(element.tokenId, element.attributes, index).then(resolve()), 600 * index);
       
                 });
-                // let prom2 = new Promise((resolve, resect) => {
-                //      setTimeout(() => getinfoLootex(element.tokenId, index).then(resolve()), 400 * index);
+                let prom2 = new Promise((resolve, resect) => {
+                     setTimeout(() => getinfoLootex(element.tokenId, index).then(resolve()), 400 * index);
   
-                // });
+                });
                 
-                await Promise.all([prom]);
+                await Promise.all([prom,prom2]);
                 let end = new Date().getTime();
                 console.log(`Время цикла: ${end - start}ms`);
               });
