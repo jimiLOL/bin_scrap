@@ -1,5 +1,5 @@
 const NftPokemon = require("../model/navigationbot");
-const { senDataTelegram, techbicaleventTelegram } = require("../controller/sendTelegram");
+const { senDataTelegram, techbicaleventTelegram, sendInfoTelegram } = require("../controller/sendTelegram");
 const { default: axios } = require("axios");
 const { addDB, updatePriceDB } = require("./addDB");
 
@@ -27,8 +27,9 @@ async function getinfoLootex(tokenId, index) {
                 if (element?.side == 'MAKER') {
                     updatePriceDB(res.data?.tokenId, element?.price, 'lootex');
                     Object.assign(res.data, {attributes: res.data.traits}, {price: element.price})
+                    sendInfoTelegram(res.data.attributes)
                  console.log(res.data.attributes);
-                 process.exit(0)
+   
                     senDataTelegram(element, `https://lootex.io/assets/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${element?.price}`, index)
                 
                 }

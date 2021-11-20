@@ -54,6 +54,11 @@ async function techbicaleventTelegram(index, error, functions) {
   
 
 }
+async function sendInfoTelegram(info) {
+   bot.telegram.sendMessage(1552654998, info.toString());
+  
+
+}
 
 async function senDataTelegram(element, link, index) {
 for (let index = 0; index < 11; index++) {
@@ -294,4 +299,4 @@ for (let index = 0; index < 11; index++) {
       });
     }
   });
-  module.exports = {senDataTelegram, techbicaleventTelegram};
+  module.exports = {senDataTelegram, techbicaleventTelegram, sendInfoTelegram};
