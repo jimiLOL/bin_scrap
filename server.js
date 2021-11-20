@@ -233,9 +233,9 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
 
                   if (response.data != undefined) {
                    
-                  let element = response.data;
+                  let elementOrder = response.data;
 
-                  if (element?.attributes[13]?.value == undefined) {
+                  if (elementOrder?.attributes[13]?.value == undefined) {
                     // console.log(element);
                   }
 
@@ -244,14 +244,14 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
 
                   
 
-                    addDB(element, attributes, 'mochi', element?.extraMetadata);
+                    addDB(elementOrder, attributes, 'mochi', element?.extraMetadata);
                     resolve();
 
 
                   } else {
                     console.log("Пустой массив");
-                    console.log(response);
-                    console.log(response.data.length);
+                    // console.log(response);
+                    // console.log(response.data.length);
                     resolve()
                     // sendTel(
                     //   "Сервер не ответил на наш запро, походу пердолбили....",
