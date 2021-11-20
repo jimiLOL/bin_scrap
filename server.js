@@ -139,7 +139,7 @@ async function delDublicate() {
 
 
 
-const jobs = new CronJob("0 */20 * * * *", async function () {
+const jobs = new CronJob("0 */2 * * * *", async function () {
    
   await delDublicate();
 
@@ -183,11 +183,11 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
                 // setTimeout(() => dsf(element.tokenId), 10000 * index);
                 let start = new Date().getTime();
                 let prom = new Promise((resolve, resect) => {
-                  setTimeout(() => dsf(element.tokenId, element.attributes, index), 600 * index);
+                  setTimeout(() => dsf(element.tokenId, element.attributes, index).then(resolve()), 600 * index);
       
                 });
                 let prom2 = new Promise((resolve, resect) => {
-                     setTimeout(() => getinfoLootex(element.tokenId, index), 400 * index);
+                     setTimeout(() => getinfoLootex(element.tokenId, index).then(resolve()), 400 * index);
   
                 });
                 
