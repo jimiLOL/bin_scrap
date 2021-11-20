@@ -188,7 +188,7 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
       
                 });
                 let prom2 = new Promise((resolve, resect) => {
-                     setTimeout(() => getinfoLootex(element.tokenId, index).then(resolve()), 400 * index);
+                     setTimeout(() => getinfoLootex(element.tokenId, index).then(resolve()), 1000 * index);
   
                 });
                 
