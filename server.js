@@ -194,7 +194,7 @@ const jobs = new CronJob("0 */4 * * * *", async function () {
   
                 // });
                 
-                await Promise.all([dsf(element.tokenId, element.attributes, index), getinfoLootex(element.tokenId, index), timeout(4000)]);
+                let [as] = await Promise.all([dsf(element.tokenId, element.attributes, index), getinfoLootex(element.tokenId, index), timeout(4000)]);
                 let end = new Date().getTime();
                 console.log(`Время цикла: ${end - start}ms`);
               });
