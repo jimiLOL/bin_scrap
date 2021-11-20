@@ -90,7 +90,7 @@ let data = {
 
 
 
-getInfotofunft();
+
 
 async function delDublicate() {
   let asw = [];
@@ -140,7 +140,7 @@ async function delDublicate() {
 
 
 
-const jobs = new CronJob("0 */2 * * * *", async function () {
+const jobs = new CronJob("0 */20 * * * *", async function () {
    
   await delDublicate();
 
