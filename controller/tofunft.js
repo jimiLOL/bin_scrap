@@ -16,7 +16,8 @@ const header = {
     "x-tofu-signature": "0000001637416599i+vDhJu++L1D293vsHNopQNE1+BqE8bya6R27+NIuQM=",
     "cookie": "_ga=GA1.1.1792403331.1637233387; _ga_ERYKG9YKMT=GS1.1.1637413079.3.1.1637414638.0",
     "Referer": "https://tofunft.com/collection/kryptomon/items",
-    "Referrer-Policy": "strict-origin-when-cross-origin"
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36'
 };
 
 let body = {
