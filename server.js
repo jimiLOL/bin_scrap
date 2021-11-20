@@ -22,7 +22,7 @@ const CronJob = require("cron").CronJob;
 const { default: axios } = require("axios");
 const { reject } = require("core-js/fn/promise");
 // const { } = require('./controller');
-const { senDataTelegram } = require('./controller/sendTelegram');
+const { senDataTelegram, techbicaleventTelegram } = require('./controller/sendTelegram');
 const {nftTradeGet} = require('./controller/nftrade');
 const {addDB} = require('./controller/addDB');
 const { resolve } = require("path");
@@ -151,7 +151,8 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
   console.log(count);
 
   for (let index = 0; index < count; index++) {
-    console.log(index);
+    
+    techbicaleventTelegram(index)
    
     await sdW();
     await nftTradeGet(index);

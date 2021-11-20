@@ -48,6 +48,14 @@ const jobss = new CronJob("0 */2 * * * *", async function () {
 jobss.start()
 
 
+async function techbicaleventTelegram(index) {
+  ctx.telegram.sendMessage(
+    '1552654998',
+    `Текущий глобальный индекс: ${index}`
+  );
+
+}
+
 async function senDataTelegram(element, link, index) {
 for (let index = 0; index < 11; index++) {
   if (
@@ -287,4 +295,4 @@ for (let index = 0; index < 11; index++) {
       });
     }
   });
-  module.exports = {senDataTelegram};
+  module.exports = {senDataTelegram, techbicaleventTelegram};
