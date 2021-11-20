@@ -30,14 +30,15 @@ async function getinfoLootex(tokenId) {
                 }
                
                 
-            }).catch(function (error) {
-                console.log("Show error notification!");
-                setTimeout(() => techbicaleventTelegram(index, error, 'lootex'), 200 * index);
-                console.log(error);
-                return Promise.reject(error);
-              });;
+            })
+            res.data = 0;
         }
-    })
+    }).catch(function (error) {
+        console.log("Show error notification getinfoLootex!");
+        setTimeout(() => techbicaleventTelegram(index, error, 'lootex'), 200 * index);
+        // console.log(error);
+        return Promise.reject(error);
+      });;
 
 }
 
