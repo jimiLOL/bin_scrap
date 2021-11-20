@@ -116,7 +116,7 @@ async function delDublicate() {
   }
   asw = [];
 }
-
+await delDublicate();
 // NftPokemon.find({attributes: {$elemMatch: {value: 0, trait_type: "Generation"}}}, {tokenId:1},(err, cal) => {
 //   if (err) console.log('Err');
 //   if (cal) {
@@ -145,7 +145,7 @@ function timeout(ms) {
 
 const jobs = new CronJob("0 */2 * * * *", async function () {
    
-  await delDublicate();
+
 
   let count = await NftPokemon.find({}, {tokenId:1},(err, call) => {
     if (err) console.log(err);
