@@ -137,7 +137,7 @@ async function delDublicate() {
 
 
 
-
+getinfoLootex(6550, 1)
 
 
 const jobs = new CronJob("0 */20 * * * *", async function () {
@@ -183,16 +183,16 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
               slug.forEach(async (element, index) => {
                 // setTimeout(() => dsf(element.tokenId), 10000 * index);
                 let start = new Date().getTime();
-                let prom = new Promise((resolve, resect) => {
-                  setTimeout(() => dsf(element.tokenId, element.attributes, index).then(resolve()), 600 * index);
+                let prom = new Promise((resolve, reject) => {
+                  setTimeout(() => dsf(element.tokenId, element.attributes, index).then(resolve()).catch(reject()), 600 * index);
       
                 });
-                let prom2 = new Promise((resolve, resect) => {
-                     setTimeout(() => getinfoLootex(element.tokenId, index).then(resolve()), 1000 * index);
+                // let prom2 = new Promise((resolve, reject) => {
+                //      setTimeout(() => getinfoLootex(element.tokenId, index).then(resolve()).catch(reject()), 1000 * index);
   
-                });
+                // });
                 
-                await Promise.all([prom,prom2]);
+                await Promise.all([prom]);
                 let end = new Date().getTime();
                 console.log(`Время цикла: ${end - start}ms`);
               });
@@ -209,7 +209,7 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
     }
 
     async function dsf(slug, attributes, index) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         let start = new Date().getTime();
 
         axios
@@ -278,7 +278,7 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
                   console.log("Show error notification! mocha");
                   setTimeout(() => techbicaleventTelegram(index, error, 'mocha'), 200 * index);
                   // console.log(error);
-                  return Promise.reject(error);
+                reject(error);
                 });
             }
           });

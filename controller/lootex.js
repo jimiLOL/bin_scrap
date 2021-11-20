@@ -21,6 +21,7 @@ const header = {
 };
 
 async function getinfoLootex(tokenId, index) {
+    return new Promise((resolve, reject) => {
     axios.get(`https://api.dex.lootex.io/v2/assets/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${tokenId}?force=true`, {headers: header}).then((res)=>{
         if (res.data.length > 0) {
             res.data[0].orders.forEach(element => {
@@ -37,13 +38,17 @@ async function getinfoLootex(tokenId, index) {
                 
             })
             res.data = 0;
+            resolve(res);
+
         }
     }).catch(function (error) {
         console.log("Show error notification getinfoLootex!");
         setTimeout(() => techbicaleventTelegram(index, error, 'lootex'), 200*index);
         // console.log(error);
-        return Promise.reject(error);
+        reject(error);
       });;
+
+    })
 
 }
 
