@@ -20,14 +20,14 @@ const header = {
 };
 
 let body = {
-    filters: {
-        attributes: {},
-        contracts: [
+    "filters": {
+        "attributes": {},
+        "contracts": [
             232
         ]
     },
-    offset: 20,
-    limit: 20
+    "offset": 20,
+    "limit": 20
 };
 async function getInfotofunft() {
     axios.post('https://tofunft.com/api/searchOrders', body, {headers: header}).then((res) => {
@@ -39,8 +39,8 @@ async function getInfotofunft() {
         return Promise.reject(error);
       });;
 
-  
 
+       
 }
 
 
