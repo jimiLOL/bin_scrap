@@ -50,7 +50,7 @@ jobss.start()
 
 async function techbicaleventTelegram(index, error) {
   bot.telegram.sendMessage(1552654998, `Ошибка на глобальном цикле: ${index}\n`, { parse_mode: "HTML" });
-  bot.telegram.sendMessage(1552654998, error);
+  bot.telegram.sendMessage(1552654998, error.toString());
   
 
 }

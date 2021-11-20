@@ -184,11 +184,14 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
                 let start = new Date().getTime();
                 let prom = new Promise((resolve, resect) => {
                   setTimeout(() => dsf(element.tokenId, element.attributes, index).then(resolve()), 400 * index);
-                  // setTimeout(() => getinfoLootex(element.tokenId).then(resolve()), 400 * index);
-                  // dsf(element.tokenId, element.attributes, index).then(resolve());
+      
+                });
+                let prom2 = new Promise((resolve, resect) => {
+                     setTimeout(() => getinfoLootex(element.tokenId).then(resolve()), 400 * index);
+  
                 });
                 
-                await Promise.all([prom]);
+                await Promise.all([prom, prom2]);
                 let end = new Date().getTime();
                 console.log(`Время цикла: ${end - start}ms`);
               });
