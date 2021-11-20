@@ -23,10 +23,10 @@ const header = {
 async function getinfoLootex(tokenId, index) {
     axios.get(`https://api.dex.lootex.io/v2/assets/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${tokenId}?force=true`, {headers: header}).then((res)=>{
         if (res.data.length > 0) {
-            res.data.orders.forEach(element => {
+            res.data[0].orders.forEach(element => {
                 if (element?.side == 'MAKER') {
                     updatePriceDB(res.data?.tokenId, element?.price, 'lootex');
-                    Object.assign(res.data, {attributes: res.data.traits})
+                    Object.assign(res.data, {attributes: res.data.traits}, {price: element.price})
                  console.log(res.data.attributes);
                  process.exit(0)
                     senDataTelegram(element, `https://lootex.io/assets/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${element?.price}`, index)
