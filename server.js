@@ -183,7 +183,7 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
                 // setTimeout(() => dsf(element.tokenId), 10000 * index);
                 let start = new Date().getTime();
                 let prom = new Promise((resolve, resect) => {
-                  setTimeout(() => dsf(element.tokenId, element.attributes, index), 400 * index);
+                  setTimeout(() => dsf(element.tokenId, element.attributes, index), 600 * index);
       
                 });
                 let prom2 = new Promise((resolve, resect) => {

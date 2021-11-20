@@ -35,7 +35,7 @@ async function getinfoLootex(tokenId) {
         }
     }).catch(function (error) {
         console.log("Show error notification getinfoLootex!");
-        setTimeout(() => techbicaleventTelegram(index, error, 'lootex'), 200 * index);
+        setTimeout(() => techbicaleventTelegram(index, error, 'lootex'), 200);
         // console.log(error);
         return Promise.reject(error);
       });;
