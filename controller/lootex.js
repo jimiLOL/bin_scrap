@@ -20,12 +20,16 @@ const header = {
 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36'  
 };
 
-async function getinfoLootex(tokenId) {
-    axios.get(`https://api.dex.lootex.io/v2/orders/history?contractAddress=0xc33d69a337b796a9f0f7588169cd874c3987bde9&endState__in=FULLY_FILLED%2CADDED&limit=100&order=-updatedAt&page=1&tokenId=${tokenId}`, {headers: header}).then((res)=>{
+async function getinfoLootex(tokenId, index) {
+    axios.get(`https://api.dex.lootex.io/v2/assets/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${tokenId}?force=true`, {headers: header}).then((res)=>{
         if (res.data.length > 0) {
-            res.data.forEach(element => {
+            res.data.orders.forEach(element => {
                 if (element?.side == 'MAKER') {
-                    updatePriceDB(element?.tokenId, element?.price, 'lootex');
+                    updatePriceDB(res.data?.tokenId, element?.price, 'lootex');
+                    Object.assign(res.data, {attributes: res.data.traits})
+                 console.log(res.data.attributes);
+                 process.exit(0)
+                    senDataTelegram(element, `https://lootex.io/assets/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${element?.price}`, index)
                 
                 }
                
@@ -35,7 +39,7 @@ async function getinfoLootex(tokenId) {
         }
     }).catch(function (error) {
         console.log("Show error notification getinfoLootex!");
-        setTimeout(() => techbicaleventTelegram(index, error, 'lootex'), 200);
+        setTimeout(() => techbicaleventTelegram(index, error, 'lootex'), 200*index);
         // console.log(error);
         return Promise.reject(error);
       });;
