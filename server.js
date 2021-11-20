@@ -89,7 +89,7 @@ let data = {
 };
 
 
-
+getInfotofunft();
 
 
 async function delDublicate() {
