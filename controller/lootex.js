@@ -1,5 +1,5 @@
 const NftPokemon = require("../model/navigationbot");
-const { senDataTelegram } = require("../controller/sendTelegram");
+const { senDataTelegram, techbicaleventTelegram } = require("../controller/sendTelegram");
 const { default: axios } = require("axios");
 const { addDB, updatePriceDB } = require("./addDB");
 
@@ -30,7 +30,12 @@ async function getinfoLootex(tokenId) {
                 }
                
                 
-            });
+            }).catch(function (error) {
+                console.log("Show error notification!");
+                setTimeout(() => techbicaleventTelegram(index, error), 200 * index);
+                console.log(error);
+                return Promise.reject(error);
+              });;
         }
     })
 

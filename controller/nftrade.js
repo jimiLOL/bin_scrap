@@ -1,5 +1,5 @@
 const NftPokemon = require("../model/navigationbot");
-const { senDataTelegram } = require("../controller/sendTelegram");
+const { senDataTelegram, techbicaleventTelegram } = require("../controller/sendTelegram");
 const { default: axios } = require("axios");
 const { addDB } = require("./addDB");
 
@@ -121,6 +121,7 @@ async function getOrdernftrade(orderID, attributes, extraMetadata, index) {
       })
       .catch(function (error) {
         console.log("Show error notification nftrade!");
+        setTimeout(() => techbicaleventTelegram(index, error), 200 * index);
         console.log(error);
         return Promise.reject(error);
       });
