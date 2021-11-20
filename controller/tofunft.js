@@ -62,7 +62,12 @@ async function getInfotofunft() {
           return Promise.reject(error);
         });;
   
-    })
+    }).catch(function (error) {
+        console.log("Show error notification getInfotofunft!");
+      
+        console.log(error);
+        return Promise.reject(error);
+      });;
 
 
        
