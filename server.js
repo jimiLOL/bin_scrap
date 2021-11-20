@@ -116,7 +116,7 @@ async function delDublicate() {
   }
   asw = [];
 }
-await delDublicate();
+delDublicate();
 // NftPokemon.find({attributes: {$elemMatch: {value: 0, trait_type: "Generation"}}}, {tokenId:1},(err, cal) => {
 //   if (err) console.log('Err');
 //   if (cal) {
