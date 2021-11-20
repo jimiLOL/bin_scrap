@@ -90,7 +90,6 @@ let data = {
 
 
 // getInfotofunft();
-getinfoLootex(198, 1),
 
 
 async function delDublicate() {
@@ -116,7 +115,7 @@ async function delDublicate() {
   }
   asw = [];
 }
-delDublicate();
+
 // NftPokemon.find({attributes: {$elemMatch: {value: 0, trait_type: "Generation"}}}, {tokenId:1},(err, cal) => {
 //   if (err) console.log('Err');
 //   if (cal) {
@@ -143,9 +142,9 @@ function timeout(ms) {
 
 
 
-const jobs = new CronJob("0 */2 * * * *", async function () {
+const jobs = new CronJob("0 */20 * * * *", async function () {
    
-
+  await delDublicate();
 
   let count = await NftPokemon.find({}, {tokenId:1},(err, call) => {
     if (err) console.log(err);
@@ -160,7 +159,7 @@ const jobs = new CronJob("0 */2 * * * *", async function () {
    
 
     
-    let [sa] = await Promise.all([sdW(), nftTradeGet(index), timeout(10000)])
+    let [sa] = await Promise.all([sdW(), nftTradeGet(index), timeout(5000)])
   
  
 
@@ -193,7 +192,7 @@ const jobs = new CronJob("0 */2 * * * *", async function () {
   
                 // });
                 
-                let [as] = await Promise.all([dsf(element.tokenId, element.attributes, index), timeout(2000)]);
+                let [as] = await Promise.all([dsf(element.tokenId, element.attributes, index), timeout(1000)]);
                 let end = new Date().getTime();
                 console.log(`Время цикла: ${end - start}ms`);
               });
