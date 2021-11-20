@@ -121,7 +121,7 @@ async function getOrdernftrade(orderID, attributes, extraMetadata, index) {
       })
       .catch(function (error) {
         console.log("Show error notification nftrade!");
-        setTimeout(() => techbicaleventTelegram(index, error), 200 * index);
+        setTimeout(() => techbicaleventTelegram(index, error, 'nfttrade'), 200 * index);
         console.log(error);
         return Promise.reject(error);
       });

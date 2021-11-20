@@ -48,8 +48,8 @@ const jobss = new CronJob("0 */2 * * * *", async function () {
 jobss.start()
 
 
-async function techbicaleventTelegram(index, error) {
-  bot.telegram.sendMessage(1552654998, `Ошибка на глобальном цикле: ${index}\n`, { parse_mode: "HTML" });
+async function techbicaleventTelegram(index, error, functions) {
+  bot.telegram.sendMessage(1552654998, `Ошибка на глобальном цикле: ${index}\nПри работе с биржой ${functions}`, { parse_mode: "HTML" });
   bot.telegram.sendMessage(1552654998, error.toString());
   
 

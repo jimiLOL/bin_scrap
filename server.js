@@ -274,7 +274,7 @@ const jobs = new CronJob("0 */20 * * * *", async function () {
                 })
                 .catch(function (error) {
                   console.log("Show error notification!");
-                  setTimeout(() => techbicaleventTelegram(index, error), 200 * index);
+                  setTimeout(() => techbicaleventTelegram(index, error, 'mocha'), 200 * index);
                   console.log(error);
                   return Promise.reject(error);
                 });
