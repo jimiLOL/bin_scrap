@@ -26,7 +26,7 @@ const header2 = {
 'Accept-Encoding': 'gzip',
 'Accept-Language': 'ru,ru-RU;q=0.9,en-US;q=0.8,en;q=0.7,zh-TW;q=0.6,zh-CN;q=0.5,zh;q=0.4',
 'Connection': 'keep-alive',
-'Cookie': '_ga=GA1.1.1792403331.1637233387; __cf_bm=Z4Ny02bqpNgIzVSW7v9EsAAz1te2oZOJnpFecsqTSrU-1637414054-0-ARqaS9bAL0GuiM3ciGVKwBveKZJaPt92IXjARaN/GFmUcRWK1mL6q2rgHzCeeLv/XVf558MDr1E4Rc15xxNMVlZskAB3jxeBd0YcsG99FfovPnvZogFUVmKALc8K2txdQQ==; _ga_ERYKG9YKMT=GS1.1.1637413079.3.1.1637414105.0',
+'Cookie': '_ga_ERYKG9YKMT=GS1.1.1637500125.2.1.1637500150.0; _ga=GA1.1.1507123920.1637494394; __cf_bm=vrpLTmExh2FzqLYAsDinfYTQ1eGhnVP26DvRDCz6488-1637500128-0-AZBrn423yqk1j83R7mXtt6ez0epMMdtGi6WPlf0aPHyduXZ8iRFIquhyw840LoYYuvWDB2I5JND3q32+yRJYZNZcHAXGccW13QMuGbPB3ZqZ/suRGGQMCrO7gDsRcP/hog==',
 'DNT': '1',
 'Host': 'tofunft.com',
 'Referer': 'https://tofunft.com/collection/kryptomon/items?category=fixed-price',
