@@ -1,7 +1,14 @@
 const NftPokemon = require("../model/navigationbot");
+const fs = require('fs');
 const { senDataTelegram, techbicaleventTelegram } = require("../controller/sendTelegram");
 const { default: axios } = require("axios");
 const { addDB, updatePriceDB } = require("./addDB");
+const https = require('https');
+const http = require("http");
+// const ca = fs.readFileSync('../FiddlerRootCertificate.crt', 'utf8')
+
+// const httpsAgent = new https.Agent({ ca: ca });
+
 
 const header = {
     "accept": "*/*",
@@ -49,17 +56,16 @@ let body = {
     "offset": 20,
     "limit": 20
 };
-// async function getInfotofunft() {
+
 //     axios.get('https://tofunft.com/_next/data/_G9VnbUq-OFYDPhY49-s8/en/collection/kryptomon/items.json?slug=kryptomon', {headers: header2}).then((response) => {
 //     console.log(response.data);    
     
     
 
        
-// }
 
-
-axios.post('https://tofunft.com/api/searchOrders', body, {headers: header}).then((res) => {
+async function getInfotofunft() {
+axios.post('https://tofunft.com/api/searchOrders', body, {headers: header}, {httpsAgent: httpsAgent}).then((res) => {
             console.log(res);
         }).catch(function (error) {
           console.log("Show error notification getInfotofunft!");
@@ -70,5 +76,7 @@ axios.post('https://tofunft.com/api/searchOrders', body, {headers: header}).then
   
   
 
+
+    }
 
   module.exports = { getInfotofunft };
