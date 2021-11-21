@@ -14,7 +14,7 @@ const header = {
     "sec-fetch-mode": "cors",
     "sec-fetch-site": "same-origin",
     "x-tofu-signature": "0000001637416599i+vDhJu++L1D293vsHNopQNE1+BqE8bya6R27+NIuQM=",
-    "cookie": "_ga=GA1.1.1792403331.1637233387; _ga_ERYKG9YKMT=GS1.1.1637413079.3.1.1637414638.0",
+    "cookie": "_ga_ERYKG9YKMT=GS1.1.1637500125.2.1.1637500150.0; _ga=GA1.1.1507123920.1637494394; __cf_bm=vrpLTmExh2FzqLYAsDinfYTQ1eGhnVP26DvRDCz6488-1637500128-0-AZBrn423yqk1j83R7mXtt6ez0epMMdtGi6WPlf0aPHyduXZ8iRFIquhyw840LoYYuvWDB2I5JND3q32+yRJYZNZcHAXGccW13QMuGbPB3ZqZ/suRGGQMCrO7gDsRcP/hog==",
     "Referer": "https://tofunft.com/collection/kryptomon/items",
     "Referrer-Policy": "strict-origin-when-cross-origin",
     'Origin':'https://tofunft.com',
@@ -49,11 +49,17 @@ let body = {
     "offset": 20,
     "limit": 20
 };
-async function getInfotofunft() {
-    axios.get('https://tofunft.com/_next/data/_G9VnbUq-OFYDPhY49-s8/en/collection/kryptomon/items.json?slug=kryptomon', {headers: header2}).then((response) => {
-    console.log(response.data);    
+// async function getInfotofunft() {
+//     axios.get('https://tofunft.com/_next/data/_G9VnbUq-OFYDPhY49-s8/en/collection/kryptomon/items.json?slug=kryptomon', {headers: header2}).then((response) => {
+//     console.log(response.data);    
     
-    axios.post('https://tofunft.com/api/searchOrders', body, {headers: header}).then((res) => {
+    
+
+       
+// }
+
+
+axios.post('https://tofunft.com/api/searchOrders', body, {headers: header}).then((res) => {
             console.log(res);
         }).catch(function (error) {
           console.log("Show error notification getInfotofunft!");
@@ -62,18 +68,7 @@ async function getInfotofunft() {
           return Promise.reject(error);
         });;
   
-    }).catch(function (error) {
-        console.log("Show error notification getInfotofunft!");
-      
-        console.log(error);
-        return Promise.reject(error);
-      });;
-
-
-       
-}
-
-
+  
 
 
   module.exports = { getInfotofunft };
