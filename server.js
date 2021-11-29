@@ -408,7 +408,7 @@ const jobs = new CronJob(dataCron, async function () {
   });
 });
 
-// jobs.start();
+jobs.start();
 
 let skip = 0;
 
