@@ -176,7 +176,7 @@ const jobs = new CronJob(dataCron, async function () {
 
     await Promise.all([
       start = new Date(),
-      timeout(30000 * index).then(() => {
+      timeout(60000 * index).then(() => {
         log(index),
           nfttradeParseContract(index, elementNFT.nft_contract.contract);
       }),
