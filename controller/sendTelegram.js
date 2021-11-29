@@ -49,8 +49,8 @@ jobss.start()
 
 
 async function techbicaleventTelegram(index, error, functions) {
-  bot.telegram.sendMessage(1552654998, `Событие на глобальном цикле: ${index}\nПри работе с ${functions}`, { parse_mode: "HTML" });
-  bot.telegram.sendMessage(1552654998, error.toString());
+  bot.telegram.sendMessage(1552654998, `Событие на глобальном цикле: ${index}\nПри работе с ${functions}\n${error.toString()}`, { parse_mode: "HTML" });
+ 
   
 
 }

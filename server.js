@@ -153,10 +153,14 @@ dataCron.setSeconds(dataCron.getSeconds() + 10);
 
 function startCron() {
   let d = new Date();
-  d.setSeconds(d.getSeconds() + 30);
+  d.setSeconds(d.getSeconds() + 60000);
   jobs.setTime(new CronTime(d));
   jobs.start();
-  console.log(jobs.nextDates().toISOString());
+  setTimeout(
+    () => techbicaleventTelegram(1, `Запуск CronJob планируется в ${jobs.nextDates().toISOString()}`, "....."),
+    200
+  );
+  console.log();
 }
 
 const jobs = new CronJob(dataCron, async function () {
