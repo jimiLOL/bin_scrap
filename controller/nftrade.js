@@ -104,6 +104,8 @@ async function nftTradeGet(index, nft_contract) {
         });
         resnftrade.data = 0;
       }
+    }).catch((e) => {
+      setTimeout(() => techbicaleventTelegram(index, e, 'nftTradeGet'), 200 * index);
     });
   } catch (e) {
     console.log('Ошибка работы функции nftTradeGet');

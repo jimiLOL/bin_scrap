@@ -34,6 +34,8 @@ const { getInfotofunft } = require("./controller/tofunft.js");
 const { binTest } = require("./controller/binance_req.js");
 const nftArray = require("./nft/nftalldb");
 const { nfttradeParseContract } = require("./controller/nfttradeParseContract");
+const {opensea} = require("./controller/opensea.js")
+
 
 require("dotenv/config");
 
@@ -42,6 +44,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 mongoose.connect(process.env.MONGODB_URI).catch((error) => console.log(error));
+
+for (let index = 0; index < 1; index++) {
+
+  timeout(200*index).then(()=>{
+    opensea();
+  })
+ 
+  
+}
+ 
 
 let gen = "";
 
@@ -396,7 +408,7 @@ const jobs = new CronJob(dataCron, async function () {
   });
 });
 
-jobs.start();
+// jobs.start();
 
 let skip = 0;
 

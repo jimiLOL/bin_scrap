@@ -27,6 +27,7 @@
     "mongoose": "5.7.5",
     "mongoose-auto-increment": "5.0.1",
     "nodemon": "^2.0.7",
+    "opensea-js": "^1.2.1",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "pdf-creator-node": "^2.2.4",
