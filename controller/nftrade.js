@@ -1,7 +1,8 @@
-const NftPokemon = require("../model/navigationbot");
 const { senDataTelegram, techbicaleventTelegram } = require("../controller/sendTelegram");
 const { default: axios } = require("axios");
 const { addDB } = require("./addDB");
+const { count } = require("../model/price");
+ 
 
 const header2 = {
   accept: "application/json, text/plain, */*",
@@ -43,51 +44,60 @@ const header = {
   Host: "api.mochi.market",
   "Content-Length": "0",
 };
-async function nftTradeGet(index) {
+function timeout(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+async function nftTradeGet(index, nft_contract) {
+  return new Promise((resolve, reject) => {
+
+
+  try {
+  let NftPokemon = require("../model/navigationbot")(nft_contract);
   axios
     .get(
-      `https://api.nftrade.com/api/v1/tokens?contractAddress=0xc33d69a337b796a9f0f7588169cd874c3987bde9&limit=500&skip=${
+      `https://api.nftrade.com/api/v1/tokens?contractAddress=${nft_contract}&limit=100&skip=${
         index * 100
       }`,
       { headers: header2 }
     )
     .then((resnftrade) => {
+      if (resnftrade.status != 200) {
+        console.log('resnftrade.status');
+        console.log(resnftrade.status);
+        reject(resnftrade.status)
+        
+      }
       if (resnftrade.data.length != 0) {
         resnftrade.data.forEach(async function (value, index) {
           if (value?.orderId != null) {
             NftPokemon.findOne(
               { tokenId: value.tokenID },
               { attributes: 1 },
-              (err, callback) => {
+              async (err, callback) => {
                 if (err) {
                   console.log("Ошибка получения attributes");
                   console.log(err);
                 }
                 if (callback) {
-                  axios
-                    .get(
-                      `https://api.mochi.market/nft/56/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${value.tokenID}`,
-                      { headers: header }
-                    )
-                    .then((resmochiNftmarket) => {
-                      setTimeout(
-                        async () =>
-                          await getOrdernftrade(
-                            value.orderId,
-                            callback.attributes,
-                            resmochiNftmarket.data.extraMetadata
-                          ),
-                        100 * index
-                      );
-                    })
-                    .catch(function (error) {
-                      console.log("Show error notification nftrade Array!");
-                      console.log(error);
-                      return Promise.reject(error);
-                    });
+                  
+                 await Promise.all([timeout(2500).then(() => {
+                  getMocha(nft_contract, value, callback).catch((error) => {
+                    console.log("Show error notification getMocha for nftTradeGet!");
+                    console.log(error);
+                    reject(error);
+                  })
+
+                 })])
+                
+
+                 
                 }
               }
-            );
+            ).catch(error => {
+              return Promise.reject(error)
+          })
           } else {
             // console.log('orderId == null');
           }
@@ -95,7 +105,50 @@ async function nftTradeGet(index) {
         resnftrade.data = 0;
       }
     });
+  } catch (e) {
+    console.log('Ошибка работы функции nftTradeGet');
+    console.log(e);
+
+  }
+})
 }
+
+async function getMocha(nft_contract, value, callback) {
+  return new Promise((resolve, reject) => {
+    axios
+    .get(
+      `https://api.mochi.market/nft/56/${nft_contract}/${value.tokenID}`,
+      { headers: header }
+    )
+    .then(async (resmochiNftmarket) => {
+      if (resmochiNftmarket.status != 200) {
+        
+        reject(resmochiNftmarket.status)
+      }
+      return resolve(await Promise.all([getOrdernftrade(
+        value.orderId,
+        callback.attributes,
+        resmochiNftmarket?.data?.extraMetadata
+      ).catch(function (error) {
+        console.log("Show error notification getMocha in 1!");
+        console.log(error);
+        reject(error);
+      }), timeout(2500)]).then((res)=>{
+        console.log(res);
+      }))
+     
+     
+    })
+    .catch(function (error) {
+      console.log("Show error notification getMocha in 2!");
+      console.log(error);
+      reject(error);
+    });
+  })
+  
+
+}
+
 
 async function getOrdernftrade(orderID, attributes, extraMetadata, index) {
   return new Promise((resolve, reject) => {
@@ -104,8 +157,8 @@ async function getOrdernftrade(orderID, attributes, extraMetadata, index) {
         headers: header2,
       })
       .then((resnftrade) => {
-        if (resnftrade.status == 500 || resnftrade.status == 404) {
-          reject();
+        if (resnftrade.status != 200) {
+          reject(resnftrade.status);
         }
         let element = resnftrade.data;
 
@@ -113,20 +166,35 @@ async function getOrdernftrade(orderID, attributes, extraMetadata, index) {
 
         senDataTelegram(
           element.tokens[0],
-          `https://nftrade.com/assets/bsc/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${element.tokens[0].tokenID}`,
+          `https://nftrade.com/assets/bsc/${element.tokens[0].contractAddress}/${element.tokens[0].tokenID}`,
           index
         );
-        addDB(element.tokens[0], attributes, "nftrade", extraMetadata);
+        return resolve(addDB(element.tokens[0], attributes(attributes), "nftrade", extraMetadata(extraMetadata), element.tokens[0].contractAddress))
       
-        resolve();
       })
       .catch(function (error) {
         console.log("Show error notification nftrade!");
         setTimeout(() => techbicaleventTelegram(index, error, 'nfttrade'), 200 * index);
         console.log(error);
-        return Promise.reject(error);
+        reject(error);
       });
   });
+  function extraMetadata(extraMetadata) {
+    if (extraMetadata == null) {
+    return []
+    } else {
+    return extraMetadata
+    }
+    };
+    function attributes(attributes) {
+      if (attributes == null) {
+        return []
+      } else {
+        return attributes
+      }
+    };
 }
+
+
 
 module.exports = { nftTradeGet };

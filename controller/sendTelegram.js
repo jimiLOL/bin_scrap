@@ -49,7 +49,7 @@ jobss.start()
 
 
 async function techbicaleventTelegram(index, error, functions) {
-  bot.telegram.sendMessage(1552654998, `Ошибка на глобальном цикле: ${index}\nПри работе с биржой ${functions}`, { parse_mode: "HTML" });
+  bot.telegram.sendMessage(1552654998, `Событие на глобальном цикле: ${index}\nПри работе с ${functions}`, { parse_mode: "HTML" });
   bot.telegram.sendMessage(1552654998, error.toString());
   
 
@@ -61,6 +61,7 @@ async function sendInfoTelegram(info) {
 }
 
 async function senDataTelegram(element, link, index) {
+  try {
 for (let index = 0; index < 11; index++) {
   if (
     element.price * price.priceBnb <= price['priceBuy_' + index] &&
@@ -191,6 +192,10 @@ for (let index = 0; index < 11; index++) {
   
       }
     }
+  } catch (e) {
+    console.log(e);
+    
+  }
   }
 
   async function sendTel(msg) {

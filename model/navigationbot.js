@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const Addresses = {}
 
+function DynamicSchema(namecollection) {
 const ShemaNftPokemon = new Schema({
     _id: mongoose.Types.ObjectId,
     marketpalce: String,
@@ -14,11 +16,10 @@ const ShemaNftPokemon = new Schema({
         sellId: Number,
         collectionAddress: {
             type: String,
-            default: '0xc33d69a337b796a9f0f7588169cd874c3987bde9'
+            required: true
         },
         collectionName: {
-            type: String,
-            default: 'Kryptomon'
+            type: String
         },
         tokenId: {
             type: String || null,
@@ -42,14 +43,25 @@ const ShemaNftPokemon = new Schema({
         thumb: String,
         attributes: Array,
         extraMetadata: Array,
-        otherSellOrders: Array
+        otherSellOrders: Array,
+        assetData: Object,
+        last_sell: String,
+        last_sell_at: Date
     
 })
+return mongoose.model(namecollection, ShemaNftPokemon);
+}
 
 
+function getAddressModel(prefix) {
+    if (!Addresses[prefix]) {
+      Addresses[prefix] =  new DynamicSchema(prefix)
+    }
+    return Addresses[prefix]
+  }
+  
 
 
-
-const NftPokemon = mongoose.model('nfts', ShemaNftPokemon);
-module.exports = NftPokemon;
+// const NftPokemon = mongoose.model('nfts', ShemaNftPokemon);
+module.exports = getAddressModel;
 

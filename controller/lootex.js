@@ -2,6 +2,7 @@ const NftPokemon = require("../model/navigationbot");
 const { senDataTelegram, techbicaleventTelegram, sendInfoTelegram } = require("../controller/sendTelegram");
 const { default: axios } = require("axios");
 const { addDB, updatePriceDB } = require("./addDB");
+const tunnel = require("tunnel");
 
 const header = {
     'accept': 'application/json, text/plain, */*',
@@ -19,21 +20,31 @@ const header = {
 'sec-fetch-site': 'same-site',
 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36'  
 };
-
-async function getinfoLootex(tokenId, index) {
+const agent = tunnel.httpsOverHttp({
+    proxy: {
+      host: "127.0.0.1",
+      port: 8866,
+    },
+    rejectUnauthorized: false,
+  });
+async function getinfoLootex(tokenId, index, contract) {
     return new Promise((resolve, reject) => {
-    axios.get(`https://api.dex.lootex.io/v2/assets/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${tokenId}?force=true`, {headers: header}).then((res)=>{
+    axios.get(`https://api.dex.lootex.io/v2/assets/${contract}/${tokenId}?force=true`, {headers: header, httpsAgent: agent,  timeout: 3000}).then((res)=>{
+        if (res.status == 404) {
+            console.log('Такого контаркта не существует на lootex');
+        }
+ 
      
         if (res.data.length != undefined || res.data.length != null) {
             res.data[0].orders.forEach(element => {
                 if (element?.side == 'MAKER') {
-                    updatePriceDB(res.data?.tokenId, element?.price, 'lootex');
-                    Object.assign(res.data, {attributes: res.data.traits}, {price: element.price})
-                    sendInfoTelegram(res.data.attributes)
-                 console.log(res.data.attributes);
-   
-                    senDataTelegram(element, `https://lootex.io/assets/0xc33d69a337b796a9f0f7588169cd874c3987bde9/${element?.price}`, index)
-                
+                    Object.assign(res.data[0], {attributes: res.data[0]?.traits}, {price: element.price});
+                  
+                    updatePriceDB(res.data?.tokenId, element?.price, 'lootex', res.data[0]?.contractAddress);
+                    senDataTelegram(res.data[0], `https://lootex.io/assets/${contract}/${element.tokenId}`, index)
+                   
+              
+            
                 }
                
                 
@@ -47,7 +58,7 @@ async function getinfoLootex(tokenId, index) {
         setTimeout(() => techbicaleventTelegram(index, error, 'lootex'), 200*index);
         // console.log(error);
         reject(error);
-      });;
+      });
 
     })
 
