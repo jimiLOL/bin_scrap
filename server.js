@@ -160,7 +160,7 @@ function startCron() {
     () => techbicaleventTelegram(1, `Запуск CronJob планируется в ${jobs.nextDates().toISOString()}`, "....."),
     200
   );
-  console.log();
+ 
 }
 
 const jobs = new CronJob(dataCron, async function () {
