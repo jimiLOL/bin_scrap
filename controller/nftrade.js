@@ -70,38 +70,79 @@ async function nftTradeGet(index, nft_contract) {
         
       }
       if (resnftrade.data.length != 0) {
-        resnftrade.data.forEach(async function (value, index) {
-          if (value?.orderId != null) {
-            NftPokemon.findOne(
-              { tokenId: value.tokenID },
-              { attributes: 1 },
-              async (err, callback) => {
-                if (err) {
-                  console.log("Ошибка получения attributes");
-                  console.log(err);
-                }
-                if (callback) {
+        let err = false;
+        (async () => {
+          for (const [index, iterator] of resnftrade.data.entries()) {
+        
+          if (err) {
+            break
+          }
+            if (iterator?.orderId != null) {
+              await NftPokemon.findOne(
+                { tokenId: iterator.tokenID },
+                { attributes: 1 },
+                async (err, callback) => {
+                  if (err) {
+                    console.log("Ошибка получения attributes");
+                    console.log(err);
+                  }
+                  if (callback) {
+                   await timeout(2500).then(() => {
+                      getMocha(nft_contract, iterator, callback)
+                     }).catch((error) => {
+                      console.log("Show error notification getMocha for nftTradeGet!");
+                      console.log(error);
+                      err = true
+                      reject(error);
+                    })
+                    
                   
-                 await Promise.all([timeout(2500).then(() => {
-                  getMocha(nft_contract, value, callback).catch((error) => {
-                    console.log("Show error notification getMocha for nftTradeGet!");
-                    console.log(error);
-                    reject(error);
-                  })
+                  
+  
+                   
+                  }
+                }
+              ).catch(error => {
+                return reject(error)
+            })
+            }
+          
+          
+        }
+      })();
 
-                 })])
+        // resnftrade.data.forEach(async function (value, index) {
+        //   if (value?.orderId != null) {
+        //     NftPokemon.findOne(
+        //       { tokenId: value.tokenID },
+        //       { attributes: 1 },
+        //       async (err, callback) => {
+        //         if (err) {
+        //           console.log("Ошибка получения attributes");
+        //           console.log(err);
+        //         }
+        //         if (callback) {
+                  
+        //          await Promise.all([timeout(2500).then(() => {
+        //           getMocha(nft_contract, value, callback).catch((error) => {
+        //             console.log("Show error notification getMocha for nftTradeGet!");
+        //             console.log(error);
+        //             reject(error);
+        //           })
+
+        //          })])
                 
 
                  
-                }
-              }
-            ).catch(error => {
-              return Promise.reject(error)
-          })
-          } else {
-            // console.log('orderId == null');
-          }
-        });
+        //         }
+        //       }
+        //     ).catch(error => {
+        //       return Promise.reject(error)
+        //   })
+        //   } else {
+        //     // console.log('orderId == null');
+        //   }
+        // });
         resnftrade.data = 0;
       }
     }).catch((e) => {
