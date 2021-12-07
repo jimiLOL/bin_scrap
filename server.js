@@ -31,10 +31,12 @@ const { nftTradeGet } = require("./controller/nftrade");
 const { addDB } = require("./controller/addDB");
 const { getinfoLootex } = require("./controller/lootex");
 const { getInfotofunft } = require("./controller/tofunft.js");
-const { binTest } = require("./controller/binance_req.js");
+const { binTest, getBinanceProductList } = require("./controller/binance_req.js");
 const nftArray = require("./nft/nftalldb");
 const { nfttradeParseContract } = require("./controller/nfttradeParseContract");
-const {opensea} = require("./controller/opensea.js")
+const {opensea} = require("./controller/opensea.js");
+const {cat} = require('./controller/cybercatController');
+const {filterCat} = require('./controller/faindeCate');
 
 
 require("dotenv/config");
@@ -45,14 +47,37 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 mongoose.connect(process.env.MONGODB_URI).catch((error) => console.log(error));
 
-for (let index = 0; index < 1; index++) {
+// for (let index = 0; index < 1; index++) {
 
-  timeout(200*index).then(()=>{
-    opensea();
-  })
- 
-  
-}
+//   timeout(200*index).then(()=>{
+//     opensea();
+//   })  
+// }
+
+let dataCron = new Date();
+console.log(dataCron);
+dataCron.setSeconds(dataCron.getSeconds() + 10);
+
+
+
+const jobs2 = new CronJob(dataCron, async function () {
+  getBinanceProductList().then(()=>{
+    cat();
+    
+  }).then(()=>{
+    console.log('Переходим к фильтрации');
+    for (let index = 2; index <= 6; index++){
+      filterCat(index);
+     
+    }
+    
+  }).then(()=> {
+    startCron();
+  });
+})
+
+
+
  
 
 let gen = "";
@@ -160,16 +185,15 @@ function conractSet(element) {
 function log(index) {
   console.log("Цикл: " + index);
 }
-let dataCron = new Date();
-dataCron.setSeconds(dataCron.getSeconds() + 10);
+
 
 function startCron() {
   let d = new Date();
-  d.setSeconds(d.getSeconds() + 60000);
-  jobs.setTime(new CronTime(d));
-  jobs.start();
+  d.setSeconds(d.getSeconds() + 6000);
+  jobs2.setTime(new CronTime(d));
+  jobs2.start();
   setTimeout(
-    () => techbicaleventTelegram(1, `Запуск CronJob планируется в ${jobs.nextDates().toISOString()}`, "....."),
+    () => techbicaleventTelegram(1, `Запуск CronJob планируется в ${jobs2.nextDates().toISOString()}`, "....."),
     200
   );
  
@@ -409,6 +433,7 @@ const jobs = new CronJob(dataCron, async function () {
 });
 
 jobs.start();
+// jobs2.start();
 
 let skip = 0;
 
