@@ -13,6 +13,7 @@
     "bcrypt": "^5.0.1",
     "body-parser": "1.18.3",
     "connect-mongo": "2.0.1",
+    "cookie": "^0.4.1",
     "cookie-parser": "1.4.3",
     "core-js": "2",
     "cors": "^2.8.5",
