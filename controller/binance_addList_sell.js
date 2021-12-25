@@ -102,7 +102,7 @@ function getListMysterSell() {
                     });
                     binanceMysterBoxAnons.findOneAndUpdate({productId: element.productId}, newbinanceMysterBoxAnons, (err, call)=> {
                         if (err) console.log(err);
-                        if (call) console.log('Обновили ' + element.name);
+                        
                     })
                 }
             })

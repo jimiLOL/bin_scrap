@@ -92,7 +92,7 @@ const jobs2 = new CronJob(dataCron, async function () {
 
 // }
 // })();
-let BuyNFTProductId = "169620702126436352"; //nft которое будем отслеживать
+let BuyNFTProductId = "170825717369339904"; //nft которое будем отслеживать
 let allcronObj = {};
 let timeStartBuy = -40; //На сколько раньше установить крон перед событием или позже(-1) секунды!
 let diffMS = 0; // за сколько мс начать покупать
@@ -110,8 +110,11 @@ const jobsTimeBinance = new CronJob(dataCron, async function () {
         });
     });
   };
+
+   
  
-  binanceMysterBoxAnons.find({ mappingStatus: -1 }, (err, call) => {
+ 
+  binanceMysterBoxAnons.find({mappingStatus: -1}, (err, call) => {
     if (err) console.log("Ошибка полуения NFT по статусу");
     if (call) {
       call.forEach(async (element) => {
@@ -154,7 +157,7 @@ const jobsTimeBinance = new CronJob(dataCron, async function () {
               console.log("Diff:", diff);
 
               diffMS += diff;
-              binanceAdminCookies.find({}, (err, call) => {
+              binanceAdminCookies.find({enable: true}, (err, call) => {
                 if (err) console.log(err);
 
                 if (call) {
@@ -183,6 +186,8 @@ const jobsTimeBinance = new CronJob(dataCron, async function () {
           }
         }
       });
+    } else {
+      console.log('Не нашли запланированные события');
     }
   });
 
