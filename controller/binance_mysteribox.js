@@ -9,6 +9,7 @@ const { addDB, updatePriceDB } = require("./addDB");
 const binanceIdProduct = require("../model/binanceIdProduct");
 const tunnel = require("tunnel");
 const binanceAdminCookies = require("../model/binanceAdminCookies");
+const fs = require("fs");
 
 // const agent = tunnel.httpsOverHttp({
 //   proxy: {
@@ -19,13 +20,14 @@ const binanceAdminCookies = require("../model/binanceAdminCookies");
 // });
 
 const base_url = "https://www.binance.com/ru/nft/history";
-const key = "15d44b5a18e55164829aeee3948be439"; // ключ anti-captcha.com
-const buydropMS = 10; // сколько спать между покупками
+const key = "bfa0c04eae93bc8d68bd5caf2227dc37"; // ключ anti-captcha.com
+const buydropMS = 50; // сколько спать между покупками
 const number = 1; //сколько  покупать
 const power = 1; // множитель запросов, 1 - как обычно
-const lastTime = 10; // На сколько отложить покупку
+const lastTime = -1000; // На сколько отложить покупку
 
 async function buyNFT(nftInfo, diffMS, cookies) {
+
   console.log("Работа с аккаунтом " + cookies.user);
 
   let start = new Date().getTime();
@@ -71,7 +73,7 @@ async function buyNFT(nftInfo, diffMS, cookies) {
   function get_captcha(_url, cb) {
     return new Promise((resolve, reject) => {
       axios
-        .post("https://api.anti-captcha.com/createTask", body, {
+        .post("https://api.capmonster.cloud/createTask", body, {
           headers: {
             accept: "application/json",
             "content-type": "application/json",
@@ -79,31 +81,36 @@ async function buyNFT(nftInfo, diffMS, cookies) {
         })
         .then((res) => {
           console.log(res.data);
-          let id = res.data.taskId;
+          let id = res.data?.taskId;
           let body = {
             clientKey: key,
             taskId: id,
           };
-          check_status(id);
-          function check_status(id) {
-            axios
-              .post("https://api.anti-captcha.com/getTaskResult", body, {
-                headers: {
-                  accept: "application/json",
-                  "content-type": "application/json",
-                },
-              })
-              .then((res) => {
-                console.log("Status task get_captcha");
-                console.log(res.data);
-                if (res.data?.status === "ready") {
-                  return resolve(res.data?.solution.gRecaptchaResponse);
-                } else {
-                  console.log(res.data?.status);
-                  setTimeout(() => check_status(id), 500);
-                }
-              });
+          if (id == undefined) {
+            get_captcha();
+          } else { 
+            check_status(id);
+            function check_status(id) {
+              axios
+                .post("https://api.capmonster.cloud/getTaskResult", body, {
+                  headers: {
+                    accept: "application/json",
+                    "content-type": "application/json",
+                  },
+                })
+                .then((res) => {
+                  console.log("Status task get_captcha");
+                  console.log(res.data);
+                  if (res.data?.status === "ready") {
+                    return resolve(res.data?.solution.gRecaptchaResponse);
+                  } else {
+                    console.log(res.data?.status);
+                    setTimeout(() => check_status(id), 500);
+                  }
+                });
+            }
           }
+          
         })
         .catch((e) => {
           console.log(e);
@@ -152,30 +159,7 @@ async function buyNFT(nftInfo, diffMS, cookies) {
 
       tokens.push(false);
 
-      // get_captcha(base_url, key => {
-
-      //     console.log('Got captcha key');
-      //     console.log(key);
-      //     if (check_captcha) {
-      //         headers['x-nft-checkbot-token'] = key;
-      //         fetch("https://www.binance.com/bapi/nft/v1/private/nft/mystery-box/purchase", params)
-      //         .then(res => res.text().then(text => {
-      //             if (text.indexOf('для продажи') !== -1 || text.indexOf('не существует') !== -1 || text.indexOf('not for sale') !== -1 || text.indexOf('exists') !== -1) {
-      //                 console.log('key ok');
-      //                 tokens[tokens.indexOf(false)] = key
-      //                 console.log(tokens);
-      //             } else {
-      //                 tokens.splice(tokens.indexOf(false), 1);
-      //                 console.log(text);
-      //             }
-      //         }, error => {
-      //             console.log(error);
-      //             tokens.splice(tokens.indexOf(false), 1);
-      //         }));
-      //     } else {
-      //         tokens[tokens.indexOf(false)] = key
-      //     }
-      // });
+      
 
       if (time + diffMS + lastTime >= drop.startTime) {
         for (let i = 0; i < power; i++) {
@@ -204,6 +188,13 @@ async function buyNFT(nftInfo, diffMS, cookies) {
                     { headers: headers }
                   )
                   .then((res) => {
+                    if (res.data?.data.status == 'ORDER_SUCCESS') {
+
+                    }
+                     if (res.data?.data.status == 'ORDER_INITIAL') {
+
+                    }
+                     
                     console.log(res.data);
                   });
               } else {
@@ -211,31 +202,50 @@ async function buyNFT(nftInfo, diffMS, cookies) {
                 console.log(res.data);
               }
               let end = new Date().getTime();
-              console.log(`Скрпит работал ${end - start}`);
+              console.log(`Скрпит работал ${end - start} - Текущие время: ${end}`);
             })
             .catch(async (e) => {
-              let newCookies = await binanceAdminCookies.findOne(
-                { user: cookies.user },
-                (err, call) => {
-                  if (err) console.log(err);
-
-                  if (call) {
-                    return call;
+              if (e.response?.data.message == "Token expired") {
+                let newCookies = await binanceAdminCookies.findOne(
+                  { user: cookies.user },
+                  (err, call) => {
+                    if (err) console.log(err);
+  
+                    if (call) {
+                      return call;
+                    }
                   }
-                }
-              );
-              cookies = newCookies;
-              get_captcha()
+                );
+                cookies = newCookies;
+                console.log(e.response?.data);
+                get_captcha()
                 .then((res) => {
                   buy(res);
                 })
                 .catch((e) => {
                   console.log(e);
                 });
-              if (e.response?.data.message == "Token expired") {
-                console.log(e.response?.data);
               } else {
                 console.log(e);
+                function getRandomInt(min, max) {
+                  min = Math.ceil(min);
+                  max = Math.floor(max);
+                  return Math.floor(Math.random() * (max - min)) + min; //Максимум не включается, минимум включается
+                }
+                let sleep = 100;
+                setTimeout(loop, sleep);
+                let ranS = getRandomInt(1233, 99992);
+                fs.writeFile(`./temp/err${ranS}.html`, e, function (error) {
+                  try {
+                    if (error) throw error; // если возникла ошибка
+                    console.log("Асинхронная запись HTML файла завершена.");
+             
+                  } catch {
+                    console.log('Не смогли записать лог ошибки')
+                  }
+                  
+                });
+               
               }
             });
         }

@@ -50,6 +50,7 @@ const header2 = {
 function getListMysterSell() {
     axios.get('https://www.binance.com/bapi/nft/v1/public/nft/mystery-box/list?page=1&size=25', {headers: header2}).then((res)=> {
         if (res.status == 200) {
+     
         res.data.data.forEach(element => {
             binanceMysterBoxAnons.findOne({productId: element.productId}, (err, call) => {
                 if (err) console.log('Ошибка поиска Box в базе');
@@ -78,6 +79,7 @@ function getListMysterSell() {
                     newbinanceMysterBoxAnons.save((err, call)=> {
                         if (err) console.log('Ошибка сохранения ' + element.name);
                         if (call) console.log('Сохранили ' + element.name);
+                        
                     })
                 } else {
                     let newbinanceMysterBoxAnons = new binanceMysterBoxAnons({

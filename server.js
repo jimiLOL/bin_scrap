@@ -87,14 +87,14 @@ const jobs2 = new CronJob(dataCron, async function () {
 // };
 
 // (async () => {
-// for (let index = 0; index < 10300; index++) {
+// for (let index = 0; index < 12; index++) {
 //    getDataTest(bodyForTest, index);
 
 // }
 // })();
-let BuyNFTProductId = "167178349168068608"; //nft которое будем отслеживать
+let BuyNFTProductId = "169620702126436352"; //nft которое будем отслеживать
 let allcronObj = {};
-let timeStartBuy = -30; //На сколько раньше установить крон перед событием или позже(-1) секунды!
+let timeStartBuy = -40; //На сколько раньше установить крон перед событием или позже(-1) секунды!
 let diffMS = 0; // за сколько мс начать покупать
 const jobsTimeBinance = new CronJob(dataCron, async function () {
   getListMysterSell();
@@ -125,14 +125,15 @@ const jobsTimeBinance = new CronJob(dataCron, async function () {
           console.log("Date Binance " + new Date(timeBinanceServer));
           console.log("Date server " + new Date());
           console.log("Start sell " + new Date(element.startTime));
-          let d = new Date(element.startTime);
+          let d = new Date(element.startTime); // включить
+          // let d = new Date(); // выключить
 
           console.log(
             "countdown " +
               (element.startTime - Date.now()) / 1000 / 60 / 60 +
               " h"
           );
-          d.setSeconds(d.getSeconds() + timeStartBuy);
+          d.setSeconds(d.getSeconds() + timeStartBuy); //! включить
 
           console.log(d);
           // cron.setTime(new CronTime(d));
@@ -185,7 +186,7 @@ const jobsTimeBinance = new CronJob(dataCron, async function () {
     }
   });
 
-  startCron(jobsTimeBinance, 6000);
+  // startCron(jobsTimeBinance, 9000);
 });
 
 let gen = "";
