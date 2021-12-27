@@ -542,6 +542,8 @@ const jobs = new CronJob(dataCron, async function () {
       }
     }
   });
+  startCron(jobs, 360);
+  
 });
 
 jobs.start();
