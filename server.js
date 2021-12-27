@@ -111,10 +111,7 @@ const jobsTimeBinance = new CronJob(dataCron, async function () {
     });
   };
 
-   
- 
- 
-  binanceMysterBoxAnons.find({mappingStatus: -1}, (err, call) => {
+  binanceMysterBoxAnons.find({ mappingStatus: -1 }, (err, call) => {
     if (err) console.log("Ошибка полуения NFT по статусу");
     if (call) {
       call.forEach(async (element) => {
@@ -157,7 +154,7 @@ const jobsTimeBinance = new CronJob(dataCron, async function () {
               console.log("Diff:", diff);
 
               diffMS += diff;
-              binanceAdminCookies.find({enable: true}, (err, call) => {
+              binanceAdminCookies.find({ enable: true }, (err, call) => {
                 if (err) console.log(err);
 
                 if (call) {
@@ -187,7 +184,7 @@ const jobsTimeBinance = new CronJob(dataCron, async function () {
         }
       });
     } else {
-      console.log('Не нашли запланированные события');
+      console.log("Не нашли запланированные события");
     }
   });
 
@@ -428,12 +425,12 @@ const jobs = new CronJob(dataCron, async function () {
                 console.log("Нашли " + slug.length + " NFT");
                 (async () => {
                   for (const [index, iterator] of slug.entries()) {
-                    console.log(index);
+                    console.log('Перебор ' + index);
                     if (err) {
                       break;
                     }
-                    await Promise.all([
-                      timeout(800 * index).then((res) => {
+                    // await Promise.all([
+                      timeout(800 * index).then(() => {
                         dsf(
                           iterator.tokenId,
                           iterator?.attributes,
@@ -444,13 +441,19 @@ const jobs = new CronJob(dataCron, async function () {
                             return resolve(res);
                           })
                           .catch(function (error) {
-                            err = true;
+                            if (
+                              contract !=
+                              "0xc33d69a337b796a9f0f7588169cd874c3987bde9"
+                            ) {
+                              err = true;
+                            }
+
                             console.log("Show error notification dsf!");
                             console.log(error);
                             return reject(error);
                           });
-                      }),
-                    ]);
+                      });
+                    // ]);
                   }
                 })();
 
@@ -473,8 +476,9 @@ const jobs = new CronJob(dataCron, async function () {
                   reject(res.status);
                 }
                 if (res.data?.sellId == null) {
-                  reject("mochi sellId == null" + contract);
+                  reject("mochi sellId == null " + contract);
                   element = res.data;
+                
                   // console.log(`https://api.nftrade.com/api/v1/tokens?contractAddress=0xc33d69a337b796a9f0f7588169cd874c3987bde9&limit=500&skip=${index*500}`);
                 } else {
                   // console.log(`https://api.mochi.market/sellOrder/bySellId/56/${res.data.sellId}`);
@@ -540,10 +544,10 @@ const jobs = new CronJob(dataCron, async function () {
   });
 });
 
-// jobs.start();
+jobs.start();
 // jobs2.start();
 
-// jobsTimeBinance.start();
+jobsTimeBinance.start();
 
 let skip = 0;
 
