@@ -18,7 +18,7 @@ let priceBuy_6 = 200;
 let priceBuy_7 = 200;
 let priceBuy_8 = 150;
 let priceBuy_9 = 150;
-let priceBuy_10 = 150;
+let priceBuy_10 = 120;
 let price = {
   priceBnb: priceBnb,
   priceBuy_0: priceBuy_0,
