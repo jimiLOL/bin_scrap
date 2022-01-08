@@ -170,7 +170,7 @@ for (let index = 0; index < 11; index++) {
       setTimeout(() => sendTel(msde), sleepS * index);
     }
     if (
-      element.price * price.priceBnb <= 180 &&
+      element.price * price.priceBnb <= 120 &&
       element.attributes[13]?.value == 10
     ) {
       let msde = `🚀Тэкс...!\n<b>Продовец: </b>${
