@@ -9,6 +9,7 @@ const { addDB, updatePriceDB } = require("./addDB");
 const binanceIdProduct = require("../model/binanceIdProduct");
 const tunnel = require("tunnel");
 const binanceAdminCookies = require("../model/binanceAdminCookies");
+const fs = require("fs");
 
 // const agent = tunnel.httpsOverHttp({
 //   proxy: {
@@ -19,13 +20,17 @@ const binanceAdminCookies = require("../model/binanceAdminCookies");
 // });
 
 const base_url = "https://www.binance.com/ru/nft/history";
-const key = "15d44b5a18e55164829aeee3948be439"; // ключ anti-captcha.com
-const buydropMS = 10; // сколько спать между покупками
-const number = 1; //сколько  покупать
+const key = "bfa0c04eae93bc8d68bd5caf2227dc37"; // ключ anti-captcha.com
+const buydropMS = 100; // сколько спать между итерациями в ожидании
+const number = 5; //сколько  покупать
 const power = 1; // множитель запросов, 1 - как обычно
-const lastTime = 10; // На сколько отложить покупку
+const lastTime = -10; // На сколько отложить покупку - откладываем + покупаем раньше ms
+const errorVar = 1000; //Сколько не успешных попыток допускать
+let cycle = 0;
+let crondown = 0;
 
 async function buyNFT(nftInfo, diffMS, cookies) {
+
   console.log("Работа с аккаунтом " + cookies.user);
 
   let start = new Date().getTime();
@@ -71,7 +76,7 @@ async function buyNFT(nftInfo, diffMS, cookies) {
   function get_captcha(_url, cb) {
     return new Promise((resolve, reject) => {
       axios
-        .post("https://api.anti-captcha.com/createTask", body, {
+        .post("https://api.capmonster.cloud/createTask", body, {
           headers: {
             accept: "application/json",
             "content-type": "application/json",
@@ -79,31 +84,36 @@ async function buyNFT(nftInfo, diffMS, cookies) {
         })
         .then((res) => {
           console.log(res.data);
-          let id = res.data.taskId;
+          let id = res.data?.taskId;
           let body = {
             clientKey: key,
             taskId: id,
           };
-          check_status(id);
-          function check_status(id) {
-            axios
-              .post("https://api.anti-captcha.com/getTaskResult", body, {
-                headers: {
-                  accept: "application/json",
-                  "content-type": "application/json",
-                },
-              })
-              .then((res) => {
-                console.log("Status task get_captcha");
-                console.log(res.data);
-                if (res.data?.status === "ready") {
-                  return resolve(res.data?.solution.gRecaptchaResponse);
-                } else {
-                  console.log(res.data?.status);
-                  setTimeout(() => check_status(id), 500);
-                }
-              });
+          if (id == undefined) {
+            get_captcha();
+          } else { 
+            check_status(id);
+            function check_status(id) {
+              axios
+                .post("https://api.capmonster.cloud/getTaskResult", body, {
+                  headers: {
+                    accept: "application/json",
+                    "content-type": "application/json",
+                  },
+                })
+                .then((res) => {
+                  console.log("Status task get_captcha");
+                  console.log(res.data);
+                  if (res.data?.status === "ready") {
+                    return resolve(res.data?.solution.gRecaptchaResponse);
+                  } else {
+                    console.log(res.data?.status);
+                    setTimeout(() => check_status(id), 500);
+                  }
+                });
+            }
           }
+          
         })
         .catch((e) => {
           console.log(e);
@@ -149,6 +159,7 @@ async function buyNFT(nftInfo, diffMS, cookies) {
     function loop(key) {
       let time = Date.now();
       let drop = nftInfo;
+     
 
       tokens.push(false);
 
@@ -177,7 +188,11 @@ async function buyNFT(nftInfo, diffMS, cookies) {
       //     }
       // });
 
+      // ||  ((time + lastTime) - time == lastTime) && ((drop.startTime + lastTime) - drop.startTime == lastTime)
+
       if (time + diffMS + lastTime >= drop.startTime) {
+        letlogDate = new Date();
+        console.log('Init buy.. ' + letlogDate);
         for (let i = 0; i < power; i++) {
           let body = { number: number, productId: productId };
           axios
@@ -190,57 +205,109 @@ async function buyNFT(nftInfo, diffMS, cookies) {
               if (res.status == 200) {
                 console.log(res.status);
                 console.log(res.data);
-                if (res.data.message == "Token expired") {
+                if (res.data?.message == "Token expired") {
                   get_captcha();
+                } else if (res.data?.message == 'Out of stock' && lastTime < 0) {
+                  setTimeout(loop(key), buydropMS);
+
+                } else if (res.data?.message == 'Too many requests. Please try again later.') {
+                  let sleep = 300;
+                  setTimeout(loop(key), sleep);
+
+                } else if (res.data?.message == 'Out of stock' && lastTime > 0) {
+                  console.log('Out of stock :(')
+
+                } else {
+                  let body = {
+                    orderId: res.data.data.orderId,
+                  };
+                  axios
+                    .post(
+                      "https://www.binance.com/bapi/nft/v1/private/nft/mystery-box/purchase-status",
+                      body,
+                      { headers: headers }
+                    )
+                    .then((res) => {
+                      if (res.data?.data.status == 'ORDER_SUCCESS') {
+  
+                      }
+                       if (res.data?.data.status == 'ORDER_INITIAL') {
+  
+                      }
+  
+                
+                       
+                      console.log(res.data);
+                    });
                 }
 
-                let body = {
-                  orderId: res.data.data.orderId,
-                };
-                axios
-                  .post(
-                    "https://www.binance.com/bapi/nft/v1/private/nft/mystery-box/purchase-status",
-                    body,
-                    { headers: headers }
-                  )
-                  .then((res) => {
-                    console.log(res.data);
-                  });
+               
               } else {
                 console.log(res.status);
                 console.log(res.data);
+                setTimeout(() => {loop(key)}, lastTime);
+         
               }
               let end = new Date().getTime();
-              console.log(`Скрпит работал ${end - start}`);
+              console.log(`Скрпит работал ${end - start} - Текущие время: ${end}`);
             })
             .catch(async (e) => {
-              let newCookies = await binanceAdminCookies.findOne(
-                { user: cookies.user },
-                (err, call) => {
-                  if (err) console.log(err);
-
-                  if (call) {
-                    return call;
+              cycle++
+              if (errorVar == cycle) {
+ if (e.response?.data.message == "Token expired") {
+                let newCookies = await binanceAdminCookies.findOne(
+                  {user: cookies.user},
+                  (err, call) => {
+                    if (err) console.log(err);
+  
+                    if (call) {
+                      return call;
+                    }
                   }
-                }
-              );
-              cookies = newCookies;
-              get_captcha()
+                );
+                cookies = newCookies;
+                console.log(e.response?.data);
+                get_captcha()
                 .then((res) => {
                   buy(res);
                 })
                 .catch((e) => {
                   console.log(e);
                 });
-              if (e.response?.data.message == "Token expired") {
-                console.log(e.response?.data);
               } else {
                 console.log(e);
+                function getRandomInt(min, max) {
+                  min = Math.ceil(min);
+                  max = Math.floor(max);
+                  return Math.floor(Math.random() * (max - min)) + min; //Максимум не включается, минимум включается
+                }
+                let sleep = 100;
+                setTimeout(loop(key), sleep);
+                let ranS = getRandomInt(1233, 99992);
+                fs.writeFile(`./temp/err${ranS}.html`, e, function (error) {
+                  try {
+                    if (error) throw error; // если возникла ошибка
+                    console.log("Асинхронная запись HTML файла завершена.");
+             
+                  } catch {
+                    console.log('Не смогли записать лог ошибки')
+                  }
+                  
+                });
+               
               }
+              }
+             
             });
         }
       } else {
-        setTimeout(loop, buydropMS);
+        let newDate = new Date().getTime();
+        let logDateNew = new Date();
+        crondown = (drop.startTime - newDate) - (lastTime > 0 ? lastTime : (lastTime*-1) );
+        crondown = crondown > 0 ? crondown : (crondown*-1);
+        
+        console.log('loop waite... ' + crondown + ' ms ' + 'Date: ' + logDateNew);
+        setTimeout(() => {loop(key)}, crondown);
       }
     }
 
