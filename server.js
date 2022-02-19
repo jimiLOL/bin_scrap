@@ -43,6 +43,12 @@ const { cat } = require("./controller/cybercatController");
 const { filterCat } = require("./controller/faindeCate");
 const { buyNFT } = require("./controller/binance_mysteribox");
 const { getListMysterSell } = require("./controller/binance_addList_sell");
+<<<<<<< HEAD
+=======
+const {getInfoBinNFT} = require("./controller/binance_marketplace_misclick");
+const {init} = require("./controller/binance_mystery_box_misclick");
+
+>>>>>>> b786a54 (add_proxy_list_and_ua)
 const binanceMysterBoxAnons = require("./model/binanceMysterBoxAnons");
 const cookie = require("cookie");
 const binanceAdminCookies = require("./model/binanceAdminCookies");
@@ -61,6 +67,11 @@ mongoose.connect(process.env.MONGODB_URI).catch((error) => console.log(error));
 //   })
 // }
 
+<<<<<<< HEAD
+=======
+init();
+
+>>>>>>> b786a54 (add_proxy_list_and_ua)
 let dataCron = new Date();
 console.log(dataCron);
 dataCron.setSeconds(dataCron.getSeconds() + 10);
