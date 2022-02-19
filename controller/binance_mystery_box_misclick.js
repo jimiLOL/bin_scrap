@@ -3,7 +3,7 @@ const tunnel = require("tunnel");
 const { proxy } = require("./../proxy_list");
 const { UA } = require("./../ua");
 const {getNaemListNFT} = require("./../controller/getNftStat");
-const num = 2 // итерациий
+const num = 10 // итерациий
 let arrayNFT = [];
 
 
@@ -117,9 +117,12 @@ function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: p
         });
 
         let breakSwitch = false;
+        getIP(agent);
+
        
 
         for (let index = 1; index <= num; index++) {
+
             if (breakSwitch) {
                 break
             }
@@ -128,11 +131,7 @@ function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: p
             header["User-Agent"] = UA[index];
             // body.page = index; // смена страницы -- не используем, просматриваем всегда первую страницу результатов
             let data = new Date().getTime();
-            axios.get('https://api.ipify.org', { httpsAgent: agent }).then(res=> {
-                console.log(res.data);
-            }).catch(e=> {
-                console.log(e);
-            })
+          
             axios.post('https://www.binance.com/bapi/nft/v1/public/nft/market-mystery/mystery-list', JSON.stringify(body), { headers: header, httpsAgent: agent }).then(res => {
                 console.log(res.status + ' ' + index);
                 // console.log(res.request);
@@ -204,4 +203,11 @@ function arrayIteration(array) {
 
 }
 
+function getIP(agent) {
+    axios.get('https://api.ipify.org', { httpsAgent: agent }).then(res=> {
+        console.log('PROXY IP^ ' + res.data);
+    }).catch(e=> {
+        console.log(e);
+    })
+}
 module.exports = { getInfoBinNFTMysteryBox, init }
