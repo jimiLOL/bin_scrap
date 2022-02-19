@@ -107,6 +107,9 @@ function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: p
             host: proxyHost,
             port: portHost,
             proxyAuth: proxyAuth,
+            headers: {
+                'User-Agent': UA[i]
+              },
         };
         let agent = tunnel.httpsOverHttp({
             proxy: proxyOptions,
@@ -114,6 +117,7 @@ function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: p
         });
 
         let breakSwitch = false;
+       
 
         for (let index = 1; index <= num; index++) {
             if (breakSwitch) {
@@ -124,8 +128,15 @@ function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: p
             header["User-Agent"] = UA[index];
             // body.page = index; // смена страницы -- не используем, просматриваем всегда первую страницу результатов
             let data = new Date().getTime();
-            axios.post('https://www.binance.com/bapi/nft/v1/public/nft/market-mystery/mystery-list', JSON.stringify(body), { headers: header, httpAgent: agent }).then(res => {
+            axios.get('https://api.ipify.org', { httpsAgent: agent }).then(res=> {
+                console.log(res.data);
+            }).catch(e=> {
+                console.log(e);
+            })
+            axios.post('https://www.binance.com/bapi/nft/v1/public/nft/market-mystery/mystery-list', JSON.stringify(body), { headers: header, httpsAgent: agent }).then(res => {
                 console.log(res.status + ' ' + index);
+                // console.log(res.request);
+                // process.exit(0)
                 if (index >= Math.ceil(num / 2)) {
                     resolve();
                     breakSwitch = true;
@@ -183,10 +194,10 @@ function arrayIteration(array) {
         // console.log(ele);
 
        let wd = arrayNFT.filter(x=> x.title == ele.title && (x.minimum - x.minimum*0) >= ele.amount);
-       if (wd.length > 0) {
-        console.log(wd);
-        console.log(ele);
-       }
+    //    if (wd.length > 0) {
+    //     console.log(wd);
+    //     console.log(ele);
+    //    }
       
 
     });
