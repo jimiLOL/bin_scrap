@@ -8,17 +8,17 @@ const sleepS = 1000;
 
 
 let priceBnb = 582;
-let priceBuy_0 = 1000;
-let priceBuy_1 = 3000;
-let priceBuy_2 = 1500;
-let priceBuy_3 = 1000;
+let priceBuy_0 = 200;
+let priceBuy_1 = 200;
+let priceBuy_2 = 200;
+let priceBuy_3 = 200;
 let priceBuy_4 = 200;
 let priceBuy_5 = 200;
 let priceBuy_6 = 200;
 let priceBuy_7 = 200;
-let priceBuy_8 = 200;
-let priceBuy_9 = 200;
-let priceBuy_10 = 200;
+let priceBuy_8 = 150;
+let priceBuy_9 = 150;
+let priceBuy_10 = 120;
 let price = {
   priceBnb: priceBnb,
   priceBuy_0: priceBuy_0,
@@ -170,7 +170,7 @@ for (let index = 0; index < 11; index++) {
       setTimeout(() => sendTel(msde), sleepS * index);
     }
     if (
-      element.price * price.priceBnb <= 180 &&
+      element.price * price.priceBnb <= 120 &&
       element.attributes[13]?.value == 10
     ) {
       let msde = `🚀Тэкс...!\n<b>Продовец: </b>${

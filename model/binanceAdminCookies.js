@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-// require("dotenv/config");
-// mongoose.connect(process.env.MONGODB_URI2).catch((error) => console.log(error))
+
 const Schema = mongoose.Schema;
 
 const shemabinanceAdminCookies = new Schema({

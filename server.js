@@ -43,7 +43,13 @@ const { cat } = require("./controller/cybercatController");
 const { filterCat } = require("./controller/faindeCate");
 const { buyNFT } = require("./controller/binance_mysteribox");
 const { getListMysterSell } = require("./controller/binance_addList_sell");
+<<<<<<< HEAD
 const {getInfoBinNFTMysteryBox} = require("./controller/binance_mystery_box_misclick");
+=======
+const {getInfoBinNFT} = require("./controller/binance_marketplace_misclick");
+const {init} = require("./controller/binance_mystery_box_misclick");
+
+>>>>>>> 1bbc3e2cd3cff69eb9c0a86ec82700be4e0e6973
 const binanceMysterBoxAnons = require("./model/binanceMysterBoxAnons");
 const cookie = require("cookie");
 const binanceAdminCookies = require("./model/binanceAdminCookies");
@@ -62,7 +68,11 @@ mongoose.connect(process.env.MONGODB_URI).catch((error) => console.log(error));
 //   })
 // }
 
+<<<<<<< HEAD
 getInfoBinNFTMysteryBox();
+=======
+init();
+>>>>>>> 1bbc3e2cd3cff69eb9c0a86ec82700be4e0e6973
 
 let dataCron = new Date();
 console.log(dataCron);
@@ -90,14 +100,14 @@ const jobs2 = new CronJob(dataCron, async function () {
 // };
 
 // (async () => {
-// for (let index = 0; index < 10300; index++) {
+// for (let index = 0; index < 12; index++) {
 //    getDataTest(bodyForTest, index);
 
 // }
 // })();
-let BuyNFTProductId = "167178349168068608"; //nft которое будем отслеживать
+let BuyNFTProductId = "170825717369339904"; //nft которое будем отслеживать
 let allcronObj = {};
-let timeStartBuy = -30; //На сколько раньше установить крон перед событием или позже(-1) секунды!
+let timeStartBuy = -40; //На сколько раньше установить крон перед событием или позже(-1) секунды!
 let diffMS = 0; // за сколько мс начать покупать
 const jobsTimeBinance = new CronJob(dataCron, async function () {
   getListMysterSell();
@@ -113,7 +123,7 @@ const jobsTimeBinance = new CronJob(dataCron, async function () {
         });
     });
   };
- 
+
   binanceMysterBoxAnons.find({ mappingStatus: -1 }, (err, call) => {
     if (err) console.log("Ошибка полуения NFT по статусу");
     if (call) {
@@ -128,14 +138,15 @@ const jobsTimeBinance = new CronJob(dataCron, async function () {
           console.log("Date Binance " + new Date(timeBinanceServer));
           console.log("Date server " + new Date());
           console.log("Start sell " + new Date(element.startTime));
-          let d = new Date(element.startTime);
+          let d = new Date(element.startTime); // включить
+          // let d = new Date(); // выключить
 
           console.log(
             "countdown " +
               (element.startTime - Date.now()) / 1000 / 60 / 60 +
               " h"
           );
-          d.setSeconds(d.getSeconds() + timeStartBuy);
+          d.setSeconds(d.getSeconds() + timeStartBuy); //! включить
 
           console.log(d);
           // cron.setTime(new CronTime(d));
@@ -156,7 +167,7 @@ const jobsTimeBinance = new CronJob(dataCron, async function () {
               console.log("Diff:", diff);
 
               diffMS += diff;
-              binanceAdminCookies.find({}, (err, call) => {
+              binanceAdminCookies.find({ enable: true }, (err, call) => {
                 if (err) console.log(err);
 
                 if (call) {
@@ -185,10 +196,12 @@ const jobsTimeBinance = new CronJob(dataCron, async function () {
           }
         }
       });
+    } else {
+      console.log("Не нашли запланированные события");
     }
   });
 
-  startCron(jobsTimeBinance, 6000);
+  // startCron(jobsTimeBinance, 9000);
 });
 
 let gen = "";
@@ -425,12 +438,12 @@ const jobs = new CronJob(dataCron, async function () {
                 console.log("Нашли " + slug.length + " NFT");
                 (async () => {
                   for (const [index, iterator] of slug.entries()) {
-                    console.log(index);
+                    console.log('Перебор ' + index);
                     if (err) {
                       break;
                     }
-                    await Promise.all([
-                      timeout(800 * index).then((res) => {
+                    // await Promise.all([
+                      timeout(800 * index).then(() => {
                         dsf(
                           iterator.tokenId,
                           iterator?.attributes,
@@ -441,13 +454,19 @@ const jobs = new CronJob(dataCron, async function () {
                             return resolve(res);
                           })
                           .catch(function (error) {
-                            err = true;
+                            if (
+                              contract !=
+                              "0xc33d69a337b796a9f0f7588169cd874c3987bde9"
+                            ) {
+                              err = true;
+                            }
+
                             console.log("Show error notification dsf!");
                             console.log(error);
                             return reject(error);
                           });
-                      }),
-                    ]);
+                      });
+                    // ]);
                   }
                 })();
 
@@ -470,8 +489,9 @@ const jobs = new CronJob(dataCron, async function () {
                   reject(res.status);
                 }
                 if (res.data?.sellId == null) {
-                  reject("mochi sellId == null" + contract);
+                  reject("mochi sellId == null " + contract);
                   element = res.data;
+                
                   // console.log(`https://api.nftrade.com/api/v1/tokens?contractAddress=0xc33d69a337b796a9f0f7588169cd874c3987bde9&limit=500&skip=${index*500}`);
                 } else {
                   // console.log(`https://api.mochi.market/sellOrder/bySellId/56/${res.data.sellId}`);
@@ -535,12 +555,14 @@ const jobs = new CronJob(dataCron, async function () {
       }
     }
   });
+  startCron(jobs, 360);
+  
 });
 
-// jobs.start();
+jobs.start();
 // jobs2.start();
 
-// jobsTimeBinance.start();
+jobsTimeBinance.start();
 
 let skip = 0;
 
