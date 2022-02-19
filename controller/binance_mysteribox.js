@@ -21,7 +21,6 @@ const fs = require("fs");
 
 const base_url = "https://www.binance.com/ru/nft/history";
 const key = "bfa0c04eae93bc8d68bd5caf2227dc37"; // ключ anti-captcha.com
-<<<<<<< HEAD
 const buydropMS = 100; // сколько спать между итерациями в ожидании
 const number = 5; //сколько  покупать
 const power = 1; // множитель запросов, 1 - как обычно
@@ -29,12 +28,6 @@ const lastTime = -10; // На сколько отложить покупку - �
 const errorVar = 1000; //Сколько не успешных попыток допускать
 let cycle = 0;
 let crondown = 0;
-=======
-const buydropMS = 50; // сколько спать между покупками
-const number = 1; //сколько  покупать
-const power = 1; // множитель запросов, 1 - как обычно
-const lastTime = -1000; // На сколько отложить покупку
->>>>>>> 1bbc3e2cd3cff69eb9c0a86ec82700be4e0e6973
 
 async function buyNFT(nftInfo, diffMS, cookies) {
 
@@ -225,29 +218,7 @@ async function buyNFT(nftInfo, diffMS, cookies) {
                     });
                 }
 
-<<<<<<< HEAD
                
-=======
-                let body = {
-                  orderId: res.data.data.orderId,
-                };
-                axios
-                  .post(
-                    "https://www.binance.com/bapi/nft/v1/private/nft/mystery-box/purchase-status",
-                    body,
-                    { headers: headers }
-                  )
-                  .then((res) => {
-                    if (res.data?.data.status == 'ORDER_SUCCESS') {
-
-                    }
-                     if (res.data?.data.status == 'ORDER_INITIAL') {
-
-                    }
-                     
-                    console.log(res.data);
-                  });
->>>>>>> 1bbc3e2cd3cff69eb9c0a86ec82700be4e0e6973
               } else {
                 console.log(res.status);
                 console.log(res.data);
@@ -258,17 +229,11 @@ async function buyNFT(nftInfo, diffMS, cookies) {
               console.log(`Скрпит работал ${end - start} - Текущие время: ${end}`);
             })
             .catch(async (e) => {
-<<<<<<< HEAD
               cycle++
               if (errorVar == cycle) {
  if (e.response?.data.message == "Token expired") {
                 let newCookies = await binanceAdminCookies.findOne(
                   {user: cookies.user},
-=======
-              if (e.response?.data.message == "Token expired") {
-                let newCookies = await binanceAdminCookies.findOne(
-                  { user: cookies.user },
->>>>>>> 1bbc3e2cd3cff69eb9c0a86ec82700be4e0e6973
                   (err, call) => {
                     if (err) console.log(err);
   
@@ -294,11 +259,7 @@ async function buyNFT(nftInfo, diffMS, cookies) {
                   return Math.floor(Math.random() * (max - min)) + min; //Максимум не включается, минимум включается
                 }
                 let sleep = 100;
-<<<<<<< HEAD
                 setTimeout(loop(key), sleep);
-=======
-                setTimeout(loop, sleep);
->>>>>>> 1bbc3e2cd3cff69eb9c0a86ec82700be4e0e6973
                 let ranS = getRandomInt(1233, 99992);
                 fs.writeFile(`./temp/err${ranS}.html`, e, function (error) {
                   try {
@@ -311,10 +272,7 @@ async function buyNFT(nftInfo, diffMS, cookies) {
                   
                 });
                
-<<<<<<< HEAD
               }
-=======
->>>>>>> 1bbc3e2cd3cff69eb9c0a86ec82700be4e0e6973
               }
              
             });
