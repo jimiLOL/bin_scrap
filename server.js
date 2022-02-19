@@ -551,7 +551,7 @@ const jobs = new CronJob(dataCron, async function () {
   
 });
 
-jobs.start();
+// jobs.start();
 // jobs2.start();
 
 jobsTimeBinance.start();
