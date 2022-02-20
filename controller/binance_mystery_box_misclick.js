@@ -2,7 +2,12 @@ const { default: axios } = require("axios");
 const tunnel = require("tunnel");
 const { proxy } = require("./../proxy_list");
 const { UA } = require("./../ua");
-const {getNaemListNFT} = require("./../controller/getNftStat");
+const {getNaemListNFT} = require("./getNftStat");
+const {arrayNFTCollectionName} = require("./nftArrayData");
+const {
+    techbicaleventTelegram,
+  } = require("./sendTelegram");
+
 const num = 10 // итерациий
 let arrayNFT = [];
 
@@ -189,15 +194,22 @@ function initNum() {
 }
 
 function arrayIteration(array) {
-    array.forEach(ele => {
-        // let da = new Date(ele.setStartTime);
-        // console.log(ele);
+    array.forEach((ele, i) => {
 
-       let wd = arrayNFT.filter(x=> x.title == ele.title && (x.minimum - x.minimum*0) >= ele.amount);
-    //    if (wd.length > 0) {
-    //     console.log(wd);
-    //     console.log(ele);
-    //    }
+       let nftMinimumPrice = arrayNFT.filter(x=> x.title == ele.title && (x.minimum - x.minimum*0) >= ele.amount);
+       let nftCollectionName = arrayNFTCollectionName.filter(x=> x.name == ele.title && x.price >= ele.amount);
+       if (nftMinimumPrice.length > 0) {
+        console.log(nftMinimumPrice);
+        console.log(ele);
+       sendMessage(`По минимальному прайсу title: ${ele.title} ${ele.amount}_$ productId: ${ele.productId}`);
+
+       } else if (nftCollectionName.length > 0) {
+        console.log(nftCollectionName);
+        console.log(ele);
+       sendMessage(`По имени коллекции title: ${ele.title} ${ele.amount}_$ productId: ${ele.productId}`);
+
+       }
+   
       
 
     });
@@ -210,5 +222,13 @@ function getIP(agent) {
     }).catch(e=> {
         console.log(e);
     })
+}
+function sendMessage(message) {
+    console.log(message);
+    techbicaleventTelegram(
+        1,
+        `Нашли ${message}`,
+        "....."
+      );
 }
 module.exports = { getInfoBinNFTMysteryBox, init }
