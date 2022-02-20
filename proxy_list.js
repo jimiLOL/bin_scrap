@@ -1,4 +1,21 @@
-const proxy = ["10.25.96.5:9999:username1:wqd2h2&sabdj2ASNdj6",
-    "45.32.23.142:9999:username:wqd2h2&sabdj2ASNdj6"]
+const proxy = ["207.148.98.170:9999:username1:wqd2h2&sabdj2ASNdj6",
+    "45.32.23.142:9999:username:wqd2h2&sabdj2ASNdj6",
+    "108.160.143.47:9999:username:wqd2h2&sabdj2ASNdj6",
+    "202.182.104.142:9999:username:wqd2h2&sabdj2ASNdj7",
+    "202.182.104.48:9999:username:wqd2h2&sabdj2ASNdj8",
+    "198.13.42.51:9999:username:wqd2h2&sabdj2ASNdj9",
+    "45.77.18.75:9999:username:wqd2h2&sabdj2ASNdj10",
+    "202.182.121.24:9999:username:wqd2h2&sabdj2ASNdj11",
+    "66.42.32.6:9999:username:wqd2h2&sabdj2ASNdj12",
+    "104.238.148.87:9999:username:wqd2h2&sabdj2ASNdj13",
+    "202.182.108.116:9999:username:wqd2h2&sabdj2ASNdj14",
+    "104.238.151.74:9999:username:wqd2h2&sabdj2ASNdj15",
+    "149.28.27.194:9999:username:wqd2h2&sabdj2ASNdj16",
+    "45.32.20.182:9999:username:wqd2h2&sabdj2ASNdj17",
+    "207.148.95.56:9999:username:wqd2h2&sabdj2ASNdj18",
+    "66.42.37.132:9999:username:wqd2h2&sabdj2ASNdj19",
+    "139.180.204.135:9999:username:wqd2h2&sabdj2ASNdj20",
+    "45.32.46.91:9999:username:wqd2h2&sabdj2ASNdj21",
+    "207.148.94.211:9999:username:wqd2h2&sabdj2ASNdj22"]
 
-module.exports = {proxy}
+module.exports = { proxy }
