@@ -166,6 +166,7 @@ function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: p
                 timeout(10000*index).then(()=> resolve())
                 // reject();
                 console.log(e);
+                console.log(agent);
             })
 
         }
