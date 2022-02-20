@@ -3,7 +3,7 @@ const tunnel = require("tunnel");
 const { proxy } = require("./../proxy_list");
 const { UA } = require("./../ua");
 const {getNaemListNFT} = require("./../controller/getNftStat");
-const num = 10 // итерациий
+const num = 30 // итерациий
 let arrayNFT = [];
 
 
