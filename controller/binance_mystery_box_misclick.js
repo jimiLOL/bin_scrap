@@ -53,7 +53,7 @@ let body = {
         // amountTo: "3",
         setStartTime: new Date().getTime(),
         // setStartTime: (function() {return new Date().getTime()})(),
-        // orderBy: "list_time",
+        orderBy: "list_time",
         orderType: -1,
         // serialNo: null,
         tradeType: 0
@@ -101,6 +101,17 @@ function shuffle(array) {
         [array[i], array[j]] = [array[j], array[i]];
     }
 }
+function random() {
+    let min = Math.ceil(1);
+    let max = Math.floor(3);
+    let n = Math.floor(Math.random() * (max - min)) + min;
+    if (n == 1) {
+        return 'list_time'
+    } else {
+        return 'set_end_time'
+
+    }
+}
 
 function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: proxyAuth }, i) {
     return new Promise((resolve, reject) => {
@@ -135,6 +146,8 @@ function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: p
             shuffle(UA);
             header["User-Agent"] = UA[index];
             // body.page = index; // смена страницы -- не используем, просматриваем всегда первую страницу результатов
+            body.params.setStartTime = (function() {return new Date().getTime()})();
+            // body.params.orderBy = random();
             let data = new Date().getTime();
           
             axios.post('https://www.binance.com/bapi/nft/v1/public/nft/market-mystery/mystery-list', JSON.stringify(body), { headers: header, httpsAgent: agent }).then(res => {
@@ -195,9 +208,11 @@ function initNum() {
 
 function arrayIteration(array) {
     array.forEach((ele, i) => {
+        // console.log(ele);
 
-       let nftMinimumPrice = arrayNFT.filter(x=> x.title == ele.title && (x.minimum - x.minimum*0) >= ele.amount);
+       let nftMinimumPrice = arrayNFT.filter(x=> x.title == ele.title && (x.minimum - x.minimum*0.4) >= ele.amount);
        let nftCollectionName = arrayNFTCollectionName.filter(x=> x.name == ele.title && x.price >= ele.amount);
+    //    let nftCollectionName2 = arrayNFTCollectionName.filter(x=> x.name == ele.title);
        if (nftMinimumPrice.length > 0) {
         console.log(nftMinimumPrice);
         console.log(ele);
@@ -208,7 +223,15 @@ function arrayIteration(array) {
         console.log(ele);
        sendMessage(`По имени коллекции title: ${ele.title} ${ele.amount}_$ productId: ${ele.productId}`);
 
-       }
+       } 
+    //    else if (ele.title == "Monsterra Treasury Box" && ele.amount >= 21) {
+    //     console.log(nftCollectionName);
+    //     console.log(ele); 
+    //    sendMessage(`По имени коллекции title: ${ele.title} ${ele.amount}_$ productId: ${ele.productId}`);
+
+    //    process.exit(0)
+
+    //    }
    
       
 
