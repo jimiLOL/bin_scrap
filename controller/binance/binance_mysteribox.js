@@ -1,14 +1,14 @@
-const NftPokemon = require("../model/navigationbot");
+const NftPokemon = require("../../model/navigationbot");
 const {
   senDataTelegram,
   techbicaleventTelegram,
   sendInfoTelegram,
-} = require("../controller/sendTelegram");
+} = require("../sendTelegram");
 const { default: axios } = require("axios");
-const { addDB, updatePriceDB } = require("./addDB");
-const binanceIdProduct = require("../model/binanceIdProduct");
+const { addDB, updatePriceDB } = require("../addDB");
+const binanceIdProduct = require("../../model/binanceIdProduct");
 const tunnel = require("tunnel");
-const binanceAdminCookies = require("../model/binanceAdminCookies");
+const binanceAdminCookies = require("../../model/binanceAdminCookies");
 const fs = require("fs");
 
 // const agent = tunnel.httpsOverHttp({
@@ -29,23 +29,25 @@ const errorVar = 1000; //Сколько не успешных попыток д�
 let cycle = 0;
 let crondown = 0;
 
+let body = {
+  clientKey: key,
+  task: {
+    type: "RecaptchaV3TaskProxyless",
+    websiteURL: base_url,
+    websiteKey: "6LeUPckbAAAAAIX0YxfqgiXvD3EOXSeuq0OpO8u_",
+    minScore: 0.9,
+    pageAction: "submit",
+    isEnterprise: false,
+  },
+};
+
 async function buyNFT(nftInfo, diffMS, cookies) {
 
   console.log("Работа с аккаунтом " + cookies.user);
 
   let start = new Date().getTime();
   let productId = nftInfo.productId;
-  let body = {
-    clientKey: key,
-    task: {
-      type: "RecaptchaV3TaskProxyless",
-      websiteURL: base_url,
-      websiteKey: "6LeUPckbAAAAAIX0YxfqgiXvD3EOXSeuq0OpO8u_",
-      minScore: 0.9,
-      pageAction: "submit",
-      isEnterprise: false,
-    },
-  };
+  
 
   let headers = {
     accept: "*/*",
@@ -73,54 +75,54 @@ async function buyNFT(nftInfo, diffMS, cookies) {
     credentials: "include",
   };
 
-  function get_captcha(_url, cb) {
-    return new Promise((resolve, reject) => {
-      axios
-        .post("https://api.capmonster.cloud/createTask", body, {
-          headers: {
-            accept: "application/json",
-            "content-type": "application/json",
-          },
-        })
-        .then((res) => {
-          console.log(res.data);
-          let id = res.data?.taskId;
-          let body = {
-            clientKey: key,
-            taskId: id,
-          };
-          if (id == undefined) {
-            get_captcha();
-          } else { 
-            check_status(id);
-            function check_status(id) {
-              axios
-                .post("https://api.capmonster.cloud/getTaskResult", body, {
-                  headers: {
-                    accept: "application/json",
-                    "content-type": "application/json",
-                  },
-                })
-                .then((res) => {
-                  console.log("Status task get_captcha");
-                  console.log(res.data);
-                  if (res.data?.status === "ready") {
-                    return resolve(res.data?.solution.gRecaptchaResponse);
-                  } else {
-                    console.log(res.data?.status);
-                    setTimeout(() => check_status(id), 500);
-                  }
-                });
-            }
-          }
+  // function get_captcha(_url, cb) {
+  //   return new Promise((resolve, reject) => {
+  //     axios
+  //       .post("https://api.capmonster.cloud/createTask", body, {
+  //         headers: {
+  //           accept: "application/json",
+  //           "content-type": "application/json",
+  //         },
+  //       })
+  //       .then((res) => {
+  //         console.log(res.data);
+  //         let id = res.data?.taskId;
+  //         let body = {
+  //           clientKey: key,
+  //           taskId: id,
+  //         };
+  //         if (id == undefined) {
+  //           get_captcha();
+  //         } else { 
+  //           check_status(id);
+  //           function check_status(id) {
+  //             axios
+  //               .post("https://api.capmonster.cloud/getTaskResult", body, {
+  //                 headers: {
+  //                   accept: "application/json",
+  //                   "content-type": "application/json",
+  //                 },
+  //               })
+  //               .then((res) => {
+  //                 console.log("Status task get_captcha");
+  //                 console.log(res.data);
+  //                 if (res.data?.status === "ready") {
+  //                   return resolve(res.data?.solution.gRecaptchaResponse);
+  //                 } else {
+  //                   console.log(res.data?.status);
+  //                   setTimeout(() => check_status(id), 500);
+  //                 }
+  //               });
+  //           }
+  //         }
           
-        })
-        .catch((e) => {
-          console.log(e);
-          reject(e);
-        });
-    });
-  }
+  //       })
+  //       .catch((e) => {
+  //         console.log(e);
+  //         reject(e);
+  //       });
+  //   });
+  // }
 
   function uuid() {
     return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
@@ -299,4 +301,53 @@ async function buyNFT(nftInfo, diffMS, cookies) {
     });
 }
 
-module.exports = { buyNFT };
+function get_captcha(_url, cb) {
+  return new Promise((resolve, reject) => {
+    axios
+      .post("https://api.capmonster.cloud/createTask", body, {
+        headers: {
+          accept: "application/json",
+          "content-type": "application/json",
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        let id = res.data?.taskId;
+        let body = {
+          clientKey: key,
+          taskId: id,
+        };
+        if (id == undefined) {
+          get_captcha();
+        } else { 
+          check_status(id);
+          function check_status(id) {
+            axios
+              .post("https://api.capmonster.cloud/getTaskResult", body, {
+                headers: {
+                  accept: "application/json",
+                  "content-type": "application/json",
+                },
+              })
+              .then((res) => {
+                console.log("Status task get_captcha");
+                console.log(res.data);
+                if (res.data?.status === "ready") {
+                  return resolve(res.data?.solution.gRecaptchaResponse);
+                } else {
+                  console.log(res.data?.status);
+                  setTimeout(() => check_status(id), 500);
+                }
+              });
+          }
+        }
+        
+      })
+      .catch((e) => {
+        console.log(e);
+        reject(e);
+      });
+  });
+}
+
+module.exports = { buyNFT, get_captcha };

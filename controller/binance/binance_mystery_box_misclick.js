@@ -1,14 +1,17 @@
+// Получаем данные из фильтра бинанса, отстование api 1-2 минуты - не подходит для мисклика, но может подходить для парсинга.
+
 const { default: axios } = require("axios");
 const tunnel = require("tunnel");
-const { proxy } = require("./../proxy_list");
-const { UA } = require("./../ua");
+const { proxy } = require("../../proxy_list");
+const { UA } = require("../../ua");
 const {getNaemListNFT} = require("./getNftStat");
 const {arrayNFTCollectionName} = require("./nftArrayData");
 const {
     techbicaleventTelegram,
-  } = require("./sendTelegram");
+  } = require("../sendTelegram");
 
-const num = 10 // итерациий
+let num = 10 // итерациий
+let size = 50;
 let arrayNFT = [];
 
 
@@ -44,7 +47,7 @@ let header = {
 
 let body = {
     page: 1,
-    size: 50,
+    size: size,
     params: {
         // keyword: "",
         currency: "BUSD",
@@ -114,10 +117,10 @@ function random() {
 }
 
 function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: proxyAuth }, i) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         // header["User-Agent"] = UA[i];
         // console.log(header);
-        // let num = initNum();
+        // num = await initNum();
         console.log(num);
         let proxyOptions = {
             host: proxyHost,
@@ -145,7 +148,7 @@ function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: p
 
             shuffle(UA);
             header["User-Agent"] = UA[index];
-            // body.page = index; // смена страницы -- не используем, просматриваем всегда первую страницу результатов
+            body.page = index; // смена страницы -- не используем, просматриваем всегда первую страницу результатов
             body.params.setStartTime = (function() {return new Date().getTime()})();
             // body.params.orderBy = random();
             let data = new Date().getTime();
@@ -154,7 +157,10 @@ function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: p
                 console.log(res.status + ' ' + index);
                 // console.log(res.request);
                 // process.exit(0)
+                
+                // console.log(num);
                 if (index >= Math.ceil(num / 2)) {
+                    num = Math.ceil(res.data.data.total/size);
                     resolve();
                     breakSwitch = true;
                 };
@@ -193,17 +199,17 @@ function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: p
 
 }
 
-function initNum() {
-    // const number = await axios.post('https://www.binance.com/bapi/nft/v1/public/nft/market-mystery/mystery-list', JSON.stringify(body), { headers: header }).then(res => {
-    //     let n = res.data.data.total / 100;
-    //     console.log(res.data.data.total);
+async function initNum() {
+    const number = await axios.post('https://www.binance.com/bapi/nft/v1/public/nft/market-mystery/mystery-list', JSON.stringify(body), { headers: header }).then(res => {
+        let n = res.data.data.total / 100;
+        console.log(res.data.data.total);
 
-    //     return Math.ceil(n)
-    // }).catch(e => {
-    //     // console.log('Error');
-    //     console.log(e?.response?.statusText);
-    // }); изначально я хотел перебрать все значения в базе @total@ теперь используем констануту num
-    return 100
+        return Math.ceil(n)
+    }).catch(e => {
+        // console.log('Error');
+        console.log(e?.response?.statusText);
+    }); // изначально я хотел перебрать все значения в базе @total@ теперь используем констануту num
+    return number
 }
 
 function arrayIteration(array) {
@@ -223,8 +229,8 @@ function arrayIteration(array) {
         console.log(ele);
        sendMessage(`По имени коллекции title: ${ele.title} ${ele.amount}_$ productId: ${ele.productId}`);
 
-       } 
-    //    else if (ele.title == "Monsterra Treasury Box" && ele.amount >= 21) {
+       }
+    //     else if (ele.title == "Syahrini's Metaverse Tour" && ele.amount == 1) {
     //     console.log(nftCollectionName);
     //     console.log(ele); 
     //    sendMessage(`По имени коллекции title: ${ele.title} ${ele.amount}_$ productId: ${ele.productId}`);

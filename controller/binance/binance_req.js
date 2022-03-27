@@ -1,12 +1,12 @@
-const NftPokemon = require("../model/navigationbot");
+const NftPokemon = require("../../model/navigationbot");
 const {
   senDataTelegram,
   techbicaleventTelegram,
   sendInfoTelegram,
-} = require("../controller/sendTelegram");
+} = require("../sendTelegram");
 const { default: axios } = require("axios");
-const { addDB, updatePriceDB } = require("./addDB");
-const binanceIdProduct = require("../model/binanceIdProduct");
+const { addDB, updatePriceDB } = require("../addDB");
+const binanceIdProduct = require("../../model/binanceIdProduct");
 const tunnel = require("tunnel");
 const cookie = require('cookie');
 

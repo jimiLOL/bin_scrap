@@ -35,16 +35,17 @@ const {
   binTest,
   getBinanceProductList,
   getDataTest,
-} = require("./controller/binance_req.js");
+} = require("./controller/binance/binance_req.js");
 const nftArray = require("./nft/nftalldb");
 const { nfttradeParseContract } = require("./controller/nfttradeParseContract");
 const { opensea } = require("./controller/opensea.js");
 const { cat } = require("./controller/cybercatController");
 const { filterCat } = require("./controller/faindeCate");
-const { buyNFT } = require("./controller/binance_mysteribox");
-const { getListMysterSell } = require("./controller/binance_addList_sell");
-const {getInfoBinNFT} = require("./controller/binance_marketplace_misclick");
-const {init} = require("./controller/binance_mystery_box_misclick");
+const { buyNFT } = require("./controller/binance/binance_mysteribox");
+const { getListMysterSell } = require("./controller/binance/binance_addList_sell");
+const {getInfoBinNFT} = require("./controller/binance/binance_marketplace_misclick");
+const {init} = require("./controller/binance/binance_mystery_box_misclick");
+const {buyInit} = require('./controller/binance/buyNFT');
 
 const binanceMysterBoxAnons = require("./model/binanceMysterBoxAnons");
 const cookie = require("cookie");
@@ -64,7 +65,19 @@ mongoose.connect(process.env.MONGODB_URI).catch((error) => console.log(error));
 //   })
 // }
 
-init();
+// init();
+
+binanceAdminCookies.find({ enable: true }, (err, call) => {
+  if (err) console.log(err);
+
+  if (call) {
+    call.forEach((cookies) => {
+      buyInit(cookies);
+    });
+
+  }
+});
+
 
 let dataCron = new Date();
 console.log(dataCron);

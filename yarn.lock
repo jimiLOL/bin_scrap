@@ -3381,7 +3381,7 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.1.9:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.8.tgz#e412b8d33f5e006593cbd3cee6df9f2cebbe802a"
   integrity sha512-qkIilPUYcNhJpd33n0GBXTB1MMPp14TxEsEs0pTrsSVucApsYzW5V+Q8Qxhik6KU3evy+qkAAowTByymK0avdg==
 
-handlebars@^4.0.11, handlebars@^4.7.6:
+handlebars@^4.0.11:
   version "4.7.7"
   resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.7.7.tgz#9ce33416aad02dbd6c8fafa8240d5d98004945a1"
   integrity sha512-aAcXm5OAfE/8IXkcZvCepKU3VzW1/39Fb5ZuqMtgI/hT8X2YgoMvBY5dLhq/cpOvw7Lk1nK/UF71aLG/ZnVYRA==
@@ -5383,14 +5383,6 @@ pbkdf2@^3.0.17, pbkdf2@^3.0.3:
     ripemd160 "^2.0.1"
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
-
-pdf-creator-node@^2.2.4:
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/pdf-creator-node/-/pdf-creator-node-2.2.4.tgz#f94d769cee015daa09aa54d8ee005656c0ace326"
-  integrity sha512-nJQ1GGga9fXvvv1x6llnr1HknbQrOS8GILc64lyymUk8IQsvLDktBsdi2X0UdY14fpN+c/CtZ+/9aGrwzu9qPw==
-  dependencies:
-    handlebars "^4.7.6"
-    html-pdf "^3.0.1"
 
 pend@~1.2.0:
   version "1.2.0"
