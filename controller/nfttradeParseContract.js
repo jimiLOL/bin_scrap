@@ -48,7 +48,7 @@ async function nfttradeParseContract(index, nft_contract) {
   return new Promise((resolve, reject) => {
 
 
-    let NftPokemon = require("../model/navigationbot")(nft_contract);
+    let NftPokemon = require("../model/navigationbot.cjs")(nft_contract, 'nftrade');
   axios
     .get(
       `https://api.nftrade.com/api/v1/tokens?contractAddress=${nft_contract}&limit=5000&skip=${
@@ -85,6 +85,7 @@ async function nfttradeParseContract(index, nft_contract) {
           
           });
           setTimeout(async () => {
+            console.log('add db nftrade');
             await addDB(element, [], "nftrade", [], nft_contract)
           }, 200*indexs);
            

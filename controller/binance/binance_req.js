@@ -1,4 +1,4 @@
-const NftPokemon = require("../../model/navigationbot");
+const NftPokemon = require("../../model/navigationbot.cjs");
 const {
   senDataTelegram,
   techbicaleventTelegram,

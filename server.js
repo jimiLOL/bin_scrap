@@ -10,7 +10,6 @@ const passport = require("passport");
 const app = express();
 const http = require("http");
 
-const cyrillicToTranslit = require("cyrillic-to-translit-js");
 // const { Telegraf, Markup } = require("telegraf");
 const { stringify } = require("query-string");
 const { json } = require("body-parser");
@@ -22,7 +21,6 @@ const CronJob = require("cron").CronJob;
 const CronTime = require("cron").CronTime;
 const { default: axios } = require("axios");
 const { reject } = require("core-js/fn/promise");
-// const { } = require('./controller');
 const {
   senDataTelegram,
   techbicaleventTelegram,
@@ -41,15 +39,19 @@ const { nfttradeParseContract } = require("./controller/nfttradeParseContract");
 const { opensea } = require("./controller/opensea.js");
 const { cat } = require("./controller/cybercatController");
 const { filterCat } = require("./controller/faindeCate");
-const { buyNFT } = require("./controller/binance/binance_mysteribox");
+// const { buyNFT } = require("./controller/binance/binance_mysteribox"); // покупка мистерибокс
 const { getListMysterSell } = require("./controller/binance/binance_addList_sell");
 const {getInfoBinNFT} = require("./controller/binance/binance_marketplace_misclick");
 const {init} = require("./controller/binance/binance_mystery_box_misclick");
 const {buyInit} = require('./controller/binance/buyNFT');
 
+const {getHeaders} = require('./controller/binance/getHeaders')
+
+
 const binanceMysterBoxAnons = require("./model/binanceMysterBoxAnons");
 const cookie = require("cookie");
 const binanceAdminCookies = require("./model/binanceAdminCookies");
+
 require("dotenv/config");
 
 app.use(cors());
@@ -58,6 +60,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 mongoose.connect(process.env.MONGODB_URI).catch((error) => console.log(error));
 
+
+getHeaders().then(() => {
+  getInfoBinNFT()
+
+})
+// init();
+
+
 // for (let index = 0; index < 1; index++) {
 
 //   timeout(200*index).then(()=>{
@@ -65,14 +75,13 @@ mongoose.connect(process.env.MONGODB_URI).catch((error) => console.log(error));
 //   })
 // }
 
-// init();
 
 binanceAdminCookies.find({ enable: true }, (err, call) => {
   if (err) console.log(err);
 
   if (call) {
     call.forEach((cookies) => {
-      buyInit(cookies);
+      // buyInit(cookies);
     });
 
   }
@@ -249,7 +258,7 @@ let data = {
 };
 
 async function delDublicate(nft_contract, count) {
-  let NftPokemon = require("./model/navigationbot")(nft_contract);
+  let NftPokemon = require("./model/navigationbot.cjs")(nft_contract, 'mochi');
   let asw = [];
   for (let index = 0; index < count; index++) {
     NftPokemon.find({}, (err, call) => {
@@ -299,16 +308,18 @@ function timeout(ms) {
 }
 
 function conractSet(element) {
-  if (
-    element.nft_contract.contract ==
-    "0xc33d69a337b796a9f0f7588169cd874c3987bde9"
-  ) {
-    let nft_contract = "nfts";
-    return nft_contract;
-  } else {
-    let nft_contract = element.nft_contract.contract;
-    return nft_contract;
-  }
+  // if (
+  //   element.nft_contract.contract ==
+  //   "0xc33d69a337b796a9f0f7588169cd874c3987bde9"
+  // ) {
+  //   let nft_contract = "nfts";
+  //   return nft_contract;
+  // } else {
+  //   let nft_contract = element.nft_contract.contract;
+  //   return nft_contract;
+  // }
+  let nft_contract = element.nft_contract.contract;
+  return nft_contract;
 }
 
 function log(index) {
@@ -329,13 +340,15 @@ const jobs = new CronJob(dataCron, async function () {
   );
   nftArray.forEach(async (elementNFT, index) => {
     // console.log(element.nft_contract.contract);
-    let NftPokemon = require("./model/navigationbot")(conractSet(elementNFT));
+    let NftPokemon = require("./model/navigationbot.cjs")(conractSet(elementNFT), 'mochi');
     // let NftPokemon = mongoose.model('nfts');
+    console.log('+');
 
-    let count = await NftPokemon.find({}, { tokenId: 1 }, (err, call) => {
-      if (err) console.log(err);
-      // if (call) console.log(call);
-    }).count();
+    // let count = await NftPokemon.find({}, { tokenId: 1 }, (err, call) => {
+    //   if (err) console.log(err);
+    //   // if (call) console.log(call);
+    // }).count();
+    let count = 100;
 
     await Promise.all([
       (start = new Date()),
@@ -461,7 +474,7 @@ const jobs = new CronJob(dataCron, async function () {
                           .catch(function (error) {
                             if (
                               contract !=
-                              "0xc33d69a337b796a9f0f7588169cd874c3987bde9"
+                              "0xc33d69a337b796a9f0f7588169cd874c3987bde9Ц"
                             ) {
                               err = true;
                             }
@@ -541,10 +554,10 @@ const jobs = new CronJob(dataCron, async function () {
                       // });
                     })
                     .catch(function (error) {
-                      console.log("Show error notification! mocha");
+                      console.log("Show error notification! mochi");
                       console.log(error);
                       setTimeout(
-                        () => techbicaleventTelegram(index, error, "mocha"),
+                        () => techbicaleventTelegram(index, error, "mochi"),
                         200 * index
                       );
                       // console.log(error);
@@ -563,11 +576,13 @@ const jobs = new CronJob(dataCron, async function () {
   startCron(jobs, 360);
   
 });
-
+// startCron(jobs, 20)
 // jobs.start();
 // jobs2.start();
 
-jobsTimeBinance.start();
+// jobsTimeBinance.start();
+
+// addDB('', '', '', '', '0xc33d69a337b796a9f0f7588169cd874c3987bde9')
 
 let skip = 0;
 

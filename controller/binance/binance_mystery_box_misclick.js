@@ -66,7 +66,7 @@ function timeout(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 async function init() {
-arrayNFT = await getNaemListNFT();
+// arrayNFT = await getNaemListNFT();
 
     for (let i = 0; i < proxy.length; i++) {
         await getInfoBinNFTMysteryBox(proxyInit(proxy[i]), i);
@@ -155,8 +155,8 @@ function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: p
           
             axios.post('https://www.binance.com/bapi/nft/v1/public/nft/market-mystery/mystery-list', JSON.stringify(body), { headers: header, httpsAgent: agent }).then(res => {
                 console.log(res.status + ' ' + index);
-                // console.log(res.request);
-                // process.exit(0)
+                console.log(res.data.data[0]);
+                process.exit(0)
                 
                 // console.log(num);
                 if (index >= Math.ceil(num / 2)) {
@@ -202,7 +202,7 @@ function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: p
 async function initNum() {
     const number = await axios.post('https://www.binance.com/bapi/nft/v1/public/nft/market-mystery/mystery-list', JSON.stringify(body), { headers: header }).then(res => {
         let n = res.data.data.total / 100;
-        console.log(res.data.data.total);
+        console.log(res.data.data);
 
         return Math.ceil(n)
     }).catch(e => {
@@ -213,35 +213,36 @@ async function initNum() {
 }
 
 function arrayIteration(array) {
-    array.forEach((ele, i) => {
-        // console.log(ele);
+    // функция для фильтрации средних цен из getNaemListNFT
+    // array.forEach((ele, i) => {
+    //     // console.log(ele);
 
-       let nftMinimumPrice = arrayNFT.filter(x=> x.title == ele.title && (x.minimum - x.minimum*0.4) >= ele.amount);
-       let nftCollectionName = arrayNFTCollectionName.filter(x=> x.name == ele.title && x.price >= ele.amount);
-    //    let nftCollectionName2 = arrayNFTCollectionName.filter(x=> x.name == ele.title);
-       if (nftMinimumPrice.length > 0) {
-        console.log(nftMinimumPrice);
-        console.log(ele);
-       sendMessage(`По минимальному прайсу title: ${ele.title} ${ele.amount}_$ productId: ${ele.productId}`);
+    //    let nftMinimumPrice = arrayNFT.filter(x=> x.title == ele.title && (x.minimum - x.minimum*0.4) >= ele.amount);
+    //    let nftCollectionName = arrayNFTCollectionName.filter(x=> x.name == ele.title && x.price >= ele.amount);
+    // //    let nftCollectionName2 = arrayNFTCollectionName.filter(x=> x.name == ele.title);
+    //    if (nftMinimumPrice.length > 0) {
+    //     // console.log(nftMinimumPrice);
+    //     // console.log(ele);
+    //    sendMessage(`По минимальному прайсу title: ${ele.title} ${ele.amount}_$ productId: ${ele.productId}`);
 
-       } else if (nftCollectionName.length > 0) {
-        console.log(nftCollectionName);
-        console.log(ele);
-       sendMessage(`По имени коллекции title: ${ele.title} ${ele.amount}_$ productId: ${ele.productId}`);
-
-       }
-    //     else if (ele.title == "Syahrini's Metaverse Tour" && ele.amount == 1) {
-    //     console.log(nftCollectionName);
-    //     console.log(ele); 
+    //    } else if (nftCollectionName.length > 0) {
+    //     // console.log(nftCollectionName);
+    //     // console.log(ele);
     //    sendMessage(`По имени коллекции title: ${ele.title} ${ele.amount}_$ productId: ${ele.productId}`);
 
-    //    process.exit(0)
-
     //    }
+    // //     else if (ele.title == "Syahrini's Metaverse Tour" && ele.amount == 1) {
+    // //     console.log(nftCollectionName);
+    // //     console.log(ele); 
+    // //    sendMessage(`По имени коллекции title: ${ele.title} ${ele.amount}_$ productId: ${ele.productId}`);
+
+    // //    process.exit(0)
+
+    // //    }
    
       
 
-    });
+    // });
 
 }
 

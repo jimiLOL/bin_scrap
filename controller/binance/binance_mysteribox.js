@@ -1,4 +1,6 @@
-const NftPokemon = require("../../model/navigationbot");
+// === Модуль покупки ===
+
+// const NftPokemon = require("../../model/navigationbot");
 const {
   senDataTelegram,
   techbicaleventTelegram,
@@ -153,7 +155,7 @@ async function buyNFT(nftInfo, diffMS, cookies) {
     headers.csrftoken = cookies.csrftoken;
     headers["x-nft-checkbot-sitekey"] =
       "6LeUPckbAAAAAIX0YxfqgiXvD3EOXSeuq0OpO8u_";
-    headers.Cookie = full;
+    headers.cookie = full;
     let endCookParse = new Date().getTime();
     console.log(`endCookParse ${endCookParse - start} ms`);
     let ids = {};

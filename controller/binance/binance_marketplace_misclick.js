@@ -1,14 +1,20 @@
+// модуль парсинга маркет плейса
 const { default: axios } = require("axios");
 const tunnel = require("tunnel");
-
-let agent = tunnel.httpsOverHttp({
-    proxy: {
-        host: "88.82.93.186",
-        port: 43937,
-        proxyAuth: "1765d78a21:7518c2dea1",
-    },
-    rejectUnauthorized: false,
-});
+const {getProductDetail} = require('./get_productDetali');
+const { proxy } = require("../../proxy_list");
+const { UA } = require("../../ua");
+const helper = require('./../helper/helper');
+let {getNewHeaders} = require('./getHeaders');
+const proxyLength = proxy.length;
+// let agent = tunnel.httpsOverHttp({
+//     proxy: {
+//         host: "127.0.0.1",
+//         port: 8867,
+//         // proxyAuth: "1765d78a21:7518c2dea1",
+//     },
+//     rejectUnauthorized: false,
+// });
 
 //   proxyOptions = {
 //     host: proxyArray[0],
@@ -21,73 +27,253 @@ let agent = tunnel.httpsOverHttp({
 // });
 
 
-let header = {
-    Host: "www.binance.com",
-    "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0",
-    Accept: "*/*",
-    "Accept-Language": "ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3",
-    "Accept-Encoding": "gzip",
-    Referer: `https://www.binance.com/`,
-    lang: "en",
-    "x-ui-request-trace": "677b2e99-a59c-4cbd-b366-69d847cc78df",
-    "x-trace-id": "677b2e99-a59c-4cbd-b366-69d847cc78df",
-    "bnc-uuid": "36fb9cd7-1cb4-4381-a8c6-1d294267734f",
-    "content-type": "application/json",
-    "device-info":
-        "eyJzY3JlZW5fcmVzb2x1dGlvbiI6Ijk2MCwxNDQwIiwiYXZhaWxhYmxlX3NjcmVlbl9yZXNvbHV0aW9uIjoiOTI5LDE0NDAiLCJzeXN0ZW1fdmVyc2lvbiI6IldpbmRvd3MgMTAiLCJicmFuZF9tb2RlbCI6InVua25vd24iLCJzeXN0ZW1fbGFuZyI6InJ1LVJVIiwidGltZXpvbmUiOiJHTVQrMyIsInRpbWV6b25lT2Zmc2V0IjotMTgwLCJ1c2VyX2FnZW50IjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NDsgcnY6OTQuMCkgR2Vja28vMjAxMDAxMDEgRmlyZWZveC85NC4wIiwibGlzdF9wbHVnaW4iOiIiLCJjYW52YXNfY29kZSI6IjA3NDg0YTBlIiwid2ViZ2xfdmVuZG9yIjoiR29vZ2xlIEluYy4gKEFNRCkiLCJ3ZWJnbF9yZW5kZXJlciI6IkFOR0xFIChSYWRlb24gUjkgMjAwIFNlcmllcyBEaXJlY3QzRDExIHZzXzVfMCBwc181XzAsIEQzRDExLTI2LjIwLjExMDMwLjE1MDAxKSIsImF1ZGlvIjoiMzUuNzM4MzI5NTkzMDkyMiIsInBsYXRmb3JtIjoiV2luMzIiLCJ3ZWJfdGltZXpvbmUiOiJFdXJvcGUvTW9zY293IiwiZGV2aWNlX25hbWUiOiJGaXJlZm94IFY5NC4wIChXaW5kb3dzKSIsImZpbmdlcnByaW50IjoiYWU1OTFiYzRlZDk5MzUyOWQxMTIwODc3YjBiZjU1NDEiLCJkZXZpY2VfaWQiOiIiLCJyZWxhdGVkX2RldmljZV9pZHMiOiIifQ==",
+
+let headers = {
+    accept: "*/*",
+    "accept-encoding":"gzip",
+    "accept-language":
+      "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7,zh-TW;q=0.6,zh;q=0.5",
     clienttype: "web",
-    "fvideo-id": "3223618618b2a6b6ba20a660a08d0298dffcdcde",
-    csrftoken: "d41d8cd98f00b204e9800998ecf8427e",
-    "Content-Length": "29",
-    Origin: "https://www.binance.com",
-    Connection: "keep-alive",
-    Cookie:
-        "cid=Y4i8bYsV; bnc-uuid=36fb9cd7-1cb4-4381-a8c6-1d294267734f; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%2217d7218bae5183-0602143e2ff1828-4c3e217e-1382400-17d7218bae6160%22%2C%22first_id%22%3A%22%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%2C%22%24latest_referrer%22%3A%22%22%7D%2C%22%24device_id%22%3A%2217d7218bae5183-0602143e2ff1828-4c3e217e-1382400-17d7218bae6160%22%7D; _ga=GA1.2.1419975887.1638296764; _gid=GA1.2.1417971414.1638296764; userPreferredCurrency=USD_USD; BNC_FV_KEY=3223618618b2a6b6ba20a660a08d0298dffcdcde; BNC_FV_KEY_EXPIRE=1638383165929; nft-init-compliance=true; source=referral; campaign=www.binance.com",
-    "Sec-Fetch-Dest": "empty",
-    "Sec-Fetch-Mode": "cors",
-    "Sec-Fetch-Site": "same-origin",
-};
+    "content-type": "application/json",
+    lang: "en",
+    "sec-ch-ua":
+      '"Google Chrome";v="93", " Not;A Brand";v="99", "Chromium";v="93"',
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": '"Windows"',
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-origin",
+    Host:"www.binance.com"
+  };
+  
 
 
-let body = {
-    currency: (function() {return "BUSD"})(),
-    mediaType: "",
-    tradeType: "",
-    amountFrom: "0.1",
-    amountTo: "2",
-    categorys: [],
-    keyword: "",
-    orderBy: "list_time",
-    orderType: 1,
-    page: 1,
-    rows: 100,
-    productIds: []
-};
+
+let header;
+
+
+
+function timeout(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+ 
+  const arrayIterator = arr => ({
+    [Symbol.asyncIterator]() {
+      let i = arr.length;
+    //   console.log(i);
+      return {
+          index:0,
+       next() {
+           if (this.index < arr.length) {
+    //   console.log(this.index, arr.length);
+
+            return awaitArray(arr[this.index++], --i);
+
+           } else {
+            return { done: true }
+               
+           }
+ 
+        }
+      }
+    }
+  })
+  awaitArray = (val, length) => {
+    //   console.log(val, length);
+    //   process.exit(0)
+      return new Promise((resolve) => {
+         function recursion() {
+             return new Promise((resolve) => {
+                if (proxy.length != proxyLength && length > 0) {
+                    // console.log('leng != length ' + proxy.length, length);
+                    // resolve({ value: val, done: false })
+                   timeout(200).then(() => {
+                    //    proxy.pop()
+                       
+                        recursion().then((res)=> {
+                            resolve(res)
+                        })
+                    })
+    
+                  
+                } else if (length < 0) {
+                    console.log('=========================leng < 0=========================');
+                    resolve({ done: true })
+    
+                } else {
+                    console.log('=====!===!=========!===done: false====!=!=========!=======!==========');
+    
+                    resolve({ value: val, done: false })
+                }
+             })
+          
+         
+        };
+        setTimeout(() => {
+            recursion().then((res) => {
+                // console.log('res');
+                resolve(res)
+            })
+        }, 5000);
+      
+          
+
+      })
+  }
+ 
 
 
 async function getInfoBinNFT() {
-    let num = await initNum();
-    console.log('1');
-    for (let index = 1; index < num; index++) {
-        body.page = index;
-        let data = new Date().getTime();
-        axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/product-list', body, { headers: header }).then(res => {
-            console.log(res.status + ' ' + index);
-            console.log(res.data.data.rows[0].currency);
-            arrayIteration(res.data.data.rows);
-            let n = res.data.data.total / 100;
-            // console.log(Math.ceil(n));
-            let newData = new Date().getTime();
-            console.log(`Date cycle^ ${newData - data} ms`);
+    header = getNewHeaders(headers);
+    // recursion()
+    const layerList = await axios.get('https://www.binance.com/bapi/nft/v1/public/nft/layer-search?keyword=', { headers: headers}).then(res=> {
+    return res.data.data
+});
+console.log(layerList.length);
+let asd = 0;
 
-            return Math.ceil(n)
-        }).catch(e => {
-            // console.log('Error');
-            console.log(e?.response?.statusText);
-        })
+(async () => {
+    for await (const p of arrayIterator(proxy)) {
+      //   console.log(layer);
+      asd++
 
+      console.log(p);
+      if (asd == 20) {
+        //   process.exit(0)
+    //   proxy.shift()
+    // proxy.length = 200;
+
+      }
+      
     }
+  })();
+
+layerList.forEach((layer, i) => {
+    let body = {
+        currency: (function() {return "BUSD"})(),
+        mediaType: "",
+        tradeType: "",
+        // amountFrom: "0.1",
+        // amountTo: "2",
+        collectionId: '',
+        categorys: [],
+        keyword: "",
+        // orderBy: "list_time", // когда размещенно
+        // orderType: 1, // статус.
+        page: 1,
+        rows: 100,
+        productIds: []
+    };
+    body.collectionId = layer.layerId;
+    helper.shuffle(proxy);
+    helper.shuffle(UA);
+    let var_break = false;
+
+
+
+    
+    (async () => {
+        let index = 0;
+        for await (const proxyVar of arrayIterator(proxy)) {
+            index++
+            // let proxyVar = proxy.slice(index-1, index)[0];
+            console.log(proxyVar);
+            // process.exit(0)
+            if (proxyVar == undefined) {
+                break
+            }
+      
+            const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = helper.proxyInit(proxyVar);
+            console.log('Proxy lenght ' + proxy.length + ' index ' + index);
+            proxy.splice(index-1, 1);
+            let proxyOptions = {
+                host: proxyHost,
+                port: portHost,
+                proxyAuth: proxyAuth,
+                headers: {
+                    'User-Agent': UA[index]
+                  },
+            };
+            let agent = tunnel.httpsOverHttp({
+                proxy: proxyOptions,
+                rejectUnauthorized: false,
+            });
+    
+            body.page = index;
+            header["User-Agent"] = UA[index];
+            // let t = helper.uuid();
+            // header['x-ui-request-trace'] = t;
+            // header['x-trace-id'] = t;
+       
+    
+            let data = new Date().getTime();
+           await timeout(5000*index).then(() => {
+               if (!var_break) {
+                axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/product-list', body, { headers: header, httpsAgent: agent }).then(res => {
+                    console.log(res.status + ' ' + index + ' total= ' + res.data.data.total);
+
+                    console.log('Send proxyVar ' + proxyVar);
+              
+                    arrayIteration(res.data.data.rows, proxyVar);
+                    let n = res.data.data.total / 100;
+                    console.log(Math.ceil(n));
+                    let newData = new Date().getTime();
+                    console.log(`Date cycle^ ${newData - data} ms`);
+                    if (Math.ceil(n) == index) {
+                        var_break = true
+                    } // останавливаем итерацию
+        
+                    return Math.ceil(n)
+                }).catch(e => {
+                    console.log('Error');
+                    proxy.push(proxyVar)
+            console.log('Proxy lenght ' + proxy.length);
+
+                    console.log(e.code);
+                    console.log(e?.response?.data);
+                    console.log(layer);
+                    console.log(body);
+
+                    // helper.getIP(agent).then(() => {
+
+                    //     process.exit(1)
+          
+                    //   });
+                    if (e?.response?.statusText != undefined) {
+                    console.log(e?.response?.statusText);
+        
+        
+                    } else {
+                        // console.log(e);
+                    }
+                    var_break = true;
+                    // process.exit(1)
+                })
+               }
+         
+           });
+           if (index == 50|| var_break) {
+               console.log('===========break==============');
+            var_break = false;
+            break
+        }
+            
+            
+    
+        }
+    })()
+
+
+    
+
+    
+});
+
+
+
+    // let num = await initNum();
+    // let num = 100
+  
 
 }
 
@@ -101,11 +287,77 @@ async function initNum() {
     });
     return number
 }
+let cloneProxySet;
+function arrayIteration(array, proxySet) {
+    if (proxySet != undefined) {
+        cloneProxySet = Object.assign({}, {proxySet: proxySet});
 
-function arrayIteration(array) {
-array.forEach(ele => {
+    }
+ 
+
+
+   
+array.forEach((ele, i) => {
+    setTimeout(() => {
+    let randomIndex = helper.getRandomInt(0, proxy.length);
+    console.log('Proxy length ' + proxy.length + ' randomIndex ' + randomIndex + ' ' + proxy[randomIndex] + ' ' + cloneProxySet.proxySet);
+
+   
+    const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = proxy[randomIndex] == undefined ?  helper.proxyInit(cloneProxySet.proxySet) : helper.proxyInit(proxy[randomIndex]);
+    if (proxy[randomIndex] == undefined) {
+        proxy.push(cloneProxySet.proxySet)
+    } else {
+        proxy.splice(randomIndex, 1);
+
+    };
+
+    let proxyOptions = {
+        host: proxyHost,
+        port: portHost,
+        proxyAuth: proxyAuth,
+        headers: {
+            'User-Agent': UA[randomIndex]
+          },
+    };
+    let agent = tunnel.httpsOverHttp({
+        proxy: proxyOptions,
+        rejectUnauthorized: false,
+    });
+ 
+        header = getNewHeaders(headers);
+    getProductDetail(ele, agent, header).then(() => {
+
+        proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
+
+
+        
+        
+
+    }).catch((e)  => {
+        // process.exit(1)
+        proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+
+
+        console.log(e);
+        // arrayIteration(array)
+    })
+        
+    }, 200*i);
+    
     
 });
+
+proxy.push(cloneProxySet.proxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
+proxy.forEach((ele, i) => {
+let filter = proxy.filter(x => x == ele);
+if (filter.length > 1) {
+    proxy.splice(i, 1);
+}
+    
+});
+
+console.log('Function arrayIteration END\nProxy length ' + proxy.length);
+
 
 }
 
