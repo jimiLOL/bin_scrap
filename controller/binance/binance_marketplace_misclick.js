@@ -63,15 +63,13 @@ const arrayIterator = arr => ({
     }
 })
 awaitArray = (val, length) => {
-    //   console.log(val, length);
-    //   process.exit(0)
-    let integer = 0;
+    let integer = 0; // предохранитель от бесконечной рекурсии
     return new Promise((resolve) => {
         function recursion() {
             return new Promise((resolve) => {
-                if (proxy.length != proxyLength && length > 0 && integer < 1001) {
-                    // resolve({ value: val, done: false })
-                    timeout(200).then(() => {
+                if (proxy.length != proxyLength && length > 0) {
+
+                    timeout(1500).then(() => {
                         integer++
                         if (integer > 1000) {
                             console.log('leng != length ' + proxy.length, proxyLength);
@@ -79,18 +77,17 @@ awaitArray = (val, length) => {
 
 
                         }
-                    if (proxy.length > proxyLength) {
-                        proxy.forEach((ele, i) => {
-                            let filter = proxy.filter(x => x == ele);
-                            if (filter.length > 1) {
-                                proxy.splice(i, 1);
-                            }
-        
-                        });
-                    }
-                    
+                        if (proxy.length > proxyLength) {
+                            proxy.forEach((ele, i) => {
+                                let filter = proxy.filter(x => x == ele);
+                                if (filter.length > 1) {
+                                    proxy.splice(i, 1);
+                                }
 
-                        //    proxy.pop()
+                            });
+                        }
+
+
 
                         recursion().then((res) => {
                             resolve(res)
@@ -100,10 +97,13 @@ awaitArray = (val, length) => {
 
                 } else if (length < 0) {
                     console.log('=========================leng < 0=========================');
+                    integer = 0;
+
                     resolve({ done: true })
 
                 } else {
                     console.log('=====!===!=========!===done: false====!=!=========!=======!==========');
+                    integer = 0;
 
                     resolve({ value: val, done: false })
                 }
@@ -113,7 +113,6 @@ awaitArray = (val, length) => {
         };
         setTimeout(() => {
             recursion().then((res) => {
-                // console.log('res');
                 resolve(res)
             })
         }, 50);
@@ -127,7 +126,6 @@ awaitArray = (val, length) => {
 
 async function getInfoBinNFT() {
     header = getNewHeaders(headers);
-    // recursion()
     const layerList = await axios.get('https://www.binance.com/bapi/nft/v1/public/nft/layer-search?keyword=', { headers: headers }).then(res => {
         return res.data.data
     });
@@ -162,9 +160,6 @@ async function getInfoBinNFT() {
             let index = 0;
             for await (const proxyVar of arrayIterator(proxy)) {
                 index++
-                // let proxyVar = proxy.slice(index-1, index)[0];
-                console.log(proxyVar);
-                // process.exit(0)
                 if (proxyVar == undefined) {
                     break
                 }
@@ -219,17 +214,8 @@ async function getInfoBinNFT() {
 
                             proxy.push(proxyVar)
                             console.log('Proxy lenght ' + proxy.length);
-
-                            console.log(e.code);
-                            console.log(e?.response?.data);
-                            console.log(layer);
-                            console.log(body);
-
-                            // helper.getIP(agent).then(() => {
-
-                            //     process.exit(1)
-
-                            //   });
+ 
+ 
                             if (e?.response?.statusText != undefined) {
                                 console.log(e?.response?.statusText);
 
@@ -238,8 +224,10 @@ async function getInfoBinNFT() {
                                 // console.log(e);
                             }
                             // var_break = true;
-                            // process.exit(1)
                         })
+                    } else {
+                        proxy.push(proxyVar)
+
                     }
 
                 });
@@ -270,16 +258,7 @@ async function getInfoBinNFT() {
 
 }
 
-async function initNum() {
-    const number = await axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/product-list', body, { headers: header }).then(res => {
-        let n = res.data.data.total / 100;
-        return Math.ceil(n)
-    }).catch(e => {
-        // console.log('Error');
-        console.log(e?.response?.statusText);
-    });
-    return number
-}
+
 let cloneProxySet;
 function arrayIteration(array, proxySet) {
     if (proxySet != undefined) {
@@ -319,10 +298,10 @@ function arrayIteration(array, proxySet) {
 
             header = getNewHeaders(headers);
             getProductDetail(ele, agent, header).then(() => {
-              
+
 
                 proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
-              
+
                 console.log('Function arrayIteration END\nProxy length ' + proxy.length);
 
 
@@ -347,7 +326,7 @@ function arrayIteration(array, proxySet) {
                 console.log(e);
             })
 
-        }, 150 * i);
+        }, 50 * i);
 
 
     });
