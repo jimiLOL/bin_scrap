@@ -41,6 +41,8 @@ function getProductDetail(productBinance, agent, header) {
           //   process.exit(0)
           addDB(productBinance, productDetail).then(() => {
             resolve()
+          }).catch(e=> {
+            reject()
           });
 
 
@@ -51,6 +53,9 @@ function getProductDetail(productBinance, agent, header) {
             // process.exit(1)
           addDB(productBinance, productDetail).then(() => {
             resolve()
+          }).catch(e=> {
+            reject()
+
           });
         })
 
@@ -86,6 +91,8 @@ function addDB(productBinance, responseProductDetail = null) {
       let newProduct = Object.assign({}, productBinance, responseProductDetail);
       add_binance_db(newProduct, 'binance').then(() => {
         resolve()
+      }).catch((e) => {
+        reject()
       })
       // process.exit(0)
 

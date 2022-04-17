@@ -203,86 +203,94 @@ async function updatePriceDB(tokenId, price, marketpalce, collectionAddress) {
 
 
 async function add_binance_db(ele, marketpalce) {
-  const NFT = require("../model/navigationbot.cjs")(ele.nftInfo.contractAddress, marketpalce);
+  return new Promise((resolve, reject) => {
+    const NFT = require("../model/navigationbot.cjs")(ele.nftInfo.contractAddress, marketpalce);
 
-  const newNFT = new NFT({
-    marketpalce: marketpalce,
-    buyers: ele?.records || [],
-    collection_nft:  ele.collection,
-    collectionAddress: ele.nftInfo.contractAddress, // будет участвовать в навигации 
-    collectionName: ele.collection?.collectionName || null,  
-    tokenId: ele.nftInfo.tokenId, // соответственно тоже участвует в навгации
-    amount: ele.amount,
-    isActive: ele.status == 1 ? true : false,
-    description: ele.productDetail.description,
-    productId: ele.productId,
-    title: ele.title,
-    coverUrl: ele.coverUrl,
-    tradeType: ele.tradeType,
-    nftType: ele.nftType,
-    currency: ele.currency,
-    setStartTime: ele.setStartTime,
-    setEndTime: ele.setEndTime,
-    timestamp: ele.timestamp,
-    status: ele.status,
-    owner: ele.owner,
-    creator: ele.creator,
-    nftInfo: ele.nftInfo,
-    mysteryBoxProductDetailVo: ele.mysteryBoxProductDetailVo,
-    productDetail: ele.productDetail,
-
+    const newNFT = new NFT({
+      marketpalce: marketpalce,
+      buyers: ele?.records || [],
+      collection_nft:  ele.collection,
+      collectionAddress: ele.nftInfo.contractAddress, // будет участвовать в навигации 
+      collectionName: ele.collection?.collectionName || null,  
+      tokenId: ele.nftInfo.tokenId, // соответственно тоже участвует в навгации
+      amount: ele.amount,
+      isActive: ele.status == 1 ? true : false,
+      description: ele.productDetail.description,
+      productId: ele.productId,
+      title: ele.title,
+      coverUrl: ele.coverUrl,
+      tradeType: ele.tradeType,
+      nftType: ele.nftType,
+      currency: ele.currency,
+      setStartTime: ele.setStartTime,
+      setEndTime: ele.setEndTime,
+      timestamp: ele.timestamp,
+      status: ele.status,
+      owner: ele.owner,
+      creator: ele.creator,
+      nftInfo: ele.nftInfo,
+      mysteryBoxProductDetailVo: ele.mysteryBoxProductDetailVo,
+      productDetail: ele.productDetail,
+  
+    })
+  
+    NFT.findOneAndUpdate({ productId: ele.productId }, newNFT, (err, call) => {
+      if (err) {
+        console.log('Не удалось обновить данные ' + ele.productId + ' для биржи ' + marketpalce);
+        console.log(err);
+        reject()
+      };
+      if (call) {
+        console.log('Обновили данные ' + ele.productId + ' для биржи ' + marketpalce);
+        resolve()
+  
+      } else {
+        const binNFT = new NFT({
+          _id: new mongoose.Types.ObjectId(),
+          marketpalce: marketpalce,
+          buyers: ele?.records || [],
+          collection_nft:  ele.collection,
+          collectionAddress: ele.nftInfo.contractAddress, // будет участвовать в навигации 
+          collectionName: ele.collection?.collectionName || null,  
+          tokenId: ele.nftInfo.tokenId, // соответственно тоже участвует в навгации
+          amount: ele.amount,
+          isActive: ele.status == 1 ? true : false,
+          description: ele.productDetail.description,
+          productId: ele.productId,
+          title: ele.title,
+          coverUrl: ele.coverUrl,
+          tradeType: ele.tradeType,
+          nftType: ele.nftType,
+          currency: ele.currency,
+          setStartTime: ele.setStartTime,
+          setEndTime: ele.setEndTime,
+          timestamp: ele.timestamp,
+          status: ele.status,
+          owner: ele.owner,
+          creator: ele.creator,
+          nftInfo: ele.nftInfo,
+          mysteryBoxProductDetailVo: ele.mysteryBoxProductDetailVo,
+          productDetail: ele.productDetail,
+      
+        });
+        binNFT.save((err, callback) => {
+          if (err) {
+            console.log('Не удалось сохранить данные');
+            console.log(err);
+            reject()
+            // process.exit(1)
+          };
+          if (callback) {
+            console.log('Сохранили данные');
+            resolve()
+          } else {
+            reject()
+          }
+        })
+      }
+    })
   })
 
-  NFT.findOneAndUpdate({ productId: ele.productId }, newNFT, (err, call) => {
-    if (err) {
-      console.log('Не удалось обновить данные ' + ele.productId + ' для биржи ' + marketpalce);
-      console.log(err);
-      process.exit(1)
-    };
-    if (call) {
-      console.log('Обновили данные ' + ele.productId + ' для биржи ' + marketpalce);
-
-    } else {
-      const binNFT = new NFT({
-        _id: new mongoose.Types.ObjectId(),
-        marketpalce: marketpalce,
-        buyers: ele?.records || [],
-        collection_nft:  ele.collection,
-        collectionAddress: ele.nftInfo.contractAddress, // будет участвовать в навигации 
-        collectionName: ele.collection?.collectionName || null,  
-        tokenId: ele.nftInfo.tokenId, // соответственно тоже участвует в навгации
-        amount: ele.amount,
-        isActive: ele.status == 1 ? true : false,
-        description: ele.productDetail.description,
-        productId: ele.productId,
-        title: ele.title,
-        coverUrl: ele.coverUrl,
-        tradeType: ele.tradeType,
-        nftType: ele.nftType,
-        currency: ele.currency,
-        setStartTime: ele.setStartTime,
-        setEndTime: ele.setEndTime,
-        timestamp: ele.timestamp,
-        status: ele.status,
-        owner: ele.owner,
-        creator: ele.creator,
-        nftInfo: ele.nftInfo,
-        mysteryBoxProductDetailVo: ele.mysteryBoxProductDetailVo,
-        productDetail: ele.productDetail,
-    
-      });
-      binNFT.save((err, callback) => {
-        if (err) {
-          console.log('Не удалось сохранить данные');
-          console.log(err);
-          // process.exit(1)
-        };
-        if (callback) {
-          console.log('Сохранили данные');
-        }
-      })
-    }
-  })
 
 
 }

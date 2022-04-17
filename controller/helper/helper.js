@@ -56,7 +56,9 @@ function getRandomInt(min, max) {
     });
     return agent
   }
-const helper = {shuffle, proxyInit, getIP, uuid, getRandomInt, initAgent}
+
+  const removeDuplicateItems = arr => [new Set(arr)];
+const helper = {shuffle, proxyInit, getIP, uuid, getRandomInt, initAgent, removeDuplicateItems}
 
 
 module.exports = helper
