@@ -58,7 +58,12 @@ function getRandomInt(min, max) {
   }
 
   const removeDuplicateItems = arr => [new Set(arr)];
-const helper = {shuffle, proxyInit, getIP, uuid, getRandomInt, initAgent, removeDuplicateItems}
+
+  function timeout(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+const helper = {shuffle, proxyInit, getIP, uuid, getRandomInt, initAgent, removeDuplicateItems, timeout}
 
 
 module.exports = helper

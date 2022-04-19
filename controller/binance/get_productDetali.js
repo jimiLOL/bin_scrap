@@ -18,7 +18,7 @@ function getProductDetail(productBinance, agent, header) {
     axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/nft-trade/product-detail', body, { headers: header, httpsAgent: agent }).then(res => {
       let productDetail = res.data.data;
 
-      if (res.data.code != 000000) {
+      if (res.data.code != '000000') {
         console.log(res.data);
         helper.getIP(agent).then(() => {
           // process.exit(1)

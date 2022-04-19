@@ -7,8 +7,9 @@ const { UA } = require("../../ua");
 const helper = require('./../helper/helper');
 let { getNewHeaders } = require('./getHeaders');
 const proxyLength = proxy.length;
+// const {arrayIterator, setConstant} = require('./arrayiterator.js') // надо перенести итератор в отдельный модуль
 
-
+// setConstant(proxy)
 
 
 let headers = {
@@ -28,17 +29,10 @@ let headers = {
     "sec-fetch-site": "same-origin",
     Host: "www.binance.com"
 };
-
-
-
-
 let header;
 
 
 
-function timeout(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 const arrayIterator = arr => ({
     [Symbol.asyncIterator]() {
@@ -69,11 +63,11 @@ awaitArray = (val, length) => {
             return new Promise((resolve) => {
                 if (proxy.length != proxyLength && length > 0) {
 
-                    timeout(1500).then(() => {
+                    helper.timeout(1500).then(() => {
                         integer++
                         if (integer > 1000) {
                             console.log('leng != length ' + proxy.length, proxyLength);
-                            proxyLength.length = proxy.length;
+                            proxyLength = proxy.length;
 
 
                         }
@@ -159,6 +153,7 @@ async function getInfoBinNFT() {
         (async () => {
             let index = 0;
             for await (const proxyVar of arrayIterator(proxy)) {
+                console.log('INIT');
                 index++
                 if (proxyVar == undefined) {
                     break
@@ -188,7 +183,7 @@ async function getInfoBinNFT() {
 
 
                 let data = new Date().getTime();
-                await timeout(100 * index).then(() => {
+                await helper.timeout(100 * index).then(() => {
                     if (!var_break) {
                         axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/product-list', body, { headers: header, httpsAgent: agent }).then(res => {
                             console.log(res.status + ' ' + index + ' total= ' + res.data.data.total);
@@ -214,8 +209,8 @@ async function getInfoBinNFT() {
 
                             proxy.push(proxyVar)
                             console.log('Proxy lenght ' + proxy.length);
- 
- 
+
+
                             if (e?.response?.statusText != undefined) {
                                 console.log(e?.response?.statusText);
 

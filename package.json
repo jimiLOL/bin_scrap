@@ -38,5 +38,8 @@
     "telegraf": "^4.4.2",
     "tunnel": "^0.0.6"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "^17.0.24"
+  }
 }
