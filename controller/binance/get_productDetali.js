@@ -75,6 +75,10 @@ function getProductDetail(productBinance, agent, header) {
           reject([e.code, agent.proxyOptions.host])
 
         });
+      } else {
+        reject([e.code, agent.proxyOptions.host])
+
+        
       }
 
       // console.log(e);

@@ -6,9 +6,9 @@ const mongoose = require('mongoose');
 
 var objectTrain = {};
 (async () => {
-    objectTrain['binance'] = await mongoose.createConnection('mongodb+srv://user:gBv6CPAr93ZhDrG@cluster0.1mkng.mongodb.net/binance?retryWrites=true&w=majority');
-    objectTrain['mochi'] = await mongoose.createConnection('mongodb+srv://user:gBv6CPAr93ZhDrG@cluster0.1mkng.mongodb.net/mochi?retryWrites=true&w=majority');
-    objectTrain['nftrade'] = await mongoose.createConnection('mongodb+srv://user:gBv6CPAr93ZhDrG@cluster0.1mkng.mongodb.net/nftrade?retryWrites=true&w=majority');
+    objectTrain['binance'] = await mongoose.createConnection(process.env.BINANCE_DB);
+    objectTrain['mochi'] = await mongoose.createConnection(process.env.MOCHI_DB);
+    objectTrain['nftrade'] = await mongoose.createConnection(process.env.NFTRADE_DB);
     
 mongoose.connection.on('error', err => {
     console.log(err);

@@ -62,11 +62,11 @@ mongoose.connect(process.env.MONGODB_URI).catch((error) => console.log(error));
 
 
 getHeaders().then(() => {
-  // getInfoBinNFT() // Парсинг маркетплейса
-init();
+  // getInfoBinNFT() // Раздел nft
+init(); // Раздел mystery_box
 
 
-})
+}) // Парсинг маркетплейса
 
 
 // for (let index = 0; index < 1; index++) {

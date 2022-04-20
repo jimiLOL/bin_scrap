@@ -14,8 +14,9 @@ binanceAdminCookies.find({ enable: true }, (err, call) => {
 
 var header = {};
 function getNewHeaders(headers) {
-    
-    let full = "";
+  let full = "";
+
+  if (headers.hasOwnProperty["Cookie"]) {
     let json = JSON.parse(header.Cookie);
     json.cookies.forEach((element) => {
       full = full + element.name + "=" + element.value + "; ";
@@ -31,6 +32,10 @@ function getNewHeaders(headers) {
     headers["x-nft-checkbot-sitekey"] =
       "6LeUPckbAAAAAIX0YxfqgiXvD3EOXSeuq0OpO8u_";
     headers.cookie = full;
+  }
+    
+
+   
 
     return headers
 }
