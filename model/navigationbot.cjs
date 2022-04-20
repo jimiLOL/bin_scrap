@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const objectTrain = require('../controller/db_train');
-// const bin = mongoose.createConnection('mongodb+srv://user:gBv6CPAr93ZhDrG@cluster0.1mkng.mongodb.net/binance?retryWrites=true&w=majority');
 const Addresses = {}
 
 
