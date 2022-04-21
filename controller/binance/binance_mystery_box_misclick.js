@@ -70,33 +70,33 @@ const arrayIterator = arr => ({
     }
 })
 awaitArray = (val, length) => {
-    let integer = 0; // предохранитель от бесконечной рекурсии
+    // let integer = 0; // предохранитель от бесконечной рекурсии
     return new Promise((resolve) => {
         function recursion() {
             return new Promise((resolve) => {
                 if (proxy.length != proxyLength && length > 0) {
                     helper.timeout(1500).then(() => {
-                        integer++
-                            // console.log('leng != length MeysteryBox ' + proxy.length, proxyLength);
+                        // integer++
+                        // // console.log('leng != length MeysteryBox ' + proxy.length, proxyLength);
 
-                            if (integer > 500) {
-                                console.log('leng != length ' + proxy.length, proxyLength);
-                                // proxyLength = proxy.length;
-    
-                                console.log(proxy.length + ' > '+ proxyLength);
-    
+                        // if (integer > 500) {
+                        //     console.log('leng != length ' + proxy.length, proxyLength);
+                        //     // proxyLength = proxy.length;
+
+                        //     console.log(proxy.length + ' > ' + proxyLength);
+
+                        // }
+                        proxy.forEach((ele, i) => {
+                            let filter = proxy.filter(x => x == ele);
+                            if (filter.length > 1) {
+                                console.log(filter);
+                                // proxy.splice(i, 1);
+                                console.log('length ' + proxy.length, proxyLength);
+                                process.exit(0)
+
                             }
-                            proxy.forEach((ele, i) => {
-                                let filter = proxy.filter(x => x == ele);
-                                if (filter.length > 1) {
-                                    console.log(filter);
-                                    // proxy.splice(i, 1);
-                                    console.log('length ' + proxy.length, proxyLength);
-                                    process.exit(0)
 
-                                }
-            
-                            });
+                        });
                         // if (proxy.length > proxyLength) {
                         //     proxy.forEach((ele, i) => {
                         //         let filter = proxy.filter(x => x == ele);
@@ -110,12 +110,12 @@ awaitArray = (val, length) => {
                         })
                     })
                 } else if (length < 0) {
-                    console.log('=========================leng < 0=========================');
-                    integer = 0;
+                    // console.log('=========================leng < 0=========================');
+                    // integer = 0;
                     resolve({ done: true })
                 } else {
-                    console.log('=====!===!=========!===done: false====!=!=========!=======!==========');
-                    integer = 0;
+                    // console.log('=====!===!=========!===done: false====!=!=========!=======!==========');
+                    // integer = 0;
                     resolve({ value: val, done: false })
                 }
             })
@@ -137,7 +137,6 @@ async function init() {
     const layerList = await axios.get('https://www.binance.com/bapi/nft/v1/public/nft/mystery-box/list?page=1&size=1000', { headers: header }).then(res => {
         return res.data.data
     });
-    helper.shuffle(proxy);
 
     layerList.forEach(async (layer, indexLayer) => {
         console.log(layer.name);
@@ -163,17 +162,19 @@ async function init() {
         let i = 0;
         let breakSwitch = false;
         for await (const proxyVar of arrayIterator(proxy)) {
-            console.log('====================INIT parsing Mystery BOX====================');
-            console.log(proxyVar);
-            console.log(proxy[i]);
+            helper.shuffle(proxy);
+
+            // console.log('====================INIT parsing Mystery BOX====================');
+            // console.log(proxyVar);
+            // console.log(proxy[i]);
             let indexProxy = proxy.indexOf(proxyVar);
             proxy.splice(indexProxy, 1);
 
             i++
-            
+
             await getInfoBinNFTMysteryBox(helper.proxyInit(proxyVar), i, body).then(res => {
                 breakSwitch = res;
-            }).catch(e=> {
+            }).catch(e => {
                 console.log(e);
             });
             if (breakSwitch) {
@@ -244,49 +245,49 @@ function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: p
             console.log(res.status + ' ' + i + ' total^ ' + res.data.data.total);
             console.log(body);
             // console.log(res.data.data.data[0]);
-            let num = Math.ceil(res.data.data.total/100);
+            let num = Math.ceil(res.data.data.total / 100);
             console.log('i ' + i + ' num ' + num);
             if (res.data.data.total == 0 || i >= num) {
 
                 breakSwitch = true
-            proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-        console.log('End cycle "getInfoBinNFTMysteryBox" Proxy length ' + proxy.length);
+                proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+                console.log('End cycle "getInfoBinNFTMysteryBox" Proxy length ' + proxy.length);
 
-            resolve(breakSwitch);
+                resolve(breakSwitch);
 
 
             } else {
-        console.log('Await parsing... cycle "getInfoBinNFTMysteryBox" Proxy length ' + proxy.length);
+                console.log('Await parsing... cycle "getInfoBinNFTMysteryBox" Proxy length ' + proxy.length);
 
 
                 // if (res.data.data?.data[0]?.setStartTime != undefined) {
                 //     console.log(res.data.data.data[0].productId);
-    
-    
+
+
                 // } else {
                 //     console.log(res.data.data);
-    
-    
+
+
                 // }
-    
+
                 arrayIteration(res.data.data.data, `${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
                 resolve(breakSwitch);
-    
-             
+
+
                 let newData = new Date().getTime();
                 console.log(`Date cycle^ ${newData - data} ms`);
 
             }
-         
 
-          
+
+
 
         }).catch(e => {
             console.log('Error');
             proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
             reject()
- 
-          
+
+
         })
 
     })
@@ -294,7 +295,7 @@ function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: p
 
 }
 
- 
+
 let cloneProxySet;
 function arrayIteration(array, proxySet) {
     if (proxySet != undefined) {
@@ -371,7 +372,7 @@ function arrayIteration(array, proxySet) {
                 console.log(e);
             })
 
-        }, 50 * i);
+        }, 250 * i);
 
 
     });

@@ -57,21 +57,21 @@ const arrayIterator = arr => ({
     }
 })
 awaitArray = (val, length) => {
-    let integer = 0; // предохранитель от бесконечной рекурсии
+    // let integer = 0; // отладка
     return new Promise((resolve) => {
         function recursion() {
             return new Promise((resolve) => {
                 if (proxy.length != proxyLength && length > 0) {
 
                     helper.timeout(1500).then(() => {
-                        integer++
-                        if (integer > 500) {
-                            console.log('leng != length ' + proxy.length, proxyLength);
-                            // proxyLength = proxy.length;
+                        // integer++
+                        // if (integer > 500) {
+                        //     console.log('leng != length ' + proxy.length, proxyLength);
+                        //     // proxyLength = proxy.length;
 
-                            console.log(proxy.length + ' > '+ proxyLength);
+                        //     console.log(proxy.length + ' > '+ proxyLength);
 
-                        }
+                        // }
                         
                         // if (proxy.length > proxyLength) {
                         //     console.log(proxy.length + ' > '+ proxyLength);
@@ -102,14 +102,14 @@ awaitArray = (val, length) => {
 
 
                 } else if (length < 0) {
-                    console.log('=========================leng < 0=========================');
-                    integer = 0;
+                    // console.log('=========================leng < 0=========================');
+                    // integer = 0;
 
                     resolve({ done: true })
 
                 } else {
-                    console.log('=====!===!=========!===done: false====!=!=========!=======!==========');
-                    integer = 0;
+                    // console.log('=====!===!=========!===done: false====!=!=========!=======!==========');
+                    // integer = 0;
 
                     resolve({ value: val, done: false })
                 }
@@ -142,6 +142,8 @@ async function getInfoBinNFT() {
     header = getNewHeaders(headers);
     const layerList = await axios.get('https://www.binance.com/bapi/nft/v1/public/nft/layer-search?keyword=', { headers: headers }).then(res => {
         return res.data.data
+    }).catch(e=> {
+        // console.log(e);
     });
 
 
@@ -163,7 +165,6 @@ async function getInfoBinNFT() {
             productIds: []
         };
         body.collectionId = layer.layerId;
-        helper.shuffle(proxy);
         helper.shuffle(UA);
         let var_break = false;
 
@@ -173,6 +174,8 @@ async function getInfoBinNFT() {
         (async () => {
             let index = 0;
             for await (const proxyVar of arrayIterator(proxy)) {
+        helper.shuffle(proxy);
+
                 console.log('====================INIT parsing nft====================');
                 index++
                 if (proxyVar == undefined) {
@@ -198,7 +201,7 @@ async function getInfoBinNFT() {
                 });
 
                 body.page = index;
-                header["User-Agent"] = UA[index];
+                header["user-agent"] = UA[index];
                 // let t = helper.uuid();
                 // header['x-ui-request-trace'] = t;
                 // header['x-trace-id'] = t;
@@ -252,7 +255,7 @@ async function getInfoBinNFT() {
                 if (index == 101 || var_break) {
                     console.log('===========break==============');
                     console.log(`Global cycle ${i}`);
-                    proxy.push(proxyVar);
+                    // proxy.push(proxyVar);
                     // delDublicateProxy();
 
 
@@ -291,7 +294,7 @@ function arrayIteration(array, proxySet) {
 
 
     array.forEach((ele, i) => {
-        setTimeout(() => {
+        setTimeout(async () => {
             let randomIndex = helper.getRandomInt(0, proxy.length);
             // console.log('Proxy length ' + proxy.length + ' randomIndex ' + randomIndex + ' ' + proxy[randomIndex] + ' ' + cloneProxySet.proxySet);
 
@@ -318,7 +321,7 @@ function arrayIteration(array, proxySet) {
             });
 
             header = getNewHeaders(headers);
-            getProductDetail(ele, agent, header).then(() => {
+           await getProductDetail(ele, agent, header).then(() => {
 
 
                 proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
@@ -353,14 +356,20 @@ function arrayIteration(array, proxySet) {
 
 
                 console.log(e);
-            })
+            });
+            if (array.length-1 == i) {
+                proxy.push(cloneProxySet.proxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
+            
+            
+                    }
 
-        }, 150 * i);
+        }, 250 * i);
+
+       
 
 
     });
 
-    proxy.push(cloneProxySet.proxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
 
 
 

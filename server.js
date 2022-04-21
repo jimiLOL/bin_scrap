@@ -62,7 +62,7 @@ mongoose.connect(process.env.MONGODB_URI).catch((error) => console.log(error));
 
 
 getHeaders().then(() => {
-  // getInfoBinNFT() // Раздел nft
+  getInfoBinNFT() // Раздел nft
 init(); // Раздел mystery_box
 
 
