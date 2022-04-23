@@ -62,7 +62,7 @@ async function addDB(element, attributes, marketpalce, extraMetadata, collection
 
 
     // }
-    let NftPokemon = require("../model/navigationbot.cjs")(collectionAddress, marketpalce);
+    let NftPokemon = require("../model/nft_detalii.cjs")(collectionAddress, marketpalce);
 
 
 
@@ -183,7 +183,7 @@ async function updatePriceDB(tokenId, price, marketpalce, collectionAddress) {
   // if (collectionAddress == '0xc33d69a337b796a9f0f7588169cd874c3987bde9') {
   //   collectionAddress = 'nfts'
   // }
-  let NftPokemon = require("../model/navigationbot.cjs")(collectionAddress, marketpalce);
+  let NftPokemon = require("../model/nft_detalii.cjs")(collectionAddress, marketpalce);
   NftPokemon.findOneAndUpdate(
     { tokenId: tokenId },
     { $set: { price: price, marketpalce: marketpalce } },
@@ -204,7 +204,7 @@ async function updatePriceDB(tokenId, price, marketpalce, collectionAddress) {
 
 async function add_binance_db(ele, marketpalce) {
   return new Promise((resolve, reject) => {
-    const NFT = require("../model/navigationbot.cjs")(ele.nftInfo.contractAddress, marketpalce);
+    const NFT = require("../model/nft_detalii.cjs")(ele.nftInfo.contractAddress, marketpalce);
 
     const newNFT = new NFT({
       marketpalce: marketpalce,

@@ -54,7 +54,7 @@ async function nftTradeGet(index, nft_contract) {
 
 
   try {
-  let NftPokemon = require("../model/navigationbot.cjs")(nft_contract, 'nftrade');
+  let NftPokemon = require("../model/nft_detalii.cjs")(nft_contract, 'nftrade');
   axios
     .get(
       `https://api.nftrade.com/api/v1/tokens?contractAddress=${nft_contract}&limit=100&skip=${

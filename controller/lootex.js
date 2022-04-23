@@ -1,4 +1,4 @@
-const NftPokemon = require("../model/navigationbot.cjs");
+const NftPokemon = require("../model/nft_detalii.cjs");
 const { senDataTelegram, techbicaleventTelegram, sendInfoTelegram } = require("../controller/sendTelegram");
 const { default: axios } = require("axios");
 const { addDB, updatePriceDB } = require("./addDB");

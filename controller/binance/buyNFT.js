@@ -137,14 +137,14 @@ async function buy(key, cookies) {
                         } else if (res.data.code == '10000222') {
                             console.log(res.data);
                             // console.log(headers);
-                            process.exit(0)
+                            // process.exit(0)
                             dateCaptcha = new Date().getTime() - 2*60*1000;
                             buyInit(cookies);
 
 
                         } else {
                             console.log(res.data);
-                            process.exit(0)
+                            // process.exit(0)
                             let body = {
                                 orderId: res.data.data.orderId,
                             };

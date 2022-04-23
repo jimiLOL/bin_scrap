@@ -1,5 +1,6 @@
 const { default: axios } = require("axios");
-const { add_binance_db } = require('./../addDB')
+const { add_binance_db } = require('./../addDB');
+const { add_history_binance_db } = require('./../add_db_history');
 const helper = require('./../helper/helper');
 require("dotenv/config");
 
@@ -20,6 +21,7 @@ function getProductDetail(productBinance, agent, header) {
       let productDetail = res.data.data;
 
       if (res.data.code != '000000') {
+        console.log('res.data.code != "000000"');
         console.log(res.data);
         // helper.getIP(agent).then(() => {
         //   // process.exit(1)
@@ -38,6 +40,7 @@ function getProductDetail(productBinance, agent, header) {
 
       axios.get(`https://www.binance.com/bapi/nft/v1/public/nft/nft-info/event/simple/${productDetail.nftInfo.nftId}?page=1&pageSize=10&salesOnlyFlag=false`, { headers: header, httpsAgent: agent, timeout: 9000 }).then(response => {
         productDetail.records = response.data.data.records;
+        productDetail.total = response.data.data.total;
         // console.log('get history Product Binance');
         //   console.log(productDetail);
         //   process.exit(0)
@@ -90,8 +93,11 @@ function addDB(productBinance, responseProductDetail = null) {
     if (responseProductDetail != null) {
       let newProduct = Object.assign({}, productBinance, responseProductDetail);
       add_binance_db(newProduct, 'binance').then(() => {
+        return add_history_binance_db(newProduct, 'binance')
+      }).then(() => {
         resolve()
       }).catch((e) => {
+        console.log(e);
         reject()
       })
       // process.exit(0)

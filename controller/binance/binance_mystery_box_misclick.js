@@ -90,9 +90,9 @@ awaitArray = (val, length) => {
                             let filter = proxy.filter(x => x == ele);
                             if (filter.length > 1) {
                                 console.log(filter);
-                                // proxy.splice(i, 1);
+                                proxy.splice(i, 1);
                                 console.log('length ' + proxy.length, proxyLength);
-                                process.exit(0)
+                                // process.exit(0)
 
                             }
 
@@ -314,7 +314,7 @@ function arrayIteration(array, proxySet) {
 
             const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = proxy[randomIndex] == undefined ? helper.proxyInit(cloneProxySet.proxySet) : helper.proxyInit(proxy[randomIndex]);
             if (proxy[randomIndex] == undefined) {
-                process.exit(0)
+                // process.exit(0)
                 proxy.push(cloneProxySet.proxySet)
             } else {
                 proxy.splice(randomIndex, 1);

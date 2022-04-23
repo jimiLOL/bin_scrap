@@ -62,7 +62,7 @@ mongoose.connect(process.env.MONGODB_URI).catch((error) => console.log(error));
 
 
 getHeaders().then(() => {
-  getInfoBinNFT() // Раздел nft
+  // getInfoBinNFT() // Раздел nft
 init(); // Раздел mystery_box
 
 
@@ -259,7 +259,7 @@ let data = {
 };
 
 async function delDublicate(nft_contract, count) {
-  let NftPokemon = require("./model/navigationbot.cjs")(nft_contract, 'mochi');
+  let NftPokemon = require("./model/nft_detalii.cjs")(nft_contract, 'mochi');
   let asw = [];
   for (let index = 0; index < count; index++) {
     NftPokemon.find({}, (err, call) => {
@@ -341,7 +341,7 @@ const jobs = new CronJob(dataCron, async function () {
   );
   nftArray.forEach(async (elementNFT, index) => {
     // console.log(element.nft_contract.contract);
-    let NftPokemon = require("./model/navigationbot.cjs")(conractSet(elementNFT), 'mochi');
+    let NftPokemon = require("./model/nft_detalii.cjs")(conractSet(elementNFT), 'mochi');
     // let NftPokemon = mongoose.model('nfts');
     console.log('+');
 
