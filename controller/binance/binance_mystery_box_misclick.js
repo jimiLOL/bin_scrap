@@ -75,7 +75,7 @@ awaitArray = (val, length) => {
         function recursion() {
             return new Promise((resolve) => {
                 if (proxy.length != proxyLength && length > 0) {
-                    helper.timeout(1500).then(() => {
+                    helper.timeout(4000).then(() => {
                         // integer++
                         // // console.log('leng != length MeysteryBox ' + proxy.length, proxyLength);
 

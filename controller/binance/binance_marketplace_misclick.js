@@ -63,7 +63,7 @@ awaitArray = (val, length) => {
             return new Promise((resolve) => {
                 if (proxy.length != proxyLength && length > 0) {
 
-                    helper.timeout(1500).then(() => {
+                    helper.timeout(4000).then(() => {
                         // integer++
                         // if (integer > 500) {
                         //     console.log('leng != length ' + proxy.length, proxyLength);
