@@ -2,10 +2,10 @@
 const { default: axios } = require("axios");
 const tunnel = require("tunnel");
 const { getProductDetail } = require('./get_productDetali');
-const { proxy } = require("../../proxy_list");
+const { proxy } = require("../../proxy_list two");
 const { UA } = require("../../ua");
 const helper = require('./../helper/helper');
-let { getNewHeaders } = require('./getHeaders');
+// let { getNewHeaders } = require('./getHeaders');
 const proxyLength = proxy.length;
 // const {arrayIterator, setConstant} = require('./arrayiterator.js') // надо перенести итератор в отдельный модуль
 
@@ -62,6 +62,8 @@ awaitArray = (val, length) => {
         function recursion() {
             return new Promise((resolve) => {
                 if (proxy.length != proxyLength && length > 0) {
+                //    console.log('leng != length ' + proxy.length, proxyLength);
+
 
                     helper.timeout(4000).then(() => {
                         // integer++
@@ -72,7 +74,7 @@ awaitArray = (val, length) => {
                         //     console.log(proxy.length + ' > '+ proxyLength);
 
                         // }
-                        
+
                         // if (proxy.length > proxyLength) {
                         //     console.log(proxy.length + ' > '+ proxyLength);
                         //     proxy.forEach((ele, i) => {
@@ -90,7 +92,7 @@ awaitArray = (val, length) => {
                             if (filter.length > 1) {
                                 proxy.splice(i, 1);
                             }
-        
+
                         });
 
 
@@ -138,143 +140,155 @@ function delDublicateProxy() {
 
     });
 }
-async function getInfoBinNFT() {
-    header = getNewHeaders(headers);
-    const layerList = await axios.get('https://www.binance.com/bapi/nft/v1/public/nft/layer-search?keyword=', { headers: headers }).then(res => {
-        return res.data.data
-    }).catch(e=> {
-        // console.log(e);
-    });
+async function getInfoBinNFT(init_header) {
+    return new Promise(async (resolve, reject) => {
+        header = init_header.headers; // делаем header глобальным
+
+        // header = getNewHeaders(headers);
+        const layerList = await axios.get('https://www.binance.com/bapi/nft/v1/public/nft/layer-search?keyword=', { headers: header }).then(res => {
+            console.log(res);
+            return res.data.data
+        }).catch(e => {
+            // console.log(e);
+        });
 
 
-    layerList.forEach((layer, i) => {
-        console.log(`Init Global cycle ${i}`);
-        let body = {
-            currency: (function () { return "BUSD" })(),
-            mediaType: "",
-            tradeType: "",
-            // amountFrom: "0.1",
-            // amountTo: "2",
-            collectionId: '',
-            categorys: [],
-            keyword: "",
-            // orderBy: "list_time", // когда размещенно
-            // orderType: 1, // статус.
-            page: 1,
-            rows: 100,
-            productIds: []
-        };
-        body.collectionId = layer.layerId;
-        helper.shuffle(UA);
-        let var_break = false;
+        layerList.forEach((layer, i) => {
+            console.log(`Init Global cycle ${i}`);
+            let body = {
+                currency: (function () { return "BUSD" })(),
+                mediaType: "",
+                tradeType: "",
+                // amountFrom: "0.1",
+                // amountTo: "2",
+                collectionId: '',
+                categorys: [],
+                keyword: "",
+                // orderBy: "list_time", // когда размещенно
+                // orderType: 1, // статус.
+                page: 1,
+                rows: 100,
+                productIds: []
+            };
+            body.collectionId = layer.layerId;
+            helper.shuffle(UA);
+            let var_break = false;
 
 
 
 
-        (async () => {
-            let index = 0;
-            for await (const proxyVar of arrayIterator(proxy)) {
-        helper.shuffle(proxy);
+            (async () => {
+                let index = 0;
+                for await (const proxyVar of arrayIterator(proxy)) {
+                    helper.shuffle(proxy);
 
-                console.log('====================INIT parsing nft====================');
-                index++
-                if (proxyVar == undefined) {
-                    break
-                }
+                    console.log('====================INIT parsing nft====================');
+                    index++
+                    if (proxyVar == undefined) {
+                        break
+                    }
 
-                const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = helper.proxyInit(proxyVar);
-                console.log('Proxy lenght ' + proxy.length + ' index ' + index);
-                let indexProxy = proxy.indexOf(proxyVar);
-                proxy.splice(indexProxy, 1);
-                // proxy.splice(index - 1, 1);
-                let proxyOptions = {
-                    host: proxyHost,
-                    port: portHost,
-                    proxyAuth: proxyAuth,
-                    headers: {
-                        'User-Agent': UA[index]
-                    },
-                };
-                let agent = tunnel.httpsOverHttp({
-                    proxy: proxyOptions,
-                    rejectUnauthorized: false,
-                });
+                    const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = helper.proxyInit(proxyVar);
+                    console.log('Proxy lenght ' + proxy.length + ' index ' + index);
+                    let indexProxy = proxy.indexOf(proxyVar);
+                    proxy.splice(indexProxy, 1);
+                    // proxy.splice(index - 1, 1);
+                    let proxyOptions = {
+                        host: proxyHost,
+                        port: portHost,
+                        proxyAuth: proxyAuth,
+                        headers: {
+                            'User-Agent': UA[index]
+                        },
+                    };
+                    let agent = tunnel.httpsOverHttp({
+                        proxy: proxyOptions,
+                        rejectUnauthorized: false,
+                    });
 
-                body.page = index;
-                header["user-agent"] = UA[index];
-                // let t = helper.uuid();
-                // header['x-ui-request-trace'] = t;
-                // header['x-trace-id'] = t;
+                    body.page = index;
+                    header["user-agent"] = UA[index];
+                    // let t = helper.uuid();
+                    // header['x-ui-request-trace'] = t;
+                    // header['x-trace-id'] = t;
 
 
-                let data = new Date().getTime();
-                // await helper.timeout(100 * index).then(() => {
+                    let data = new Date().getTime();
+                    // await helper.timeout(100 * index).then(() => {
                     // if (!var_break) {
-                        axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/product-list', body, { headers: header, httpsAgent: agent }).then(res => {
-                            console.log(res.status + ' ' + index + ' total= ' + res.data.data.total);
+                    axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/product-list', body, { headers: header, httpsAgent: agent }).then(res => {
+                        console.log(res.status + ' ' + index + ' total= ' + res.data.data.total);
 
-                            console.log('Send proxyVar ' + proxyVar);
+                        console.log('Send proxyVar ' + proxyVar);
 
-                            arrayIteration(res.data.data.rows, proxyVar);
-                            let n = res.data.data.total / 100;
-                            console.log(Math.ceil(n));
-                            let newData = new Date().getTime();
-                            console.log(`Date cycle^ ${newData - data} ms`);
-                            if (Math.ceil(n) == index) {
-                                var_break = true
-                            } // останавливаем итерацию
-                            console.log(`Global cycle ${i}`);
-
-
-
-                            return Math.ceil(n)
-                        }).catch(e => {
-                            console.log('Error');
-                            console.log(`Global cycle ${i}`);
-
-                            proxy.push(proxyVar)
-                            console.log('Proxy lenght ' + proxy.length);
+                        arrayIteration(res.data.data.rows, proxyVar);
+                        let n = res.data.data.total / 100;
+                        console.log(Math.ceil(n));
+                        let newData = new Date().getTime();
+                        console.log(`Date cycle^ ${newData - data} ms`);
+                        if (Math.ceil(n) == index) {
+                            var_break = true
+                        } // останавливаем итерацию
+                        console.log(`Global cycle ${i}`);
+                        if (i == layer.length-1) {
+                            resolve({status: 'error', name_worker: 'binance_mystery_box_misclick'})
+                        }
 
 
-                            if (e?.response?.statusText != undefined) {
-                                console.log(e?.response?.statusText);
+
+                        return Math.ceil(n)
+                    }).catch(e => {
+                        console.log('Error');
+                        console.log(`Global cycle ${i}`);
+
+                        proxy.push(proxyVar)
+                        console.log('Proxy lenght ' + proxy.length);
 
 
-                            } else {
-                                // console.log(e);
-                            }
-                            // var_break = true;
-                        })
+                        if (e?.response?.statusText != undefined) {
+                            console.log(e?.response?.statusText);
+
+
+                        } else {
+                            // console.log(e);
+                        }
+                        // var_break = true;
+                        if (i == layer.length-1) {
+                            reject({status: 'error', name_worker: 'binance_mystery_box_misclick'})
+                        }
+                    })
                     // } else {
                     //     proxy.push(proxyVar);
                     //     // delDublicateProxy()
 
                     // }
 
-                // });
-                if (index == 101 || var_break) {
-                    console.log('===========break==============');
-                    console.log(`Global cycle ${i}`);
-                    // proxy.push(proxyVar);
-                    // delDublicateProxy();
+                    // });
+                    if (index == 101 || var_break) {
+                        console.log('===========break==============');
+                        console.log(`Global cycle ${i}`);
+                        // proxy.push(proxyVar);
+                        // delDublicateProxy();
 
 
-                    var_break = false;
-                console.log('break\nProxy length ' + proxy.length);
+                        var_break = false;
+                        console.log('break\nProxy length ' + proxy.length);
 
-                    break
-                } // у нас в ответе максимум 100 сущностей отсюда и 101
-
-
-
-            }
-        })()
+                        break
+                    } // у нас в ответе максимум 100 сущностей отсюда и 101
 
 
 
+                }
+            })()
 
 
-    });
+
+
+
+        });
+    })
+
 
 
 
@@ -320,8 +334,8 @@ function arrayIteration(array, proxySet) {
                 rejectUnauthorized: false,
             });
 
-            header = getNewHeaders(headers);
-           await getProductDetail(ele, agent, header).then(() => {
+            // header = getNewHeaders(headers);
+            await getProductDetail(ele, agent, header).then(() => {
 
 
                 proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
@@ -351,21 +365,21 @@ function arrayIteration(array, proxySet) {
                 //     }
 
                 // });
-                console.log('Function arrayIteration END\nProxy length ' + proxy.length);
+                console.log('Function arrayIteration END MarketPlace\nProxy length ' + proxy.length);
 
 
 
                 console.log(e);
             });
-            if (array.length-1 == i) {
+            if (array.length - 1 == i) {
                 proxy.push(cloneProxySet.proxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
-            
-            
-                    }
+
+
+            }
 
         }, 250 * i);
 
-       
+
 
 
     });

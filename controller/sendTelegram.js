@@ -1,4 +1,4 @@
-const token = "5096662702:AAHW_TI1eURLDocxOvH122okHBln-Uw4zNU";
+const token = "5399479670:AAFY-lsVifLTf6sc5eeDY7s8C--4Etcs57o";
 const { Telegraf, Markup } = require("telegraf");
 const bot = new Telegraf(token);
 const CronJob = require("cron").CronJob;

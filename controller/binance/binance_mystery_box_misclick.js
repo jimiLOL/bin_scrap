@@ -8,10 +8,10 @@ const { UA } = require("../../ua");
 const helper = require('./../helper/helper');
 const { getNaemListNFT } = require("./getNftStat");
 const { arrayNFTCollectionName } = require("./nftArrayData");
-const {
-    techbicaleventTelegram,
-} = require("../sendTelegram");
-let { getNewHeaders } = require('./getHeaders');
+// const {
+//     techbicaleventTelegram,
+// } = require("../sendTelegram");
+// let { getNewHeaders } = require('./getHeaders');
 const { getProductDetail } = require('./get_productDetali');
 
 const proxyLength = proxy.length;
@@ -75,6 +75,9 @@ awaitArray = (val, length) => {
         function recursion() {
             return new Promise((resolve) => {
                 if (proxy.length != proxyLength && length > 0) {
+                        // console.log('leng != length MeysteryBox ' + proxy.length, proxyLength);
+
+
                     helper.timeout(4000).then(() => {
                         // integer++
                         // // console.log('leng != length MeysteryBox ' + proxy.length, proxyLength);
@@ -130,66 +133,78 @@ awaitArray = (val, length) => {
 
     })
 }
+//header - мы прокидываем при инциализации потока
+async function init(init_header) {
+    return new Promise(async (resolve, reject) => {
+        // arrayNFT = await getNaemListNFT();
+        // header = getNewHeaders(headers); // поток не имеет доступа к результату этой функции;
+        header = init_header.headers; // делаем header глобальным
+        // console.log(header);
+ 
+        const layerList = await axios.get('https://www.binance.com/bapi/nft/v1/public/nft/mystery-box/list?page=1&size=1000', { headers: header }).then(res => {
+            return res.data.data
+        });
 
-async function init() {
-    // arrayNFT = await getNaemListNFT();
-    header = getNewHeaders(headers);
-    const layerList = await axios.get('https://www.binance.com/bapi/nft/v1/public/nft/mystery-box/list?page=1&size=1000', { headers: header }).then(res => {
-        return res.data.data
-    });
+        layerList.forEach(async (layer, indexLayer) => {
+            console.log(layer.name);
+            helper.shuffle(UA);
+            let body = {
+                page: 1,
+                size: 100,
+                params: {
+                    // keyword: "",
+                    currency: "BUSD",
+                    nftType: null,
+                    // amountFrom: "0.001",
+                    // amountTo: "3",
+                    // setStartTime: new Date().getTime(),
+                    // setStartTime: (function() {return new Date().getTime()})(),
+                    // orderBy: "list_time",
+                    // orderType: -1,
+                    serialNo: [],
+                    tradeType: null
+                }
+            };
+            body.params.serialNo.push(layer.serialsNo);
+            let i = 0;
+            let breakSwitch = false;
+            for await (const proxyVar of arrayIterator(proxy)) {
+                helper.shuffle(proxy);
 
-    layerList.forEach(async (layer, indexLayer) => {
-        console.log(layer.name);
-        helper.shuffle(UA);
-        let body = {
-            page: 1,
-            size: 100,
-            params: {
-                // keyword: "",
-                currency: "BUSD",
-                nftType: null,
-                // amountFrom: "0.001",
-                // amountTo: "3",
-                // setStartTime: new Date().getTime(),
-                // setStartTime: (function() {return new Date().getTime()})(),
-                // orderBy: "list_time",
-                // orderType: -1,
-                serialNo: [],
-                tradeType: null
+                // console.log('====================INIT parsing Mystery BOX====================');
+                // console.log(proxyVar);
+                // console.log(proxy[i]);
+                let indexProxy = proxy.indexOf(proxyVar);
+                proxy.splice(indexProxy, 1);
+
+                i++
+
+                await getInfoBinNFTMysteryBox(helper.proxyInit(proxyVar), i, body).then(res => {
+                    breakSwitch = res;
+                    if (indexLayer == layer.length-1) {
+                        resolve({status: 'ok', name_worker: 'binance_mystery_box_misclick'})
+                    }
+                }).catch(e => {
+                    console.log(e);
+                    if (indexLayer == layer.length-1) {
+                        reject({status: 'error', name_worker: 'binance_mystery_box_misclick'})
+                    }
+                    process.exit(1)
+                });
+                if (breakSwitch) {
+                    break
+                }
+                // if (i == proxy.length - 1) {
+                //     console.log('!');
+                //     init();
+                // } // рекурсия
+
+
             }
-        };
-        body.params.serialNo.push(layer.serialsNo);
-        let i = 0;
-        let breakSwitch = false;
-        for await (const proxyVar of arrayIterator(proxy)) {
-            helper.shuffle(proxy);
 
-            // console.log('====================INIT parsing Mystery BOX====================');
-            // console.log(proxyVar);
-            // console.log(proxy[i]);
-            let indexProxy = proxy.indexOf(proxyVar);
-            proxy.splice(indexProxy, 1);
-
-            i++
-
-            await getInfoBinNFTMysteryBox(helper.proxyInit(proxyVar), i, body).then(res => {
-                breakSwitch = res;
-            }).catch(e => {
-                console.log(e);
-                process.exit(1)
-            });
-            if (breakSwitch) {
-                break
-            }
-            // if (i == proxy.length - 1) {
-            //     console.log('!');
-            //     init();
-            // } // рекурсия
-
-
-        }
-
+        })
     })
+
 
 
 
@@ -213,6 +228,8 @@ function random() {
 function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: proxyAuth }, i, body) {
     return new Promise(async (resolve, reject) => {
         console.log('Start "getInfoBinNFTMysteryBox" Proxy length ' + proxy.length);
+
+     
 
         header["user-agent"] = UA[i];
         let proxyOptions = {
@@ -335,7 +352,7 @@ function arrayIteration(array, proxySet) {
                 rejectUnauthorized: false,
             });
 
-            header = getNewHeaders(headers);
+            // header = getNewHeaders(headers);
             getProductDetail(ele, agent, header).then(() => {
 
 
@@ -386,12 +403,6 @@ function arrayIteration(array, proxySet) {
 }
 
 
-function sendMessage(message) {
-    console.log(message);
-    techbicaleventTelegram(
-        1,
-        `Нашли ${message}`,
-        "....."
-    );
-}
-module.exports = { getInfoBinNFTMysteryBox, init }
+ 
+ 
+module.exports = { init, getInfoBinNFTMysteryBox };

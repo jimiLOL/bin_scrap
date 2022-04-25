@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
+const { getAddressModel } = require("../model/nft_detalii.cjs");
 
 
 const ShemaNftPokemon = new Schema({
@@ -203,8 +204,8 @@ async function updatePriceDB(tokenId, price, marketpalce, collectionAddress) {
 
 
 async function add_binance_db(ele, marketpalce) {
-  return new Promise((resolve, reject) => {
-    const NFT = require("../model/nft_detalii.cjs")(ele.nftInfo.contractAddress, marketpalce);
+  return new Promise(async (resolve, reject) => {
+    const NFT = await getAddressModel(ele.nftInfo.contractAddress, marketpalce);
 
     const newNFT = new NFT({
       marketpalce: marketpalce,
@@ -241,7 +242,7 @@ async function add_binance_db(ele, marketpalce) {
         reject()
       };
       if (call) {
-        console.log('Обновили данные ' + ele.productId + ' для биржи ' + marketpalce);
+        // console.log('Обновили данные ' + ele.productId + ' для биржи ' + marketpalce);
         resolve()
   
       } else {

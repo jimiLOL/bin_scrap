@@ -127,10 +127,32 @@ function getAddressModel(prefix, db_key) {
 
     // //     }
     // // })
-    if (!Addresses[prefix]) {
-        Addresses[prefix] = new DynamicSchema(prefix, objectTrain[db_key], db_key)
-    }
-    return Addresses[prefix]
+    return new Promise((resolve, reject) => {
+        if (!Addresses[prefix]) {
+            if (objectTrain[db_key] == undefined) {
+                setTimeout(() => {
+                    console.log('await connect to ' +  db_key +' ....');
+                    getDetailModelNFT(prefix, db_key).then(res=> {
+                       resolve(res)
+                   })
+                }, 1000);
+    
+            } else {
+                Addresses[prefix] = new DynamicSchema(prefix, objectTrain[db_key], db_key);
+
+            resolve(Addresses[prefix])
+
+    
+            }
+        } else {
+            resolve(Addresses[prefix])
+
+        }
+    })
+    // if (!Addresses[prefix]) {
+    //     Addresses[prefix] = new DynamicSchema(prefix, objectTrain[db_key], db_key)
+    // }
+    // return Addresses[prefix]
 
 
 }
@@ -138,5 +160,5 @@ function getAddressModel(prefix, db_key) {
 
 
 // const NftPokemon = mongoose.model('nfts', ShemaNftPokemon);
-module.exports = getAddressModel;
+module.exports = {getAddressModel};
 

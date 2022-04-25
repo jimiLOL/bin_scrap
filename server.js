@@ -10,17 +10,16 @@ const passport = require("passport");
 const app = express();
 const http = require("http");
 
-// const { Telegraf, Markup } = require("telegraf");
 const { stringify } = require("query-string");
 const { json } = require("body-parser");
 const server = require("http").createServer(app);
-const token = "2138477603:AAFdAeFSfYQ1wqey5W35j1-d8JF01xbr6iA";
 const fs = require("fs");
 const moment = require("moment");
 const CronJob = require("cron").CronJob;
 const CronTime = require("cron").CronTime;
 const { default: axios } = require("axios");
-const { reject } = require("core-js/fn/promise");
+const path = require('path');
+const Piscina = require('piscina');
 const {
   senDataTelegram,
   techbicaleventTelegram,
@@ -61,20 +60,32 @@ app.use(bodyParser.urlencoded({ extended: false }));
 mongoose.connect(process.env.MONGODB_URI).catch((error) => console.log(error));
 
 
-getHeaders().then(() => {
-  // getInfoBinNFT() // Раздел nft
-init(); // Раздел mystery_box
+
+
+const binance_mystery = new Piscina({
+  filename: path.resolve('./controller/binance', 'binance_mystery_box_misclick.js')
+});
+const binance_marketplace = new Piscina({
+  filename: path.resolve('./controller/binance', 'binance_marketplace_misclick.js')
+});
+
+ 
+
+getHeaders().then(async (headers) => {
+  const res = await Promise.all([
+    binance_mystery.run({headers: headers}, { name: 'init' }),
+    // binance_marketplace.run({headers: headers}, { name: 'getInfoBinNFT' })
+  
+  ]);
+  console.log(res);  // Prints 10
+ 
+ 
+   
 
 
 }) // Парсинг маркетплейса
 
-
-// for (let index = 0; index < 1; index++) {
-
-//   timeout(200*index).then(()=>{
-//     opensea();
-//   })
-// }
+ 
 
 
 binanceAdminCookies.find({ enable: true }, (err, call) => {

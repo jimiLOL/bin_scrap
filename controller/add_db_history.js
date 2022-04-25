@@ -1,11 +1,13 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+// const Schema = mongoose.Schema;
+
+const { getHistoryModelNFT } = require("../model/nft_history.cjs");
+
 
 async function add_history_binance_db(ele, marketpalce) {
-    // console.log(ele);
-    // process.exit(0)
-    return new Promise((resolve, reject) => {
-        const NFT = require("../model/nft_history.cjs")(ele.nftInfo.contractAddress, marketpalce);
+
+    return new Promise(async (resolve, reject) => {
+        const NFT = await getHistoryModelNFT(ele.nftInfo.contractAddress, marketpalce);
 
         // const newNFT = new NFT({
         //     marketpalce: marketpalce,
@@ -18,7 +20,6 @@ async function add_history_binance_db(ele, marketpalce) {
                 console.log(err);
             }
             if (call) {
-                // console.log(call.total, ele.total);
                 if (call.total < ele.total) {
                     //
                     let date = [];

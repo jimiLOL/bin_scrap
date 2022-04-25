@@ -45,7 +45,7 @@ function DynamicSchema(namecollection, db, db_key) {
 }
 
 
-function getAddressModel(prefix, db_key) {
+function getHistoryModelNFT(prefix, db_key) {
 
     // console.log('db_key');
     // console.log(db_key);
@@ -55,10 +55,33 @@ function getAddressModel(prefix, db_key) {
 
     // //     }
     // // })
-    if (!Addresses[`history_${prefix}`]) {
-        Addresses[`history_${prefix}`] = new DynamicSchema(`history_${prefix}`, objectTrain[db_key], db_key)
-    }
-    return Addresses[`history_${prefix}`]
+    return new Promise((resolve, reject) => {
+        if (!Addresses[`history_${prefix}`]) {
+            if (objectTrain[db_key] == undefined) {
+                setTimeout(() => {
+                    console.log('await connect to ' +  db_key +' ....');
+                    getHistoryModelNFT(prefix, db_key).then(res=> {
+                       resolve(res)
+                   })
+                }, 1000);
+    
+            } else {
+                Addresses[`history_${prefix}`] = new DynamicSchema(`history_${prefix}`, objectTrain[db_key], db_key);
+
+            resolve(Addresses[`history_${prefix}`])
+
+    
+            }
+        } else {
+            resolve(Addresses[`history_${prefix}`])
+
+        }
+    })
+
+    // if (!Addresses[`history_${prefix}`]) {
+    //     Addresses[`history_${prefix}`] = new DynamicSchema(`history_${prefix}`, objectTrain[db_key], db_key)
+    // }
+    // return Addresses[`history_${prefix}`]
 
 
 }
@@ -66,5 +89,5 @@ function getAddressModel(prefix, db_key) {
 
 
 // const NftPokemon = mongoose.model('nfts', ShemaNftPokemon);
-module.exports = getAddressModel;
+module.exports = {getHistoryModelNFT};
 
