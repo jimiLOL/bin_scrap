@@ -6,7 +6,6 @@ const cors = require("cors");
 const Price = require("./model/price");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const passport = require("passport");
 const app = express();
 const http = require("http");
 
