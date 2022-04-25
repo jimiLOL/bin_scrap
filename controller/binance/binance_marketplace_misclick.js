@@ -2,7 +2,7 @@
 const { default: axios } = require("axios");
 const tunnel = require("tunnel");
 const { getProductDetail } = require('./get_productDetali');
-const { proxy } = require("../../proxy_list two");
+const { proxy } = require("../../proxy_list_two");
 const { UA } = require("../../ua");
 const helper = require('./../helper/helper');
 // let { getNewHeaders } = require('./getHeaders');
