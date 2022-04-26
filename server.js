@@ -156,7 +156,7 @@ function init_workers() {
   }).then(res => {
     console.log('finally');
     console.log(res);
-    let index = promiseWorker.map((x, i) => { if (Object.keys(x) == e.name_worker) return i })
+    let index = promiseWorker.map((x, i) => { if (Object.keys(x) == res.name_worker) return i })
 
     if (index != -1) {
       console.log(index);
