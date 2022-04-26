@@ -70,12 +70,12 @@ let worker = {};
 let promiseWorker = [];
 
 
-// worker.binance_mystery = new Piscina({
-//   filename: path.resolve('./controller/binance', 'binance_mystery_box_misclick.js')
-// });
-// worker.binance_marketplace = new Piscina({
-//   filename: path.resolve('./controller/binance', 'binance_marketplace_misclick.js')
-// });
+worker.binance_mystery = new Piscina({
+  filename: path.resolve('./controller/binance', 'binance_mystery_box_misclick.js')
+});
+worker.binance_marketplace = new Piscina({
+  filename: path.resolve('./controller/binance', 'binance_marketplace_misclick.js')
+});
 worker.binance_mysteryLastOrder = new Piscina({
   filename: path.resolve('./controller/binance', 'binance_mystery_box_lastorder.js')
 });
@@ -87,97 +87,38 @@ worker.binance_marketplace_lastorder = new Piscina({
 function init_workers() {
 
   getHeaders().then(async (headers) => {
-    // worker.push({test: helper.timeout(1000)})
-
-    // Object.keys(workers).forEach(e => {
-    //   if (!util.inspect(e).includes("pending")) {
-    //     worker
-
-    //   } else {
-    //     console.log(e);
-
-    //   }
-    // })
     console.log(promiseWorker);
     Object.keys(worker).forEach(e => {
-      // if (!util.inspect(e).includes("pending")) {
-      //   e(1000)
-
-      // }
       if (workers.hasOwnProperty(e) && util.inspect(workers[e]).includes("pending")) {
         console.log('Worker ' + workers[e] + ' is work..');
-
-
       } else {
         promiseWorker.push({ [e]: workers[e] = worker[e].run({ headers: headers }, { name: 'init' }) })
-        // promiseWorker.push({[e]: workers[e] = worker[e].timeout(helper.getRandomInt(1000, 10000))})
-        // console.log(promiseWorker);
-        // console.log(workers);
-        // process.exit(0)
-
-
       }
     })
     let arrayPromise = [];
     promiseWorker.forEach(promise => {
       arrayPromise.push(Object.values(promise))
-
     });
     arrayPromise = arrayPromise.flat();
     console.log(arrayPromise);
-
     return await Promise.race(arrayPromise)
-
-    // worker.forEach(element => {
-    //   // console.log(util.inspect(element).includes("pending"))
-    //   if (!util.inspect(element).includes("pending")) {
-
-    //   }
-
-    // });
-    // worker.push({ test: helper.timeout(1000) })
-    // worker.push({binance_mystery: binance_mystery.run({headers: headers}, { name: 'init' })})
-    // console.log(worker);
-
-
-    // const res = await Promise.all([
-    //   binance_mystery.run({headers: headers}, { name: 'init' }),
-    //   // binance_marketplace.run({headers: headers}, { name: 'getInfoBinNFT' }),
-    //   // binance_mysteryLastOrder.run({headers: headers}, { name: 'init_lastOrder' }),
-    //   // binance_marketplace_lastorder.run({headers: headers}, { name: 'getInfoBinNFT' })
-
-    // ]);
-    // console.log(res);  // Prints 10
-
-
-
-
-
   }).then(res => {
     console.log('finally');
     console.log(res);
     let index = promiseWorker.map((x, i) => { if (Object.keys(x) == res.name_worker) return i })
-
     if (index != -1) {
       console.log(index);
       promiseWorker.splice(index, 1)
-
     }
-    process.exit(0)
     init_workers()
-
   }).catch(e => {
     console.log('Ошибка Worker');
     console.log(e);
     let index = promiseWorker.map((x, i) => { if (Object.keys(x) == e.name_worker) return i })
     if (index != -1) {
       promiseWorker.splice(index, 1)
-
     }
-    process.exit(0)
-
     init_workers()
-
   }) // Парсинг маркетплейса
 }
 init_workers()
