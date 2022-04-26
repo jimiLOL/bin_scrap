@@ -43,6 +43,8 @@ const {getInfoBinNFT} = require("./controller/binance/binance_marketplace_miscli
 const {init} = require("./controller/binance/binance_mystery_box_misclick");
 const {buyInit} = require('./controller/binance/buyNFT');
 
+const {init_lastOrder} = require('./controller/binance/binance_mystery_box_lastorder');
+
 const {getHeaders} = require('./controller/binance/getHeaders')
 
 
@@ -67,13 +69,21 @@ const binance_mystery = new Piscina({
 const binance_marketplace = new Piscina({
   filename: path.resolve('./controller/binance', 'binance_marketplace_misclick.js')
 });
+const binance_mysteryLastOrder = new Piscina({
+  filename: path.resolve('./controller/binance', 'binance_mystery_box_lastorder.js')
+});
+const binance_marketplace_lastorder = new Piscina({
+  filename: path.resolve('./controller/binance', 'binance_marketplace_lastorder.js')
+});
 
  
 
 getHeaders().then(async (headers) => {
   const res = await Promise.all([
     binance_mystery.run({headers: headers}, { name: 'init' }),
-    // binance_marketplace.run({headers: headers}, { name: 'getInfoBinNFT' })
+    // binance_marketplace.run({headers: headers}, { name: 'getInfoBinNFT' }),
+    // binance_mysteryLastOrder.run({headers: headers}, { name: 'init_lastOrder' }),
+    // binance_marketplace_lastorder.run({headers: headers}, { name: 'getInfoBinNFT' })
   
   ]);
   console.log(res);  // Prints 10
@@ -82,7 +92,11 @@ getHeaders().then(async (headers) => {
    
 
 
+}).catch(e=> {
+  console.log('Ошибка Worker');
+  console.log(e);
 }) // Парсинг маркетплейса
+
 
  
 

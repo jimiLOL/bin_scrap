@@ -26,19 +26,19 @@ function proxyInit(proxy) {
         console.log(proxy);
         process.exit(1)
     }
- 
+
 
 };
 async function getIP(agent) {
-  await axios.get('https://api.ipify.org', { httpsAgent: agent }).then(res=> {
+    await axios.get('https://api.ipify.org', { httpsAgent: agent }).then(res => {
         console.log('PROXY IP^ ' + res.data);
-    }).catch(e=> {
+    }).catch(e => {
         console.log(e);
     })
 };
 
 function uuid() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
     });
@@ -47,23 +47,33 @@ function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min; //Максимум не включается, минимум включается
-  }
+}
 
-  function initAgent(proxyOptions) {
+function initAgent(proxyOptions) {
     let agent = tunnel.httpsOverHttp({
         proxy: proxyOptions,
         rejectUnauthorized: false,
     });
     return agent
-  }
+}
 
-  const removeDuplicateItems = arr => [new Set(arr)];
+const removeDuplicateItems = arr => [new Set(arr)];
 
-  function timeout(ms) {
+function delDublicateProxy() {
+    proxy.forEach((ele, i) => {
+        let filter = proxy.filter(x => x == ele);
+        if (filter.length > 1) {
+            proxy.splice(i, 1);
+        }
+
+    });
+}
+
+function timeout(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-const helper = {shuffle, proxyInit, getIP, uuid, getRandomInt, initAgent, removeDuplicateItems, timeout}
+const helper = { shuffle, proxyInit, getIP, uuid, getRandomInt, initAgent, removeDuplicateItems, timeout, delDublicateProxy }
 
 
 module.exports = helper
