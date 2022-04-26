@@ -221,8 +221,8 @@ async function init(init_header) {
                             var_break = true
                         } // останавливаем итерацию
                         // console.log(`Global cycle ${i}`);
-                        if (index == proxy.length-1) {
-                            resolve({status: 'error', name_worker: 'binance_marketplace_lastorder'})
+                        if (index == 10) {
+                            resolve({status: 'ok', name_worker: 'binance_marketplace_lastorder'})
                         }
 
 
@@ -244,7 +244,7 @@ async function init(init_header) {
                             // console.log(e);
                         }
                         // var_break = true;
-                        if (index == proxy.length-1) {
+                        if (index == 10) {
                             reject({status: 'error', name_worker: 'binance_marketplace_lastorder'})
                         }
                     })
@@ -257,6 +257,8 @@ async function init(init_header) {
                     // });
                     if (index == 101 || var_break) {
                         console.log('===========break==============');
+                        resolve({status: 'ok', name_worker: 'binance_marketplace_lastorder'})
+
                         // console.log(`Global cycle ${i}`);
                         // proxy.push(proxyVar);
                         // delDublicateProxy();
