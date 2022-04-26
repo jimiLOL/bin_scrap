@@ -16,6 +16,8 @@ const { getProductDetail } = require('./get_productDetali');
 
 const proxyLength = proxy.length;
 
+const iteration = 3;
+
 // let num = 10 // итерациий
 // let arrayNFT = [];
 
@@ -145,7 +147,7 @@ async function init(init_header) {
         //     return res.data.data
         // });
 
-        for (let indexLayer = 1; indexLayer < 3; indexLayer++) {
+        for (let indexLayer = 1; indexLayer < iteration; indexLayer++) {
           
             // console.log(layer.name);
             helper.shuffle(UA);
@@ -182,15 +184,15 @@ async function init(init_header) {
 
                 await getInfoBinNFTMysteryBox(helper.proxyInit(proxyVar), indexLayer, body).then(res => {
                     breakSwitch = res;
-                    if (indexLayer == 3) {
+                    if (indexLayer == iteration-1) {
                         resolve({status: 'ok', name_worker: 'binance_mysteryLastOrder'})
                     }
                 }).catch(e => {
                     console.log(e);
-                    if (indexLayer == 3) {
+                    if (indexLayer == iteration-1) {
                         reject({status: 'error', name_worker: 'binance_mysteryLastOrder'})
                     }
-                    process.exit(1)
+                    // process.exit(1)
                 });
                 if (breakSwitch) {
                     break
