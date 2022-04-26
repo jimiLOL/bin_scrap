@@ -78,7 +78,7 @@ awaitArray = (val, length) => {
                         // console.log('leng != length MeysteryBox ' + proxy.length, proxyLength);
 
 
-                    helper.timeout(4000).then(() => {
+                    helper.timeout(2000).then(() => {
                         // integer++
                         // // console.log('leng != length MeysteryBox ' + proxy.length, proxyLength);
 
