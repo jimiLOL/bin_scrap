@@ -308,7 +308,7 @@ function arrayIteration(array, proxySet) {
 
 
     array.forEach((ele, i) => {
-        setTimeout(async () => {
+        // setTimeout(async () => {
             let randomIndex = helper.getRandomInt(0, proxy.length);
             // console.log('Proxy length ' + proxy.length + ' randomIndex ' + randomIndex + ' ' + proxy[randomIndex] + ' ' + cloneProxySet.proxySet);
 
@@ -335,7 +335,7 @@ function arrayIteration(array, proxySet) {
             });
 
             // header = getNewHeaders(headers);
-            await getProductDetail(ele, agent, header).then(() => {
+            getProductDetail(ele, agent, header).then(() => {
 
 
                 proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
@@ -381,7 +381,7 @@ function arrayIteration(array, proxySet) {
 
             }
 
-        }, 50 * i);
+        // }, 50 * i);
 
 
 

@@ -325,7 +325,7 @@ function arrayIteration(array, proxySet) {
 
 
     array.forEach((ele, i) => {
-        setTimeout(() => {
+        // setTimeout(() => {
             let randomIndex = helper.getRandomInt(0, proxy.length);
             // console.log('Proxy length ' + proxy.length + ' randomIndex ' + randomIndex + ' ' + proxy[randomIndex] + ' ' + cloneProxySet.proxySet);
 
@@ -394,7 +394,7 @@ function arrayIteration(array, proxySet) {
                 console.log(e);
             })
 
-        }, 50 * i);
+        // }, 50 * i);
 
 
     });
