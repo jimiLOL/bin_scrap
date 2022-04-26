@@ -163,6 +163,7 @@ function init_workers() {
       promiseWorker.splice(index, 1)
 
     }
+    process.exit(0)
     init_workers()
 
   }).catch(e => {
@@ -173,6 +174,8 @@ function init_workers() {
       promiseWorker.splice(index, 1)
 
     }
+    process.exit(0)
+
     init_workers()
 
   }) // Парсинг маркетплейса
