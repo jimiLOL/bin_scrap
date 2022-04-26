@@ -17,6 +17,8 @@ const moment = require("moment");
 const CronJob = require("cron").CronJob;
 const CronTime = require("cron").CronTime;
 const { default: axios } = require("axios");
+const util = require("util")
+
 const path = require('path');
 const Piscina = require('piscina');
 const {
@@ -39,13 +41,13 @@ const { cat } = require("./controller/cybercatController");
 const { filterCat } = require("./controller/faindeCate");
 // const { buyNFT } = require("./controller/binance/binance_mysteribox"); // покупка мистерибокс
 const { getListMysterSell } = require("./controller/binance/binance_addList_sell");
-const {getInfoBinNFT} = require("./controller/binance/binance_marketplace_misclick");
-const {init} = require("./controller/binance/binance_mystery_box_misclick");
-const {buyInit} = require('./controller/binance/buyNFT');
+// const { getInfoBinNFT } = require("./controller/binance/binance_marketplace_misclick");
+// const { init } = require("./controller/binance/binance_mystery_box_misclick");
+// const { buyInit } = require('./controller/binance/buyNFT');
 
-const {init_lastOrder} = require('./controller/binance/binance_mystery_box_lastorder');
+const { init_lastOrder } = require('./controller/binance/binance_mystery_box_lastorder');
 
-const {getHeaders} = require('./controller/binance/getHeaders')
+const { getHeaders } = require('./controller/binance/getHeaders')
 
 
 const binanceMysterBoxAnons = require("./model/binanceMysterBoxAnons");
@@ -60,45 +62,125 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 mongoose.connect(process.env.MONGODB_URI).catch((error) => console.log(error));
 
+const helper = require('./controller/helper/helper');
 
 
+let workers = {};
+let worker = {};
+let promiseWorker = [];
 
-const binance_mystery = new Piscina({
+
+worker.binance_mystery = new Piscina({
   filename: path.resolve('./controller/binance', 'binance_mystery_box_misclick.js')
 });
-const binance_marketplace = new Piscina({
+worker.binance_marketplace = new Piscina({
   filename: path.resolve('./controller/binance', 'binance_marketplace_misclick.js')
 });
-const binance_mysteryLastOrder = new Piscina({
-  filename: path.resolve('./controller/binance', 'binance_mystery_box_lastorder.js')
-});
-const binance_marketplace_lastorder = new Piscina({
-  filename: path.resolve('./controller/binance', 'binance_marketplace_lastorder.js')
-});
-
- 
-
-getHeaders().then(async (headers) => {
-  const res = await Promise.all([
-    binance_mystery.run({headers: headers}, { name: 'init' }),
-    // binance_marketplace.run({headers: headers}, { name: 'getInfoBinNFT' }),
-    // binance_mysteryLastOrder.run({headers: headers}, { name: 'init_lastOrder' }),
-    // binance_marketplace_lastorder.run({headers: headers}, { name: 'getInfoBinNFT' })
-  
-  ]);
-  console.log(res);  // Prints 10
- 
- 
-   
+// worker.binance_mysteryLastOrder = new Piscina({
+//   filename: path.resolve('./controller/binance', 'binance_mystery_box_lastorder.js')
+// });
+// worker.binance_marketplace_lastorder = new Piscina({
+//   filename: path.resolve('./controller/binance', 'binance_marketplace_lastorder.js')
+// });
 
 
-}).catch(e=> {
-  console.log('Ошибка Worker');
-  console.log(e);
-}) // Парсинг маркетплейса
+function init_workers() {
+
+  getHeaders().then(async (headers) => {
+    // worker.push({test: helper.timeout(1000)})
+
+    // Object.keys(workers).forEach(e => {
+    //   if (!util.inspect(e).includes("pending")) {
+    //     worker
+
+    //   } else {
+    //     console.log(e);
+
+    //   }
+    // })
+    console.log(promiseWorker);
+    Object.keys(worker).forEach(e => {
+      // if (!util.inspect(e).includes("pending")) {
+      //   e(1000)
+
+      // }
+      if (workers.hasOwnProperty(e) && util.inspect(workers[e]).includes("pending")) {
+        console.log('Worker ' + workers[e] + ' is work..');
 
 
- 
+      } else {
+        promiseWorker.push({ [e]: workers[e] = worker[e].run({ headers: headers }, { name: 'init' }) })
+        // promiseWorker.push({[e]: workers[e] = worker[e].timeout(helper.getRandomInt(1000, 10000))})
+        // console.log(promiseWorker);
+        // console.log(workers);
+        // process.exit(0)
+
+
+      }
+    })
+    let arrayPromise = [];
+    promiseWorker.forEach(promise => {
+      arrayPromise.push(Object.values(promise))
+
+    });
+    arrayPromise = arrayPromise.flat();
+    console.log(arrayPromise);
+
+    return await Promise.race(arrayPromise)
+
+    // worker.forEach(element => {
+    //   // console.log(util.inspect(element).includes("pending"))
+    //   if (!util.inspect(element).includes("pending")) {
+
+    //   }
+
+    // });
+    // worker.push({ test: helper.timeout(1000) })
+    // worker.push({binance_mystery: binance_mystery.run({headers: headers}, { name: 'init' })})
+    // console.log(worker);
+
+
+    // const res = await Promise.all([
+    //   binance_mystery.run({headers: headers}, { name: 'init' }),
+    //   // binance_marketplace.run({headers: headers}, { name: 'getInfoBinNFT' }),
+    //   // binance_mysteryLastOrder.run({headers: headers}, { name: 'init_lastOrder' }),
+    //   // binance_marketplace_lastorder.run({headers: headers}, { name: 'getInfoBinNFT' })
+
+    // ]);
+    // console.log(res);  // Prints 10
+
+
+
+
+
+  }).then(res => {
+    console.log('finally');
+    console.log(res);
+    let index = promiseWorker.map((x, i) => { if (Object.keys(x) == e.name_worker) return i })
+
+    if (index != -1) {
+      console.log(index);
+      promiseWorker.splice(index, 1)
+
+    }
+    init_workers()
+
+  }).catch(e => {
+    console.log('Ошибка Worker');
+    console.log(e);
+    let index = promiseWorker.map((x, i) => { if (Object.keys(x) == e.name_worker) return i })
+    if (index != -1) {
+      promiseWorker.splice(index, 1)
+
+    }
+    init_workers()
+
+  }) // Парсинг маркетплейса
+}
+init_workers()
+
+
+
 
 
 binanceAdminCookies.find({ enable: true }, (err, call) => {
@@ -171,8 +253,8 @@ const jobsTimeBinance = new CronJob(dataCron, async function () {
           let timeBinanceServer = await fetch_time();
           console.log(
             "Server - Binance " +
-              (new Date() - new Date(timeBinanceServer)) +
-              " ms"
+            (new Date() - new Date(timeBinanceServer)) +
+            " ms"
           );
           console.log("Date Binance " + new Date(timeBinanceServer));
           console.log("Date server " + new Date());
@@ -182,8 +264,8 @@ const jobsTimeBinance = new CronJob(dataCron, async function () {
 
           console.log(
             "countdown " +
-              (element.startTime - Date.now()) / 1000 / 60 / 60 +
-              " h"
+            (element.startTime - Date.now()) / 1000 / 60 / 60 +
+            " h"
           );
           d.setSeconds(d.getSeconds() + timeStartBuy); //! включить
 
@@ -401,8 +483,7 @@ const jobs = new CronJob(dataCron, async function () {
       .catch((err) => {
         let end = new Date().getTime();
         console.log(
-          `ОШибка в цикле ${index} "Work add nft...." - время работы: ${
-            end - start
+          `ОШибка в цикле ${index} "Work add nft...." - время работы: ${end - start
           }ms`
         );
         console.log("Не смогли получить контракт " + index);
@@ -457,8 +538,7 @@ const jobs = new CronJob(dataCron, async function () {
             console.log(error);
             let end = new Date().getTime();
             console.log(
-              `Ошибка в цикле ${index} "Work...." время выполнения: ${
-                end - start
+              `Ошибка в цикле ${index} "Work...." время выполнения: ${end - start
               }ms`
             );
             // setTimeout(
@@ -486,29 +566,29 @@ const jobs = new CronJob(dataCron, async function () {
                       break;
                     }
                     // await Promise.all([
-                      timeout(800 * index).then(() => {
-                        dsf(
-                          iterator.tokenId,
-                          iterator?.attributes,
-                          index,
-                          contract
-                        )
-                          .then((res) => {
-                            return resolve(res);
-                          })
-                          .catch(function (error) {
-                            if (
-                              contract !=
-                              "0xc33d69a337b796a9f0f7588169cd874c3987bde9Ц"
-                            ) {
-                              err = true;
-                            }
+                    timeout(800 * index).then(() => {
+                      dsf(
+                        iterator.tokenId,
+                        iterator?.attributes,
+                        index,
+                        contract
+                      )
+                        .then((res) => {
+                          return resolve(res);
+                        })
+                        .catch(function (error) {
+                          if (
+                            contract !=
+                            "0xc33d69a337b796a9f0f7588169cd874c3987bde9Ц"
+                          ) {
+                            err = true;
+                          }
 
-                            console.log("Show error notification dsf!");
-                            console.log(error);
-                            return reject(error);
-                          });
-                      });
+                          console.log("Show error notification dsf!");
+                          console.log(error);
+                          return reject(error);
+                        });
+                    });
                     // ]);
                   }
                 })();
@@ -534,7 +614,7 @@ const jobs = new CronJob(dataCron, async function () {
                 if (res.data?.sellId == null) {
                   reject("mochi sellId == null " + contract);
                   element = res.data;
-                
+
                   // console.log(`https://api.nftrade.com/api/v1/tokens?contractAddress=0xc33d69a337b796a9f0f7588169cd874c3987bde9&limit=500&skip=${index*500}`);
                 } else {
                   // console.log(`https://api.mochi.market/sellOrder/bySellId/56/${res.data.sellId}`);
@@ -599,7 +679,7 @@ const jobs = new CronJob(dataCron, async function () {
     }
   });
   startCron(jobs, 360);
-  
+
 });
 // startCron(jobs, 20)
 // jobs.start();

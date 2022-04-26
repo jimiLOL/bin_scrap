@@ -140,7 +140,7 @@ function delDublicateProxy() {
 
     });
 }
-async function getInfoBinNFT(init_header) {
+async function init(init_header) {
     return new Promise(async (resolve, reject) => {
         header = init_header.headers; // делаем header глобальным
 
@@ -231,7 +231,7 @@ async function getInfoBinNFT(init_header) {
                         } // останавливаем итерацию
                         console.log(`Global cycle ${i}`);
                         if (i == layer.length-1) {
-                            resolve({status: 'error', name_worker: 'binance_mystery_box_misclick'})
+                            resolve({status: 'error', name_worker: 'binance_marketplace'})
                         }
 
 
@@ -254,7 +254,7 @@ async function getInfoBinNFT(init_header) {
                         }
                         // var_break = true;
                         if (i == layer.length-1) {
-                            reject({status: 'error', name_worker: 'binance_mystery_box_misclick'})
+                            reject({status: 'error', name_worker: 'binance_marketplace'})
                         }
                     })
                     // } else {
@@ -390,4 +390,4 @@ function arrayIteration(array, proxySet) {
 
 }
 
-module.exports = { getInfoBinNFT }
+module.exports = { init }

@@ -132,7 +132,7 @@ awaitArray = (val, length) => {
 
 
 
-async function getInfoBinNFT(init_header) {
+async function init(init_header) {
     return new Promise(async (resolve, reject) => {
         header = init_header.headers; // делаем header глобальным
 
@@ -380,4 +380,4 @@ function arrayIteration(array, proxySet) {
 
 }
 
-module.exports = { getInfoBinNFT }
+module.exports = { init }

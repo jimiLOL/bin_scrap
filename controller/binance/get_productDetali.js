@@ -45,8 +45,10 @@ function getProductDetail(productBinance, agent, header) {
         //   console.log(productDetail);
         //   process.exit(0)
         addDB(productBinance, productDetail).then(() => {
+          productBinance = 0;
           resolve()
         }).catch(e => {
+          productBinance = 0;
           reject()
         });
 
@@ -95,14 +97,22 @@ function addDB(productBinance, responseProductDetail = null) {
       add_binance_db(newProduct, 'binance').then(() => {
         return add_history_binance_db(newProduct, 'binance')
       }).then(() => {
+        productBinance = 0;
+        responseProductDetail = 0;
+        newProduct = 0;
         resolve()
       }).catch((e) => {
+        productBinance = 0;
+        responseProductDetail = 0;
+        newProduct = 0;
+
         console.log(e);
         reject()
       })
       // process.exit(0)
 
     } else {
+      productBinance = 0;
       console.log('else');
       resolve()
       // process.exit(0)

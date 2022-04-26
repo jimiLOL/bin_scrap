@@ -134,7 +134,7 @@ awaitArray = (val, length) => {
     })
 }
 //header - мы прокидываем при инциализации потока
-async function init_lastOrder(init_header) {
+async function init(init_header) {
     return new Promise(async (resolve, reject) => {
         // arrayNFT = await getNaemListNFT();
         // header = getNewHeaders(headers); // поток не имеет доступа к результату этой функции;
@@ -183,12 +183,12 @@ async function init_lastOrder(init_header) {
                 await getInfoBinNFTMysteryBox(helper.proxyInit(proxyVar), indexLayer, body).then(res => {
                     breakSwitch = res;
                     if (indexLayer == 3) {
-                        resolve({status: 'ok', name_worker: 'binance_mystery_box_lastorder'})
+                        resolve({status: 'ok', name_worker: 'binance_mysteryLastOrder'})
                     }
                 }).catch(e => {
                     console.log(e);
                     if (indexLayer == 3) {
-                        reject({status: 'error', name_worker: 'binance_mystery_box_lastorder'})
+                        reject({status: 'error', name_worker: 'binance_mysteryLastOrder'})
                     }
                     process.exit(1)
                 });
@@ -412,4 +412,4 @@ function arrayIteration(array, proxySet) {
 
  
  
-module.exports = { init_lastOrder, getInfoBinNFTMysteryBox };
+module.exports = { init, getInfoBinNFTMysteryBox };
