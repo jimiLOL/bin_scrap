@@ -8,7 +8,7 @@ const Addresses = {}
 function DynamicSchema(namecollection, db, db_key) {
     // console.log(db);
     if (db == undefined) {
-        process.exit(1)
+        // process.exit(1)
     };
     let ShemaNFT;
  

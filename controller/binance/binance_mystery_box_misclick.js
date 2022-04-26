@@ -189,7 +189,7 @@ async function init(init_header) {
                     if (indexLayer == layer.length-1) {
                         reject({status: 'error', name_worker: 'binance_mystery_box_misclick'})
                     }
-                    process.exit(1)
+                    // process.exit(1)
                 });
                 if (breakSwitch) {
                     break
