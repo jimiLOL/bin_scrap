@@ -397,7 +397,7 @@ function arrayIteration(array, proxySet) {
                 console.log(e);
             })
 
-        }, 250 * i);
+        }, 50 * i);
 
 
     });

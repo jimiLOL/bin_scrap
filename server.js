@@ -76,12 +76,12 @@ worker.binance_mystery = new Piscina({
 worker.binance_marketplace = new Piscina({
   filename: path.resolve('./controller/binance', 'binance_marketplace_misclick.js')
 });
-// worker.binance_mysteryLastOrder = new Piscina({
-//   filename: path.resolve('./controller/binance', 'binance_mystery_box_lastorder.js')
-// });
-// worker.binance_marketplace_lastorder = new Piscina({
-//   filename: path.resolve('./controller/binance', 'binance_marketplace_lastorder.js')
-// });
+worker.binance_mysteryLastOrder = new Piscina({
+  filename: path.resolve('./controller/binance', 'binance_mystery_box_lastorder.js')
+});
+worker.binance_marketplace_lastorder = new Piscina({
+  filename: path.resolve('./controller/binance', 'binance_marketplace_lastorder.js')
+});
 
 
 function init_workers() {

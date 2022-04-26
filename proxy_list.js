@@ -97,6 +97,15 @@ const proxy = ["193.233.42.91:24531:cnzsgf:ZYNFgKpabu",
 "46.8.130.22:24531:cnzsgf:ZYNFgKpabu",
 "193.233.43.20:24531:cnzsgf:ZYNFgKpabu",
 "45.91.54.249:24531:cnzsgf:ZYNFgKpabu",
-"45.151.139.8:24531:cnzsgf:ZYNFgKpabu"]
+"45.151.139.8:24531:cnzsgf:ZYNFgKpabu",
+"193.233.45.85:24531:onxezv:h2ZSnvsnUJ",
+"2.59.219.217:24531:onxezv:h2ZSnvsnUJ",
+"188.130.217.14:24531:onxezv:h2ZSnvsnUJ",
+"109.248.106.69:24531:onxezv:h2ZSnvsnUJ",
+"45.89.61.56:24531:onxezv:h2ZSnvsnUJ",
+"45.89.62.57:24531:onxezv:h2ZSnvsnUJ",
+"45.8.147.229:24531:onxezv:h2ZSnvsnUJ",
+"92.119.203.212:24531:onxezv:h2ZSnvsnUJ",
+"185.139.215.202:24531:onxezv:h2ZSnvsnUJ",]
 
 module.exports = { proxy }
