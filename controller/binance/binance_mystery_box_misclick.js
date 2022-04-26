@@ -181,12 +181,12 @@ async function init(init_header) {
 
                 await getInfoBinNFTMysteryBox(helper.proxyInit(proxyVar), i, body).then(res => {
                     breakSwitch = res;
-                    if (indexLayer == layer.length-1) {
+                    if (indexLayer == layerList.length-1) {
                         resolve({status: 'ok', name_worker: 'binance_mystery'})
                     }
                 }).catch(e => {
                     console.log(e);
-                    if (indexLayer == layer.length-1) {
+                    if (indexLayer == layerList.length-1) {
                         reject({status: 'error', name_worker: 'binance_mystery'})
                     }
                     // process.exit(1)
