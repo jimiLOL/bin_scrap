@@ -366,6 +366,7 @@ function arrayIteration(array, proxySet) {
                 proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
 
                 console.log('Function arrayIteration  Mystery Box last order  END\nProxy length ' + proxy.length);
+                console.log('Worker 1');
 
 
 
@@ -391,6 +392,8 @@ function arrayIteration(array, proxySet) {
 
                 // });
                 console.log('Function arrayIteration Mystery Box last order END\nProxy length ' + proxy.length);
+                console.log('Worker 1');
+
 
 
 
