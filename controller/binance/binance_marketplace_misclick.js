@@ -230,7 +230,7 @@ async function init(init_header) {
                             var_break = true
                         } // останавливаем итерацию
                         console.log(`Global cycle ${i}`);
-                        if (i == layer.length-1) {
+                        if (i == layerList.length-1) {
                             resolve({status: 'error', name_worker: 'binance_marketplace'})
                         }
 
@@ -253,7 +253,7 @@ async function init(init_header) {
                             // console.log(e);
                         }
                         // var_break = true;
-                        if (i == layer.length-1) {
+                        if (i == layerList.length-1) {
                             reject({status: 'error', name_worker: 'binance_marketplace'})
                         }
                     })
