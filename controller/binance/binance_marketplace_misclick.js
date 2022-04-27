@@ -144,11 +144,14 @@ async function init(init_header) {
     return new Promise(async (resolve, reject) => {
         emitter.on('infinity_recursion', (message) => {
             if (message) {
+                console.log('infinity_recursion');
                 reject({ status: 'error', name_worker: 'binance_marketplace' })
 
             }
 
         });
+
+        
 
         header = init_header.headers; // делаем header глобальным
 
