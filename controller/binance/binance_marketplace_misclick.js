@@ -162,141 +162,149 @@ async function init(init_header) {
             // console.log(e);
         });
 
-
-        layerList.forEach((layer, i) => {
-            console.log(`Init Global cycle ${i}`);
-            let body = {
-                currency: (function () { return "BUSD" })(),
-                mediaType: "",
-                tradeType: "",
-                // amountFrom: "0.1",
-                // amountTo: "2",
-                collectionId: '',
-                categorys: [],
-                keyword: "",
-                // orderBy: "list_time", // когда размещенно
-                // orderType: 1, // статус.
-                page: 1,
-                rows: 100,
-                productIds: []
-            };
-            body.collectionId = layer.layerId;
-            helper.shuffle(UA);
-            let var_break = false;
-
-
-
-
-            (async () => {
-                let index = 0;
-                for await (const proxyVar of arrayIterator(proxy)) {
-                    helper.shuffle(proxy);
-
-                    console.log('====================INIT parsing nft====================');
-                    index++
-                    if (proxyVar == undefined) {
-                        break
+        if (Array.isArray(layerList)) {
+            layerList.forEach((layer, i) => {
+                console.log(`Init Global cycle ${i}`);
+                let body = {
+                    currency: (function () { return "BUSD" })(),
+                    mediaType: "",
+                    tradeType: "",
+                    // amountFrom: "0.1",
+                    // amountTo: "2",
+                    collectionId: '',
+                    categorys: [],
+                    keyword: "",
+                    // orderBy: "list_time", // когда размещенно
+                    // orderType: 1, // статус.
+                    page: 1,
+                    rows: 100,
+                    productIds: []
+                };
+                body.collectionId = layer.layerId;
+                helper.shuffle(UA);
+                let var_break = false;
+    
+    
+    
+    
+                (async () => {
+                    let index = 0;
+                    for await (const proxyVar of arrayIterator(proxy)) {
+                        helper.shuffle(proxy);
+    
+                        console.log('====================INIT parsing nft====================');
+                        index++
+                        if (proxyVar == undefined) {
+                            break
+                        }
+    
+                        const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = helper.proxyInit(proxyVar);
+                        console.log('Proxy lenght ' + proxy.length + ' index ' + index);
+                        let indexProxy = proxy.indexOf(proxyVar);
+                        proxy.splice(indexProxy, 1);
+                        // proxy.splice(index - 1, 1);
+                        let proxyOptions = {
+                            host: proxyHost,
+                            port: portHost,
+                            proxyAuth: proxyAuth,
+                            headers: {
+                                'User-Agent': UA[index]
+                            },
+                        };
+                        let agent = tunnel.httpsOverHttp({
+                            proxy: proxyOptions,
+                            rejectUnauthorized: false,
+                        });
+    
+                        body.page = index;
+                        header["user-agent"] = UA[index];
+                        // let t = helper.uuid();
+                        // header['x-ui-request-trace'] = t;
+                        // header['x-trace-id'] = t;
+    
+    
+                        let data = new Date().getTime();
+                        // await helper.timeout(100 * index).then(() => {
+                        // if (!var_break) {
+                        axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/product-list', body, { headers: header, httpsAgent: agent }).then(res => {
+                            console.log(res.status + ' ' + index + ' total= ' + res.data.data.total);
+    
+                            console.log('Send proxyVar ' + proxyVar);
+    
+                            arrayIteration(res.data.data.rows, proxyVar);
+                            let n = res.data.data.total / 100;
+                            console.log(Math.ceil(n));
+                            let newData = new Date().getTime();
+                            console.log(`Date cycle^ ${newData - data} ms`);
+                            if (Math.ceil(n) == index) {
+                                var_break = true
+                            } // останавливаем итерацию
+                            console.log(`Global cycle ${i}`);
+                            if (i == layerList.length - 1) {
+                                resolve({ status: 'ok', name_worker: 'binance_marketplace' })
+                            }
+    
+    
+    
+                            return Math.ceil(n)
+                        }).catch(e => {
+                            console.log('Error');
+                            console.log(`Global cycle ${i}`);
+    
+                            proxy.push(proxyVar)
+                            console.log('Proxy lenght ' + proxy.length);
+    
+    
+                            if (e?.response?.statusText != undefined) {
+                                console.log(e?.response?.statusText);
+    
+    
+                            } else {
+                                // console.log(e);
+                            }
+                            // var_break = true;
+                            if (i == layerList.length - 1) {
+                                reject({ status: 'error', name_worker: 'binance_marketplace' })
+                            }
+                        })
+                        // } else {
+                        //     proxy.push(proxyVar);
+                        //     // delDublicateProxy()
+    
+                        // }
+    
+                        // });
+                        if (index == 101 || var_break) {
+                            console.log('===========break==============');
+                            console.log(`Global cycle ${i}`);
+                            // proxy.push(proxyVar);
+                            // delDublicateProxy();
+    
+    
+                            var_break = false;
+                            console.log('break\nProxy length ' + proxy.length);
+    
+                            break
+                        } // у нас в ответе максимум 100 сущностей отсюда и 101
+    
+    
+    
                     }
-
-                    const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = helper.proxyInit(proxyVar);
-                    console.log('Proxy lenght ' + proxy.length + ' index ' + index);
-                    let indexProxy = proxy.indexOf(proxyVar);
-                    proxy.splice(indexProxy, 1);
-                    // proxy.splice(index - 1, 1);
-                    let proxyOptions = {
-                        host: proxyHost,
-                        port: portHost,
-                        proxyAuth: proxyAuth,
-                        headers: {
-                            'User-Agent': UA[index]
-                        },
-                    };
-                    let agent = tunnel.httpsOverHttp({
-                        proxy: proxyOptions,
-                        rejectUnauthorized: false,
-                    });
-
-                    body.page = index;
-                    header["user-agent"] = UA[index];
-                    // let t = helper.uuid();
-                    // header['x-ui-request-trace'] = t;
-                    // header['x-trace-id'] = t;
+                })()
+    
+    
+    
+    
+    
+            });
+        } else {
+            reject({ status: 'error', name_worker: 'binance_marketplace', info: 'layerList no Array' })
 
 
-                    let data = new Date().getTime();
-                    // await helper.timeout(100 * index).then(() => {
-                    // if (!var_break) {
-                    axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/product-list', body, { headers: header, httpsAgent: agent }).then(res => {
-                        console.log(res.status + ' ' + index + ' total= ' + res.data.data.total);
-
-                        console.log('Send proxyVar ' + proxyVar);
-
-                        arrayIteration(res.data.data.rows, proxyVar);
-                        let n = res.data.data.total / 100;
-                        console.log(Math.ceil(n));
-                        let newData = new Date().getTime();
-                        console.log(`Date cycle^ ${newData - data} ms`);
-                        if (Math.ceil(n) == index) {
-                            var_break = true
-                        } // останавливаем итерацию
-                        console.log(`Global cycle ${i}`);
-                        if (i == layerList.length - 1) {
-                            resolve({ status: 'error', name_worker: 'binance_marketplace' })
-                        }
+        }
 
 
-
-                        return Math.ceil(n)
-                    }).catch(e => {
-                        console.log('Error');
-                        console.log(`Global cycle ${i}`);
-
-                        proxy.push(proxyVar)
-                        console.log('Proxy lenght ' + proxy.length);
-
-
-                        if (e?.response?.statusText != undefined) {
-                            console.log(e?.response?.statusText);
-
-
-                        } else {
-                            // console.log(e);
-                        }
-                        // var_break = true;
-                        if (i == layerList.length - 1) {
-                            reject({ status: 'error', name_worker: 'binance_marketplace' })
-                        }
-                    })
-                    // } else {
-                    //     proxy.push(proxyVar);
-                    //     // delDublicateProxy()
-
-                    // }
-
-                    // });
-                    if (index == 101 || var_break) {
-                        console.log('===========break==============');
-                        console.log(`Global cycle ${i}`);
-                        // proxy.push(proxyVar);
-                        // delDublicateProxy();
-
-
-                        var_break = false;
-                        console.log('break\nProxy length ' + proxy.length);
-
-                        break
-                    } // у нас в ответе максимум 100 сущностей отсюда и 101
-
-
-
-                }
-            })()
-
-
-
-
-
-        });
+      
     })
 
 
