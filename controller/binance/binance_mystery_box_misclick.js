@@ -14,22 +14,6 @@ const { getProductDetail } = require('./get_productDetali');
 
 const proxyLength = proxy.length;
 
-// let num = 10 // итерациий
-// let arrayNFT = [];
-
-
-
-//   proxyOptions = {
-//     host: proxyArray[0],
-//     port: proxyArray[1],
-//     proxyAuth: `${proxyArray[2] + ':' + proxyArray[3]}`,
-// };
-// agent = tunnel.httpsOverHttp({
-//     proxy: proxyOptions,
-//     rejectUnauthorized: false,
-// });
-
-
 let headers = {
     Host: "www.binance.com",
     "User-Agent":
@@ -48,18 +32,18 @@ let headers = {
 };
 
 let header;
-
+let stackProxy = {};
 
 const arrayIterator = arr => ({
     [Symbol.asyncIterator]() {
         let i = arr.length;
         return {
             index: 0,
-            next() {
+            async next() {
                 console.log('=========================== ' + this.index + ' index iterator =================================================');
                 if (this.index < proxyLength) {
                     //   console.log(this.index, arr.length);
-                    return awaitArray(arr[this.index++], --i);
+                    return await awaitArray(arr[this.index++], --i);
                 } else {
                     return { done: true }
                 }
@@ -68,7 +52,8 @@ const arrayIterator = arr => ({
     }
 })
 awaitArray = (val, length) => {
-    let integer = 0; // предохранитель от бесконечной рекурсии
+    stackProxy[val] = { status: 'init', integer: 0 };
+
     return new Promise((resolve) => {
         function recursion() {
             return new Promise((resolve) => {
@@ -77,13 +62,13 @@ awaitArray = (val, length) => {
 
 
                     helper.timeout(2000).then(() => {
-                        integer++
-                        // // console.log('leng != length MeysteryBox ' + proxy.length, proxyLength);
+                        if (stackProxy[val].status == 'work') {
+                            stackProxy[val].integer++
 
-                        if (integer > 150) {
-                            emitter.emit('infinity_recursion', true);
+                        }
 
-
+                        if (stackProxy[val].integer > 150) {
+                            emitter.emit('infinity_recursion', { status: true, integer: integer });
                         }
                         proxy.forEach((ele, i) => {
                             let filter = proxy.filter(x => x == ele);
@@ -96,26 +81,21 @@ awaitArray = (val, length) => {
                             }
 
                         });
-                        // if (proxy.length > proxyLength) {
-                        //     proxy.forEach((ele, i) => {
-                        //         let filter = proxy.filter(x => x == ele);
-                        //         if (filter.length > 1) {
-                        //             proxy.splice(i, 1);
-                        //         }
-                        //     });
-                        // }
+
                         recursion().then((res) => {
-                            integer = 0;
+                            stackProxy[val].integer = 0;
+
                             resolve(res)
                         })
                     })
                 } else if (length < 0) {
-                    // console.log('=========================leng < 0=========================');
-                    integer = 0;
+
+                    stackProxy[val].integer = 0;
+
                     resolve({ done: true })
                 } else {
-                    // console.log('=====!===!=========!===done: false====!=!=========!=======!==========');
-                    integer = 0;
+                    stackProxy[val].integer = 0;
+
                     resolve({ value: val, done: false })
                 }
             })
@@ -136,83 +116,87 @@ async function init(init_header) {
 
     return new Promise(async (resolve, reject) => {
         emitter.on('infinity_recursion', (message) => {
-            if (message) {
-                reject({ status: 'error', name_worker: 'binance_mystery' })
+            let magicVal = 0; // что бы не долбитть в емитор по 100 раз
+            if (message.status && magicVal < 2) {
+                reject({ status: 'error', name_worker: 'binance_mystery', integer: message.integer })
 
             }
 
         });
-        // resolve({status: 'ok', name_worker: 'binance_mystery'})
-        // arrayNFT = await getNaemListNFT();
         // header = getNewHeaders(headers); // поток не имеет доступа к результату этой функции;
         header = init_header.headers; // делаем header глобальным
-        // console.log(header);
 
         const layerList = await axios.get('https://www.binance.com/bapi/nft/v1/public/nft/mystery-box/list?page=1&size=1000', { headers: header }).then(res => {
             return res.data.data
         });
+        if (Array.isArray(layerList)) {
+            layerList.forEach(async (layer, indexLayer) => {
+                console.log(layer.name);
+                helper.shuffle(UA);
+                let body = {
+                    page: 1,
+                    size: 100,
+                    params: {
+                        // keyword: "",
+                        currency: "BUSD",
+                        nftType: null,
+                        // amountFrom: "0.001",
+                        // amountTo: "3",
+                        // setStartTime: new Date().getTime(),
+                        // setStartTime: (function() {return new Date().getTime()})(),
+                        // orderBy: "list_time",
+                        // orderType: -1,
+                        serialNo: [],
+                        tradeType: null
+                    }
+                };
+                body.params.serialNo.push(layer.serialsNo);
+                let i = 0;
+                let breakSwitch = false;
+                for await (const proxyVar of arrayIterator(proxy)) {
+                    helper.shuffle(proxy);
 
-        layerList.forEach(async (layer, indexLayer) => {
-            console.log(layer.name);
-            helper.shuffle(UA);
-            let body = {
-                page: 1,
-                size: 100,
-                params: {
-                    // keyword: "",
-                    currency: "BUSD",
-                    nftType: null,
-                    // amountFrom: "0.001",
-                    // amountTo: "3",
-                    // setStartTime: new Date().getTime(),
-                    // setStartTime: (function() {return new Date().getTime()})(),
-                    // orderBy: "list_time",
-                    // orderType: -1,
-                    serialNo: [],
-                    tradeType: null
+                    // console.log('====================INIT parsing Mystery BOX====================');
+                    // console.log(proxyVar);
+                    // console.log(proxy[i]);
+                    let indexProxy = proxy.indexOf(proxyVar);
+                    proxy.splice(indexProxy, 1);
+
+                    i++
+
+                    await getInfoBinNFTMysteryBox(helper.proxyInit(proxyVar), i, body).then(res => {
+                        breakSwitch = res;
+                        if (indexLayer == layerList.length - 1) {
+                            resolve({ status: 'ok', name_worker: 'binance_mystery' })
+                        }
+                    }).catch(e => {
+                        console.log(e);
+                        if (typeof e == "boolean") {
+                            breakSwitch = e
+                        }
+                        if (indexLayer == layerList.length - 1) {
+                            reject({ status: 'error', name_worker: 'binance_mystery' })
+                        }
+                        // process.exit(1)
+                    });
+                    if (breakSwitch) {
+                        break
+                    }
+                    // if (i == proxy.length - 1) {
+                    //     console.log('!');
+                    //     init();
+                    // } // рекурсия
+
+
                 }
-            };
-            body.params.serialNo.push(layer.serialsNo);
-            let i = 0;
-            let breakSwitch = false;
-            for await (const proxyVar of arrayIterator(proxy)) {
-                helper.shuffle(proxy);
 
-                // console.log('====================INIT parsing Mystery BOX====================');
-                // console.log(proxyVar);
-                // console.log(proxy[i]);
-                let indexProxy = proxy.indexOf(proxyVar);
-                proxy.splice(indexProxy, 1);
+            })
+        } else {
+            reject({ status: 'error', name_worker: 'binance_marketplace', info: 'layerList no Array' })
 
-                i++
-
-                await getInfoBinNFTMysteryBox(helper.proxyInit(proxyVar), i, body).then(res => {
-                    breakSwitch = res;
-                    if (indexLayer == layerList.length - 1) {
-                        resolve({ status: 'ok', name_worker: 'binance_mystery' })
-                    }
-                }).catch(e => {
-                    console.log(e);
-                    if (typeof e == "boolean") {
-                        breakSwitch = e
-                    }
-                    if (indexLayer == layerList.length - 1) {
-                        reject({ status: 'error', name_worker: 'binance_mystery' })
-                    }
-                    // process.exit(1)
-                });
-                if (breakSwitch) {
-                    break
-                }
-                // if (i == proxy.length - 1) {
-                //     console.log('!');
-                //     init();
-                // } // рекурсия
+        }
 
 
-            }
-
-        })
     })
 
 
@@ -362,8 +346,10 @@ function arrayIteration(array, proxySet) {
                 rejectUnauthorized: false,
             });
 
-            // header = getNewHeaders(headers);
+            stackProxy[proxySet].status = 'work';
+
             getProductDetail(ele, agent, header).then(() => {
+                stackProxy[proxySet].status = 'off';
 
 
                 proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
@@ -378,7 +364,7 @@ function arrayIteration(array, proxySet) {
 
 
             }).catch((e) => {
-                // process.exit(1)
+                stackProxy[proxySet].status = 'off';
                 // let index = proxy.indexOf(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
                 // console.log(index);
                 // if (index == -1) {
@@ -395,7 +381,7 @@ function arrayIteration(array, proxySet) {
                 //     }
 
                 // });
-                console.log('Function arrayIteration Mystery Box END\nProxy length ' + proxy.length);
+                console.log('Error: Function arrayIteration Mystery Box END\nProxy length ' + proxy.length);
                 console.log('Worker 2');
 
 

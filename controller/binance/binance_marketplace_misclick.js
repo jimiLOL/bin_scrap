@@ -33,7 +33,7 @@ let headers = {
 let header;
 
 
-let stackProxy = {};
+let stackProxy = {}; // этот объект для дублирования состояния задании по итерациям, счетчик\пердохранитель от рекурсии увеличивается только на ключи, который в работе сейчас. 
 
 
 
@@ -71,12 +71,9 @@ awaitArray = (val, length) => {
 
                     helper.timeout(2000).then(() => {
                         if (stackProxy[val].status == 'work') {
-                            console.log(val);
                             stackProxy[val].integer++
-                            console.log('===============================================================================  ' + stackProxy[val].integer);
 
                         }
-                        // integer++
 
                         if (stackProxy[val].integer > 150) {
                             emitter.emit('infinity_recursion', { status: true, integer: integer });
@@ -152,7 +149,9 @@ function delDublicateProxy() {
 async function init(init_header) {
     return new Promise(async (resolve, reject) => {
         emitter.on('infinity_recursion', (message) => {
-            if (message.status) {
+            let magicVal = 0; // что бы не долбитть в емитор по 100 раз
+            if (message.status && magicVal < 2) {
+                magicVal++
                 console.log('infinity_recursion');
                 reject({ status: 'error', name_worker: 'binance_marketplace', integer: message.integer })
 
@@ -200,7 +199,7 @@ async function init(init_header) {
                     let index = 0;
                     for await (const proxyVar of arrayIterator(proxy)) {
                         // helper.shuffle(proxy);
-                        console.log(stackProxy);
+                        // console.log(stackProxy);
 
                         console.log('====================INIT parsing nft====================');
                         index++
@@ -251,6 +250,8 @@ async function init(init_header) {
                             } // останавливаем итерацию
                             console.log(`Global cycle ${i}`);
                             if (i == layerList.length - 1) {
+                                stackProxy = 0;
+
                                 resolve({ status: 'ok', name_worker: 'binance_marketplace' })
                             }
 
@@ -274,6 +275,7 @@ async function init(init_header) {
                             }
                             // var_break = true;
                             if (i == layerList.length - 1) {
+                                stackProxy = 0;
                                 reject({ status: 'error', name_worker: 'binance_marketplace' })
                             }
                         })
