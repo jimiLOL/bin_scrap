@@ -83,7 +83,7 @@ awaitArray = (val, length) => {
                         // // console.log('leng != length MeysteryBox ' + proxy.length, proxyLength);
 
                       
-                        if (integer > 1000) {
+                        if (integer > 150) {
                             emitter.emit('infinity_recursion', true);
                         }
                         proxy.forEach((ele, i) => {

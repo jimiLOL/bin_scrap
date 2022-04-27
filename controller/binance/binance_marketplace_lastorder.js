@@ -68,7 +68,7 @@ awaitArray = (val, length) => {
 
                     helper.timeout(2000).then(() => {
                         integer++
-                        if (integer > 1000) {
+                        if (integer > 150) {
                             emitter.emit('infinity_recursion', true);
                         }
 

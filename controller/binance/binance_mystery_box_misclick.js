@@ -80,7 +80,7 @@ awaitArray = (val, length) => {
                         integer++
                         // // console.log('leng != length MeysteryBox ' + proxy.length, proxyLength);
 
-                        if (integer > 1000) {
+                        if (integer > 150) {
                             emitter.emit('infinity_recursion', true);
 
 
