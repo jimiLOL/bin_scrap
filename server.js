@@ -59,7 +59,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-mongoose.connect(process.env.MONGODB_URI).catch((error) => console.log(error));
+// mongoose.connect(process.env.MONGODB_URI).catch((error) => console.log(error));
 
 const helper = require('./controller/helper/helper');
 
@@ -72,15 +72,15 @@ let promiseWorker = [];
 worker.binance_mystery = new Piscina({
   filename: path.resolve('./controller/binance', 'binance_mystery_box_misclick.js')
 });
-worker.binance_marketplace = new Piscina({
-  filename: path.resolve('./controller/binance', 'binance_marketplace_misclick.js')
-});
-worker.binance_mysteryLastOrder = new Piscina({
-  filename: path.resolve('./controller/binance', 'binance_mystery_box_lastorder.js')
-});
-worker.binance_marketplace_lastorder = new Piscina({
-  filename: path.resolve('./controller/binance', 'binance_marketplace_lastorder.js')
-});
+// worker.binance_marketplace = new Piscina({
+//   filename: path.resolve('./controller/binance', 'binance_marketplace_misclick.js')
+// });
+// worker.binance_mysteryLastOrder = new Piscina({
+//   filename: path.resolve('./controller/binance', 'binance_mystery_box_lastorder.js')
+// });
+// worker.binance_marketplace_lastorder = new Piscina({
+//   filename: path.resolve('./controller/binance', 'binance_marketplace_lastorder.js')
+// });
 
 
 function init_workers() {
@@ -150,6 +150,9 @@ function init_workers() {
 }
 init_workers()
 
+// const {getListCollectionName} = require('./controller/getCollectionList');
+
+// console.log(getListCollectionName('binance'));
 
 
 

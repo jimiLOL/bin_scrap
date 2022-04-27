@@ -41,12 +41,12 @@ const arrayIterator = arr => ({
         //   console.log(i);
         return {
             index: 0,
-            next() {
+            async next() {
                 console.log('=========================== ' + this.index + ' index iterator =================================================');
                 if (this.index < proxyLength) {
                     //   console.log(this.index, arr.length);
 
-                    return awaitArray(arr[this.index++], --i);
+                    return await awaitArray(arr[this.index++], --i);
 
                 } else {
                     return { done: true }
@@ -70,7 +70,7 @@ awaitArray = (val, length) => {
                         integer++
 
                         if (integer > 150) {
-                            emitter.emit('infinity_recursion', true);
+                            emitter.emit('infinity_recursion', {status: true, integer: integer});
                         }
 
                         // if (proxy.length > proxyLength) {
@@ -143,9 +143,9 @@ function delDublicateProxy() {
 async function init(init_header) {
     return new Promise(async (resolve, reject) => {
         emitter.on('infinity_recursion', (message) => {
-            if (message) {
+            if (message.status) {
                 console.log('infinity_recursion');
-                reject({ status: 'error', name_worker: 'binance_marketplace' })
+                reject({ status: 'error', name_worker: 'binance_marketplace', integer: message.integer })
 
             }
 
