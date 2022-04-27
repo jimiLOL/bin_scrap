@@ -379,7 +379,8 @@ function arrayIteration(array, proxySet) {
                 proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
 
                 // console.log('Function arrayIteration END MarketPlace\nProxy length ' + proxy.length);
-                // console.log('Worker 3');
+                console.clear()
+                console.log('Worker 3');
 
 
 
@@ -409,7 +410,8 @@ function arrayIteration(array, proxySet) {
 
                 // });
                 // console.log('Error: Function arrayIteration MarketPlace\nProxy length ' + proxy.length);
-                // console.log('Worker 3');
+                console.clear()
+                console.log('Worker 3');
 
 
 
