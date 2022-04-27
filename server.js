@@ -59,7 +59,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// mongoose.connect(process.env.MONGODB_URI).catch((error) => console.log(error));
+mongoose.connect(process.env.MONGODB_URI).catch((error) => console.log(error));
 
 const helper = require('./controller/helper/helper');
 
