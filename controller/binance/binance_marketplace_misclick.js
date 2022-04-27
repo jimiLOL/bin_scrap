@@ -368,10 +368,10 @@ function arrayIteration(array, proxySet) {
             });
 
             // header = getNewHeaders(headers);
-            stackProxy[proxySet].status = 'work';
+            stackProxy[cloneProxySet.proxySet].status = 'work';
 
             getProductDetail(ele, agent, header).then(() => {
-                stackProxy[proxySet].status = 'off';
+                stackProxy[cloneProxySet.proxySet].status = 'off';
 
 
 
@@ -387,7 +387,8 @@ function arrayIteration(array, proxySet) {
 
 
             }).catch((e) => {
-                stackProxy[proxySet].status = 'off';
+                stackProxy[cloneProxySet.proxySet].status = 'off';
+
 
                 proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
 

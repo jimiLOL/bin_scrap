@@ -309,10 +309,12 @@ function arrayIteration(array, proxySet) {
                 rejectUnauthorized: false,
             });
 
-            stackProxy[proxySet].status = 'work';
+            stackProxy[cloneProxySet.proxySet].status = 'work';
+
 
             getProductDetail(ele, agent, header).then(() => {
-                stackProxy[proxySet].status = 'off';
+                stackProxy[cloneProxySet.proxySet].status = 'off';
+
 
 
 
@@ -329,7 +331,8 @@ function arrayIteration(array, proxySet) {
 
             }).catch((e) => {
                 proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-                stackProxy[proxySet].status = 'off';
+                stackProxy[cloneProxySet.proxySet].status = 'off';
+
 
  
                 // console.log('Error: Function arrayIteration END MarketPlace lastOrder\nProxy length ' + proxy.length);

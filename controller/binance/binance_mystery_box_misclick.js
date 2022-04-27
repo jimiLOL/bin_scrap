@@ -345,11 +345,12 @@ function arrayIteration(array, proxySet) {
                 proxy: proxyOptions,
                 rejectUnauthorized: false,
             });
+            stackProxy[cloneProxySet.proxySet].status = 'work';
 
-            stackProxy[proxySet].status = 'work';
 
             getProductDetail(ele, agent, header).then(() => {
-                stackProxy[proxySet].status = 'off';
+                stackProxy[cloneProxySet.proxySet].status = 'off';
+
 
 
                 proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
@@ -364,7 +365,8 @@ function arrayIteration(array, proxySet) {
 
 
             }).catch((e) => {
-                stackProxy[proxySet].status = 'off';
+                stackProxy[cloneProxySet.proxySet].status = 'off';
+
                 // let index = proxy.indexOf(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
                 // console.log(index);
                 // if (index == -1) {
