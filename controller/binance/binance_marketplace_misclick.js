@@ -5,7 +5,8 @@ const { getProductDetail } = require('./get_productDetali');
 const { proxy } = require("../../proxy_list_two");
 const { UA } = require("../../ua");
 const helper = require('./../helper/helper');
-// let { getNewHeaders } = require('./getHeaders');
+const Emitter = require("events");
+const emitter = new Emitter();
 const proxyLength = proxy.length;
 // const {arrayIterator, setConstant} = require('./arrayiterator.js') // надо перенести итератор в отдельный модуль
 
@@ -57,23 +58,20 @@ const arrayIterator = arr => ({
     }
 })
 awaitArray = (val, length) => {
-    // let integer = 0; // отладка
+    let integer = 0; //  
     return new Promise((resolve) => {
         function recursion() {
             return new Promise((resolve) => {
                 if (proxy.length != proxyLength && length > 0) {
-                //    console.log('leng != length ' + proxy.length, proxyLength);
+                    //    console.log('leng != length ' + proxy.length, proxyLength);
 
 
                     helper.timeout(2000).then(() => {
-                        // integer++
-                        // if (integer > 500) {
-                        //     console.log('leng != length ' + proxy.length, proxyLength);
-                        //     // proxyLength = proxy.length;
+                        integer++
 
-                        //     console.log(proxy.length + ' > '+ proxyLength);
-
-                        // }
+                        if (integer > 1000) {
+                            emitter.emit('infinity_recursion', true);
+                        }
 
                         // if (proxy.length > proxyLength) {
                         //     console.log(proxy.length + ' > '+ proxyLength);
@@ -98,6 +96,8 @@ awaitArray = (val, length) => {
 
 
                         recursion().then((res) => {
+                            integer = 0;
+
                             resolve(res)
                         })
                     })
@@ -105,13 +105,13 @@ awaitArray = (val, length) => {
 
                 } else if (length < 0) {
                     // console.log('=========================leng < 0=========================');
-                    // integer = 0;
+                    integer = 0;
 
                     resolve({ done: true })
 
                 } else {
                     // console.log('=====!===!=========!===done: false====!=!=========!=======!==========');
-                    // integer = 0;
+                    integer = 0;
 
                     resolve({ value: val, done: false })
                 }
@@ -142,11 +142,18 @@ function delDublicateProxy() {
 }
 async function init(init_header) {
     return new Promise(async (resolve, reject) => {
+        emitter.on('infinity_recursion', (message) => {
+            if (message) {
+                reject({ status: 'error', name_worker: 'binance_marketplace' })
+
+            }
+
+        });
+
         header = init_header.headers; // делаем header глобальным
 
         // header = getNewHeaders(headers);
         const layerList = await axios.get('https://www.binance.com/bapi/nft/v1/public/nft/layer-search?keyword=', { headers: header }).then(res => {
-            console.log(res);
             return res.data.data
         }).catch(e => {
             // console.log(e);
@@ -230,8 +237,8 @@ async function init(init_header) {
                             var_break = true
                         } // останавливаем итерацию
                         console.log(`Global cycle ${i}`);
-                        if (i == layerList.length-1) {
-                            resolve({status: 'error', name_worker: 'binance_marketplace'})
+                        if (i == layerList.length - 1) {
+                            resolve({ status: 'error', name_worker: 'binance_marketplace' })
                         }
 
 
@@ -253,8 +260,8 @@ async function init(init_header) {
                             // console.log(e);
                         }
                         // var_break = true;
-                        if (i == layerList.length-1) {
-                            reject({status: 'error', name_worker: 'binance_marketplace'})
+                        if (i == layerList.length - 1) {
+                            reject({ status: 'error', name_worker: 'binance_marketplace' })
                         }
                     })
                     // } else {
@@ -335,7 +342,7 @@ function arrayIteration(array, proxySet) {
             });
 
             // header = getNewHeaders(headers);
-             getProductDetail(ele, agent, header).then(() => {
+            getProductDetail(ele, agent, header).then(() => {
 
 
                 proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле

@@ -8,10 +8,8 @@ const { UA } = require("../../ua");
 const helper = require('./../helper/helper');
 const { getNaemListNFT } = require("./getNftStat");
 const { arrayNFTCollectionName } = require("./nftArrayData");
-// const {
-//     techbicaleventTelegram,
-// } = require("../sendTelegram");
-// let { getNewHeaders } = require('./getHeaders');
+const Emitter = require("events");
+const emitter = new Emitter();
 const { getProductDetail } = require('./get_productDetali');
 
 const proxyLength = proxy.length;
@@ -72,7 +70,7 @@ const arrayIterator = arr => ({
     }
 })
 awaitArray = (val, length) => {
-    // let integer = 0; // предохранитель от бесконечной рекурсии
+    let integer = 0; // предохранитель от бесконечной рекурсии
     return new Promise((resolve) => {
         function recursion() {
             return new Promise((resolve) => {
@@ -81,16 +79,13 @@ awaitArray = (val, length) => {
 
 
                     helper.timeout(2000).then(() => {
-                        // integer++
+                        integer++
                         // // console.log('leng != length MeysteryBox ' + proxy.length, proxyLength);
 
-                        // if (integer > 500) {
-                        //     console.log('leng != length ' + proxy.length, proxyLength);
-                        //     // proxyLength = proxy.length;
-
-                        //     console.log(proxy.length + ' > ' + proxyLength);
-
-                        // }
+                      
+                        if (integer > 1000) {
+                            emitter.emit('infinity_recursion', true);
+                        }
                         proxy.forEach((ele, i) => {
                             let filter = proxy.filter(x => x == ele);
                             if (filter.length > 1) {
@@ -111,16 +106,17 @@ awaitArray = (val, length) => {
                         //     });
                         // }
                         recursion().then((res) => {
+                            integer = 0;
                             resolve(res)
                         })
                     })
                 } else if (length < 0) {
                     // console.log('=========================leng < 0=========================');
-                    // integer = 0;
+                    integer = 0;
                     resolve({ done: true })
                 } else {
                     // console.log('=====!===!=========!===done: false====!=!=========!=======!==========');
-                    // integer = 0;
+                    integer = 0;
                     resolve({ value: val, done: false })
                 }
             })
@@ -138,6 +134,14 @@ awaitArray = (val, length) => {
 //header - мы прокидываем при инциализации потока
 async function init(init_header) {
     return new Promise(async (resolve, reject) => {
+        emitter.on('infinity_recursion', (message) => {
+            if (message) {
+                reject({ status: 'error', name_worker: 'binance_mysteryLastOrder' })
+
+            }
+
+        });
+ 
         // arrayNFT = await getNaemListNFT();
         // header = getNewHeaders(headers); // поток не имеет доступа к результату этой функции;
         header = init_header.headers; // делаем header глобальным

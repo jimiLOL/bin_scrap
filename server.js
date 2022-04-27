@@ -8,7 +8,6 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const app = express();
 const http = require("http");
-
 const { stringify } = require("query-string");
 const { json } = require("body-parser");
 const server = require("http").createServer(app);
@@ -92,6 +91,7 @@ function init_workers() {
       if (workers.hasOwnProperty(e) && util.inspect(workers[e]).includes("pending")) {
         console.log('Worker ' + [e] + ' is work..');
       } else {
+ 
         promiseWorker.push({
           [e]: workers[e] = worker[e].run({ headers: headers }, { name: 'init' }).then(res => {
             console.log(res);
@@ -102,9 +102,20 @@ function init_workers() {
               promiseWorker.splice(index, 1)
             }
             return res
+          }).catch(e => {
+            console.log(e);
+
+            let index = promiseWorker.findIndex(x => Object.keys(x) == e.name_worker)
+
+            if (index != -1) {
+              promiseWorker.splice(index, 1)
+            }
+            return e
+
           })
         })
       }
+ 
     })
     let arrayPromise = [];
     promiseWorker.forEach(promise => {
