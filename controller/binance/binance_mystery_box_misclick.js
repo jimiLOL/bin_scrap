@@ -67,8 +67,8 @@ awaitArray = (val, length) => {
 
                         }
 
-                        if (stackProxy[val].integer > 150) {
-                            emitter.emit('infinity_recursion', { status: true, integer: integer });
+                        if (stackProxy[val].integer > 5000) {
+                            emitter.emit('infinity_recursion', { status: true, integer: stackProxy[val].integer });
                         }
                         proxy.forEach((ele, i) => {
                             let filter = proxy.filter(x => x == ele);
@@ -118,6 +118,9 @@ async function init(init_header) {
         emitter.on('infinity_recursion', (message) => {
             let magicVal = 0; // что бы не долбитть в емитор по 100 раз
             if (message.status && magicVal < 2) {
+                magicVal++
+                console.log(stackProxy);
+
                 reject({ status: 'error', name_worker: 'binance_mystery', integer: message.integer })
 
             }
@@ -392,7 +395,7 @@ function arrayIteration(array, proxySet) {
                 console.log(e);
             })
 
-        }, 20 * i);
+        }, 100*i);
 
 
     });

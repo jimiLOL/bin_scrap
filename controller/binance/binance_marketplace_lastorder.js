@@ -74,8 +74,8 @@ awaitArray = (val, length) => {
 
                         }
 
-                        if (stackProxy[val].integer > 150) {
-                            emitter.emit('infinity_recursion', { status: true, integer: integer });
+                        if (stackProxy[val].integer > 5000) {
+                            emitter.emit('infinity_recursion', { status: true, integer: stackProxy[val].integer });
                         }
                         proxy.forEach((ele, i) => {
                             let filter = proxy.filter(x => x == ele);
@@ -349,7 +349,7 @@ function arrayIteration(array, proxySet) {
 
             }
 
-        }, 20 * i);
+        }, 100*i);
 
 
 

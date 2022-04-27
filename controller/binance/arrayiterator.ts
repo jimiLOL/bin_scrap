@@ -59,7 +59,7 @@ const iterator = (proxy:arrayProxy) => {
     
                         helper.timeout(1500).then(() => {
                             integer++
-                            if (integer > 150) {
+                            if (integer > 550) {
                                 console.log('leng != length ' + length, proxyLength);
                                 proxyLength = proxy.length;
     

@@ -132,7 +132,7 @@ function getAddressModel(prefix, db_key) {
             if (objectTrain[db_key] == undefined) {
                 setTimeout(() => {
                     console.log('await connect to ' +  db_key +' ....');
-                    getDetailModelNFT(prefix, db_key).then(res=> {
+                    getAddressModel(prefix, db_key).then(res=> {
                        resolve(res)
                    })
                 }, 1000);

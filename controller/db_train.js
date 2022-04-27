@@ -7,6 +7,7 @@ require("dotenv/config");
 
 var objectTrain = {};
 (async () => {
+ 
     objectTrain['binance'] = await mongoose.createConnection(process.env.BINANCE_DB);
     objectTrain['mochi'] = await mongoose.createConnection(process.env.MOCHI_DB);
     objectTrain['nftrade'] = await mongoose.createConnection(process.env.NFTRADE_DB);
