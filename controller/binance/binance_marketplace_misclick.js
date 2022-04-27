@@ -334,7 +334,7 @@ function arrayIteration(array, proxySet) {
 
 
     if (proxySet != undefined) {
-        cloneProxySet = Object.assign({}, { proxySet: proxySet });
+        cloneProxySet = proxySet
 
     }
 
@@ -344,12 +344,12 @@ function arrayIteration(array, proxySet) {
     array.forEach((ele, i) => {
         setTimeout(() => {
             let randomIndex = helper.getRandomInt(0, proxy.length);
-            // console.log('Proxy length ' + proxy.length + ' randomIndex ' + randomIndex + ' ' + proxy[randomIndex] + ' ' + cloneProxySet.proxySet);
+            // console.log('Proxy length ' + proxy.length + ' randomIndex ' + randomIndex + ' ' + proxy[randomIndex] + ' ' + cloneProxySet);
 
 
-            const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = proxy[randomIndex] == undefined ? helper.proxyInit(cloneProxySet.proxySet) : helper.proxyInit(proxy[randomIndex]);
+            const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = proxy[randomIndex] == undefined ? helper.proxyInit(cloneProxySet) : helper.proxyInit(proxy[randomIndex]);
             if (proxy[randomIndex] == undefined) {
-                proxy.push(cloneProxySet.proxySet)
+                proxy.push(cloneProxySet)
             } else {
                 proxy.splice(randomIndex, 1);
 
@@ -369,10 +369,10 @@ function arrayIteration(array, proxySet) {
             });
 
             // header = getNewHeaders(headers);
-            stackProxy[cloneProxySet.proxySet].status = 'work';
+            stackProxy[cloneProxySet].status = 'work';
 
             getProductDetail(ele, agent, header).then(() => {
-                stackProxy[cloneProxySet.proxySet].status = 'off';
+                stackProxy[cloneProxySet].status = 'off';
 
 
 
@@ -388,7 +388,7 @@ function arrayIteration(array, proxySet) {
 
 
             }).catch((e) => {
-                stackProxy[cloneProxySet.proxySet].status = 'off';
+                stackProxy[cloneProxySet].status = 'off';
 
 
                 proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
@@ -417,7 +417,7 @@ function arrayIteration(array, proxySet) {
                 console.log(e);
             });
             if (array.length - 1 == i) {
-                proxy.push(cloneProxySet.proxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
+                proxy.push(cloneProxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
 
 
             }
