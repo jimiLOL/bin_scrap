@@ -33,6 +33,8 @@ let headers = {
 let header;
 
 
+let stackProxy = {};
+
 
 
 const arrayIterator = arr => ({
@@ -58,7 +60,8 @@ const arrayIterator = arr => ({
     }
 })
 awaitArray = (val, length) => {
-    let integer = 0; //  
+    stackProxy[val] = {status: 'init', integer: 0};
+    // let integer = 0; //  
     return new Promise((resolve) => {
         function recursion() {
             return new Promise((resolve) => {
@@ -67,9 +70,13 @@ awaitArray = (val, length) => {
 
 
                     helper.timeout(2000).then(() => {
-                        integer++
+                        if (stackProxy[val].status == 'work') {
+                            stackProxy[val].integer++
 
-                        if (integer > 150) {
+                        }
+                        // integer++
+
+                        if (stackProxy[val].integer > 150) {
                             emitter.emit('infinity_recursion', {status: true, integer: integer});
                         }
 
@@ -96,7 +103,7 @@ awaitArray = (val, length) => {
 
 
                         recursion().then((res) => {
-                            integer = 0;
+                            stackProxy[val].integer = 0;
 
                             resolve(res)
                         })
@@ -105,13 +112,13 @@ awaitArray = (val, length) => {
 
                 } else if (length < 0) {
                     // console.log('=========================leng < 0=========================');
-                    integer = 0;
+                    stackProxy[val].integer = 0;
 
                     resolve({ done: true })
 
                 } else {
                     // console.log('=====!===!=========!===done: false====!=!=========!=======!==========');
-                    integer = 0;
+                    stackProxy[val].integer = 0;
 
                     resolve({ value: val, done: false })
                 }
@@ -317,6 +324,10 @@ async function init(init_header) {
 
 let cloneProxySet;
 function arrayIteration(array, proxySet) {
+    stackProxy[proxySet].status = 'work';
+    let start = new Date().getTime();
+    
+
     if (proxySet != undefined) {
         cloneProxySet = Object.assign({}, { proxySet: proxySet });
 
@@ -405,6 +416,10 @@ function arrayIteration(array, proxySet) {
 
 
     });
+    stackProxy[proxySet].status = 'off';
+    let end = new Date().getTime();
+    console.log('========================================================================Finish cycle ' + end - start + ' ms');
+
 
 
 
