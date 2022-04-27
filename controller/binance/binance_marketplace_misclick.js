@@ -71,7 +71,7 @@ awaitArray = (val, length) => {
 
                     helper.timeout(2000).then(() => {
                         if (stackProxy[val].status == 'work') {
-                            console.log(Object.keys(stackProxy[val]));
+                            console.log(Object.keys([val]));
                             stackProxy[val].integer++
                             console.log('===============================================================================  ' + stackProxy[val].integer);
 
