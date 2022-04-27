@@ -385,7 +385,7 @@ function arrayIteration(array, proxySet) {
                 //     }
 
                 // });
-                console.log('Function arrayIteration END MarketPlace\nProxy length ' + proxy.length);
+                console.log('Error: Function arrayIteration MarketPlace\nProxy length ' + proxy.length);
                 console.log('Worker 3');
 
 
