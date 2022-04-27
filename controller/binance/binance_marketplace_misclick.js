@@ -198,7 +198,8 @@ async function init(init_header) {
                 (async () => {
                     let index = 0;
                     for await (const proxyVar of arrayIterator(proxy)) {
-                        helper.shuffle(proxy);
+                        // helper.shuffle(proxy);
+                        console.log(stackProxy);
 
                         console.log('====================INIT parsing nft====================');
                         index++
