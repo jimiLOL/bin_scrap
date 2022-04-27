@@ -90,9 +90,20 @@ function init_workers() {
     console.log(promiseWorker);
     Object.keys(worker).forEach(e => {
       if (workers.hasOwnProperty(e) && util.inspect(workers[e]).includes("pending")) {
-        console.log('Worker ' + workers[e] + ' is work..');
+        console.log('Worker ' + [e] + ' is work..');
       } else {
-        promiseWorker.push({ [e]: workers[e] = worker[e].run({ headers: headers }, { name: 'init' }) })
+        promiseWorker.push({
+          [e]: workers[e] = worker[e].run({ headers: headers }, { name: 'init' }).then(res => {
+            console.log(res);
+
+            let index = promiseWorker.findIndex(x => Object.keys(x) == res.name_worker)
+
+            if (index != -1) {
+              promiseWorker.splice(index, 1)
+            }
+            return res
+          })
+        })
       }
     })
     let arrayPromise = [];
@@ -105,19 +116,24 @@ function init_workers() {
   }).then(res => {
     console.log('finally');
     console.log(res);
-    let index = promiseWorker.map((x, i) => { if (Object.keys(x) == res.name_worker) return i })
+    let index = promiseWorker.findIndex(x => Object.keys(x) == res.name_worker)
+
     if (index != -1) {
       console.log(index);
       promiseWorker.splice(index, 1)
     }
+    console.log(promiseWorker);
     init_workers()
   }).catch(e => {
     console.log('Ошибка Worker');
     console.log(e);
-    let index = promiseWorker.map((x, i) => { if (Object.keys(x) == e.name_worker) return i })
+    let index = promiseWorker.findIndex(x => Object.keys(x) == e.name_worker)
+
     if (index != -1) {
       promiseWorker.splice(index, 1)
     }
+    console.log(promiseWorker);
+
     init_workers()
   }) // Парсинг маркетплейса
 }
