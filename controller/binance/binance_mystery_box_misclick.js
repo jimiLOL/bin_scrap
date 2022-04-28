@@ -356,6 +356,50 @@ function arrayIteration(array, proxySet) {
                     proxy: proxyOptions,
                     rejectUnauthorized: false,
                 });
+
+                arrayPromise.push(getProductDetail(ele, agent, header).then(() => {
+    
+    
+    
+                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
+    
+                    // console.log('Function arrayIteration  Mystery Box END\nProxy length ' + proxy.length);
+                    console.clear()
+                    console.log('Worker 2');
+    
+    
+    
+    
+    
+    
+    
+                }).catch((e) => {
+    
+                    // let index = proxy.indexOf(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+                    // console.log(index);
+                    // if (index == -1) {
+                    // proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+    
+    
+                    // }
+                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+    
+                    // proxy.forEach((ele, i) => {
+                    //     let filter = proxy.filter(x => x == ele);
+                    //     if (filter.length > 1) {
+                    //         proxy.splice(i, 1);
+                    //     }
+    
+                    // });
+                    // console.log('Error: Function arrayIteration Mystery Box END\nProxy length ' + proxy.length);
+                    console.clear()
+                    console.log('Worker 2');
+    
+    
+    
+    
+                    console.log(e);
+                }))
     
     
                 getProductDetail(ele, agent, header).then(() => {
