@@ -45,7 +45,10 @@ async function add_history_binance_db(ele, marketpalce) {
                                 }
                                 if (call) {
                                     console.log('Добавили данные в историю ' + ele.productId);
+                                    resolve()
                                     
+                                } else {
+                                    resolve()
                                 }
                             })
                         });
