@@ -75,7 +75,7 @@ awaitArray = (val, length) => {
 
                         }
 
-                        if (stackProxy[val].integer > 5000) {
+                        if (stackProxy[val].integer > 10000) {
                             emitter.emit('infinity_recursion', { status: true, integer: stackProxy[val].integer });
                         }
 
@@ -330,106 +330,113 @@ async function init(init_header) {
 
 let cloneProxySet;
 function arrayIteration(array, proxySet) {
-    let start = new Date().getTime();
+    return new Promise((resolve, reject) => {
+        let start = new Date().getTime();
 
 
-    if (proxySet != undefined) {
-        cloneProxySet = proxySet
+        if (proxySet != undefined) {
+            cloneProxySet = proxySet
+    
+        };
+        let arrayPromise = [];
 
-    }
+    
+    
+    
+    
+        array.forEach((ele, i) => {
+            setTimeout(() => {
+                let randomIndex = helper.getRandomInt(0, proxy.length);
+                // console.log('Proxy length ' + proxy.length + ' randomIndex ' + randomIndex + ' ' + proxy[randomIndex] + ' ' + cloneProxySet);
+    
+    
+                const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = proxy[randomIndex] == undefined ? helper.proxyInit(cloneProxySet) : helper.proxyInit(proxy[randomIndex]);
+                if (proxy[randomIndex] == undefined) {
+                    proxy.push(cloneProxySet)
+                } else {
+                    proxy.splice(randomIndex, 1);
+    
+                };
+    
+                let proxyOptions = {
+                    host: proxyHost,
+                    port: portHost,
+                    proxyAuth: proxyAuth,
+                    headers: {
+                        'User-Agent': UA[randomIndex]
+                    },
+                };
+                let agent = tunnel.httpsOverHttp({
+                    proxy: proxyOptions,
+                    rejectUnauthorized: false,
+                });
+    
+                // header = getNewHeaders(headers);
+                stackProxy[cloneProxySet].status = 'work';
+    
+                getProductDetail(ele, agent, header).then(() => {
+                    stackProxy[cloneProxySet].status = 'off';
+    
+    
+    
+                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
+    
+                    // console.log('Function arrayIteration END MarketPlace\nProxy length ' + proxy.length);
+                    console.clear()
+                    console.log('Worker 3');
+    
+    
+    
+    
+    
+    
+    
+                }).catch((e) => {
+                    stackProxy[cloneProxySet].status = 'off';
+    
+    
+                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+    
+                    // let index = proxy.indexOf(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+                    // console.log(index);
+                    // if (index == -1) {
+                    // proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+    
+    
+                    // }
+                    // proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+                    // proxy.forEach((ele, i) => {
+                    //     let filter = proxy.filter(x => x == ele);
+                    //     if (filter.length > 1) {
+                    //         proxy.splice(i, 1);
+                    //     }
+    
+                    // });
+                    // console.log('Error: Function arrayIteration MarketPlace\nProxy length ' + proxy.length);
+                    console.clear()
+                    console.log('Worker 3');
+    
+    
+    
+    
+                    console.log(e);
+                });
+                if (array.length - 1 == i) {
+                    proxy.push(cloneProxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
+    
+    
+                }
+    
+            }, 50*i);
+    
+    
+    
+    
+        });
+        resolve(Promise.all(arrayPromise));
 
-
-
-
-    array.forEach((ele, i) => {
-        setTimeout(() => {
-            let randomIndex = helper.getRandomInt(0, proxy.length);
-            // console.log('Proxy length ' + proxy.length + ' randomIndex ' + randomIndex + ' ' + proxy[randomIndex] + ' ' + cloneProxySet);
-
-
-            const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = proxy[randomIndex] == undefined ? helper.proxyInit(cloneProxySet) : helper.proxyInit(proxy[randomIndex]);
-            if (proxy[randomIndex] == undefined) {
-                proxy.push(cloneProxySet)
-            } else {
-                proxy.splice(randomIndex, 1);
-
-            };
-
-            let proxyOptions = {
-                host: proxyHost,
-                port: portHost,
-                proxyAuth: proxyAuth,
-                headers: {
-                    'User-Agent': UA[randomIndex]
-                },
-            };
-            let agent = tunnel.httpsOverHttp({
-                proxy: proxyOptions,
-                rejectUnauthorized: false,
-            });
-
-            // header = getNewHeaders(headers);
-            stackProxy[cloneProxySet].status = 'work';
-
-            getProductDetail(ele, agent, header).then(() => {
-                stackProxy[cloneProxySet].status = 'off';
-
-
-
-                proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
-
-                // console.log('Function arrayIteration END MarketPlace\nProxy length ' + proxy.length);
-                console.clear()
-                console.log('Worker 3');
-
-
-
-
-
-
-
-            }).catch((e) => {
-                stackProxy[cloneProxySet].status = 'off';
-
-
-                proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-
-                // let index = proxy.indexOf(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-                // console.log(index);
-                // if (index == -1) {
-                // proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-
-
-                // }
-                // proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-                // proxy.forEach((ele, i) => {
-                //     let filter = proxy.filter(x => x == ele);
-                //     if (filter.length > 1) {
-                //         proxy.splice(i, 1);
-                //     }
-
-                // });
-                // console.log('Error: Function arrayIteration MarketPlace\nProxy length ' + proxy.length);
-                console.clear()
-                console.log('Worker 3');
-
-
-
-
-                console.log(e);
-            });
-            if (array.length - 1 == i) {
-                proxy.push(cloneProxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
-
-
-            }
-
-        }, 50*i);
-
-
-
-
-    });
+    })
+  
 
 
 

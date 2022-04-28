@@ -58,17 +58,16 @@ awaitArray = (val, length) => {
         function recursion() {
             return new Promise((resolve) => {
                 if (proxy.length != proxyLength && length > 0) {
-                    console.log('leng != length MeysteryBox ' + proxy.length, proxyLength);
-                    console.log(stackProxy[val]);
 
 
                     helper.timeout(2000).then(() => {
                         if (stackProxy[val].status == 'work' || stackProxy[val].status == 'off') {
+
                             stackProxy[val].integer++
 
                         }
 
-                        if (stackProxy[val].integer > 5000) {
+                        if (stackProxy[val].integer > 10000) {
                             emitter.emit('infinity_recursion', { status: true, integer: stackProxy[val].integer });
                         }
                         proxy.forEach((ele, i) => {
@@ -289,6 +288,8 @@ function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: p
 
                 arrayIteration(res.data.data.data, `${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`).then(() => {
                     stackProxy[`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`].status = 'off';
+                    console.log('end');
+                    // process.exit(0)
 
                     resolve(breakSwitch);
 
@@ -322,28 +323,28 @@ function arrayIteration(array, proxySet) {
     return new Promise((resolve, reject) => {
         if (proxySet != undefined) {
             cloneProxySet = proxySet
-    
+
         };
         let arrayPromise = [];
-    
-    
-    
-    
+
+
+
+
         array.forEach((ele, i) => {
-            setTimeout(() => {
+            setTimeout(async () => {
                 let randomIndex = helper.getRandomInt(0, proxy.length);
                 // console.log('Proxy length ' + proxy.length + ' randomIndex ' + randomIndex + ' ' + proxy[randomIndex] + ' ' + cloneProxySet);
-    
-    
+
+
                 const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = proxy[randomIndex] == undefined ? helper.proxyInit(cloneProxySet) : helper.proxyInit(proxy[randomIndex]);
                 if (proxy[randomIndex] == undefined) {
                     // process.exit(0)
                     proxy.push(cloneProxySet)
                 } else {
                     proxy.splice(randomIndex, 1);
-    
+
                 };
-    
+
                 let proxyOptions = {
                     host: proxyHost,
                     port: portHost,
@@ -358,104 +359,75 @@ function arrayIteration(array, proxySet) {
                 });
 
                 arrayPromise.push(getProductDetail(ele, agent, header).then(() => {
-    
-    
-    
+
+
+
                     proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
-    
+
                     // console.log('Function arrayIteration  Mystery Box END\nProxy length ' + proxy.length);
                     console.clear()
                     console.log('Worker 2');
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
                 }).catch((e) => {
-    
+
                     // let index = proxy.indexOf(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
                     // console.log(index);
                     // if (index == -1) {
                     // proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-    
-    
+
+
                     // }
                     proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-    
+
                     // proxy.forEach((ele, i) => {
                     //     let filter = proxy.filter(x => x == ele);
                     //     if (filter.length > 1) {
                     //         proxy.splice(i, 1);
                     //     }
-    
+
                     // });
                     // console.log('Error: Function arrayIteration Mystery Box END\nProxy length ' + proxy.length);
                     console.clear()
                     console.log('Worker 2');
-    
-    
-    
-    
+
+
+
+
                     console.log(e);
                 }))
+
+
+              
+                if (array.length - 1 == i) {
+                    proxy.push(cloneProxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
+                   
     
+                    await Promise.allSettled(arrayPromise).then(() => {
+                        console.log(arrayPromise);
+                     
     
-                getProductDetail(ele, agent, header).then(() => {
-    
-    
-    
-                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
-    
-                    // console.log('Function arrayIteration  Mystery Box END\nProxy length ' + proxy.length);
-                    console.clear()
-                    console.log('Worker 2');
-    
-    
-    
-    
-    
-    
-    
-                }).catch((e) => {
-    
-                    // let index = proxy.indexOf(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-                    // console.log(index);
-                    // if (index == -1) {
-                    // proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-    
-    
-                    // }
-                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-    
-                    // proxy.forEach((ele, i) => {
-                    //     let filter = proxy.filter(x => x == ele);
-                    //     if (filter.length > 1) {
-                    //         proxy.splice(i, 1);
-                    //     }
-    
-                    // });
-                    // console.log('Error: Function arrayIteration Mystery Box END\nProxy length ' + proxy.length);
-                    console.clear()
-                    console.log('Worker 2');
-    
-    
-    
-    
-                    console.log(e);
-                })
-    
-            }, 50*i);
-    
-    
+                        resolve()
+                    }).catch(() => {
+                        resolve()
+                    })
+                }
+
+            }, 250 * i);
+           
+
+
         });
-    
-        proxy.push(cloneProxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
-        resolve(Promise.all(arrayPromise));
+
+
 
     })
-    
+
 
 
 

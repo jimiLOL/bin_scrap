@@ -15,7 +15,7 @@ async function add_history_binance_db(ele, marketpalce) {
         //     productId: ele.productId
         // })
 
-        NFT.findOne({ productId: ele.productId }, (err, call) => {
+        NFT.findOne({ productId: ele.productId }, async (err, call) => {
             if (err) {
                 console.log(err);
                 reject(err)
@@ -37,8 +37,9 @@ async function add_history_binance_db(ele, marketpalce) {
                     }
                     // push array db
                     if (Array.isArray(filter)) {
+                        let arrayPromise = [];
                         filter.forEach(element => {
-                            NFT.findOneAndUpdate({productId: ele.productId}, {$addToSet: {history: element}}, (err, call) => {
+                           const req = NFT.findOneAndUpdate({productId: ele.productId}, {$addToSet: {history: element}}, (err, call) => {
                                 if (err) {
                                     console.log(err);
                                     reject(err)
@@ -50,8 +51,11 @@ async function add_history_binance_db(ele, marketpalce) {
                                 } else {
                                     resolve()
                                 }
-                            })
+                            });
+                            arrayPromise.push(req);
                         });
+                     await Promise.allSettled(arrayPromise).then(()=> resolve())
+
                     } else {
                         resolve()
 

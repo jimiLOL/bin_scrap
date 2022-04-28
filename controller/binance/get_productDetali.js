@@ -45,11 +45,11 @@ function getProductDetail(productBinance, agent, header) {
         //   console.log(productDetail);
         //   process.exit(0)
         addDB(productBinance, productDetail).then(() => {
-          productBinance = 0;
-          resolve()
+          productBinance = null;
+          resolve({status: 'ok', proxy: agent.proxyOptions.host})
         }).catch(e => {
-          productBinance = 0;
-          reject()
+          productBinance = null;
+          reject({status: 'error', proxy: agent.proxyOptions.host})
         });
 
 
@@ -59,7 +59,7 @@ function getProductDetail(productBinance, agent, header) {
         console.log('catch');
         // process.exit(1)
         addDB(productBinance, productDetail);
-        reject()
+        reject({status: 'error', proxy: agent.proxyOptions.host})
       })
 
     }).catch(e => {
@@ -97,14 +97,14 @@ function addDB(productBinance, responseProductDetail = null) {
       add_binance_db(newProduct, 'binance').then(() => {
         return add_history_binance_db(newProduct, 'binance')
       }).then(() => {
-        productBinance = 0;
-        responseProductDetail = 0;
-        newProduct = 0;
+        productBinance = null;
+        responseProductDetail = null;
+        newProduct = null;
         resolve()
       }).catch((e) => {
-        productBinance = 0;
-        responseProductDetail = 0;
-        newProduct = 0;
+        productBinance = null;
+        responseProductDetail = null;
+        newProduct = null;
 
         console.log(e);
         reject()
@@ -112,7 +112,7 @@ function addDB(productBinance, responseProductDetail = null) {
       // process.exit(0)
 
     } else {
-      productBinance = 0;
+      productBinance = null;
       console.log('else');
       resolve()
       // process.exit(0)
