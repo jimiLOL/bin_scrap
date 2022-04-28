@@ -67,7 +67,7 @@ awaitArray = (val, length) => {
 
 
                     helper.timeout(2000).then(() => {
-                        if (stackProxy[val].status == 'work' || stackProxy[val].status == 'off') {
+                        if (stackProxy[val].status == 'work') {
                             stackProxy[val].integer++
 
                         }
@@ -267,9 +267,16 @@ function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: p
 
 
 
+                stackProxy[`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`].status = 'work';
 
-                arrayIteration(res.data.data.data, `${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-                resolve(breakSwitch);
+                arrayIteration(res.data.data.data, `${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`).then(() => {
+                    stackProxy[`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`].status = 'off';
+                    console.log('end');
+                    // process.exit(0)
+
+                    resolve(breakSwitch);
+
+                });
 
 
                 let newData = new Date().getTime();
@@ -297,83 +304,102 @@ function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: p
 
 let cloneProxySet;
 function arrayIteration(array, proxySet) {
-    if (proxySet != undefined) {
-        cloneProxySet = proxySet
+    return new Promise((resolve, reject) => {
+        if (proxySet != undefined) {
+            cloneProxySet = proxySet
+    
+        };
+        let arrayPromise = [];
 
-    }
+    
+    
+    
+    
+        array.forEach((ele, i) => {
+            setTimeout(async () => {
+                let randomIndex = helper.getRandomInt(0, proxy.length);
+    
+    
+                const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = proxy[randomIndex] == undefined ? helper.proxyInit(cloneProxySet) : helper.proxyInit(proxy[randomIndex]);
+                if (proxy[randomIndex] == undefined) {
+                    // process.exit(0)
+                    proxy.push(cloneProxySet)
+                } else {
+                    proxy.splice(randomIndex, 1);
+    
+                };
+    
+                let proxyOptions = {
+                    host: proxyHost,
+                    port: portHost,
+                    proxyAuth: proxyAuth,
+                    headers: {
+                        'User-Agent': UA[randomIndex]
+                    },
+                };
+                let agent = tunnel.httpsOverHttp({
+                    proxy: proxyOptions,
+                    rejectUnauthorized: false,
+                });
+    
 
+                arrayPromise.push(  getProductDetail(ele, agent, header).then(() => {
+                    stackProxy[cloneProxySet].status = 'off';
+    
+    
+    
+                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
+    
+                    // console.log('Function arrayIteration  Mystery Box last order  END\nProxy length ' + proxy.length);
+                    console.clear()
+                    console.log('Worker 1');
+    
+    
+    
+    
+    
+    
+                }).catch((e) => {
+                    stackProxy[cloneProxySet].status = 'off';
+    
+    
+                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+    
+                    // console.log('Error: Function arrayIteration Mystery Box last order END\nProxy length ' + proxy.length);
+                    console.clear()
+                    console.log('Worker 1');
+    
+    
+    
+    
+                    console.log(e);
+                }))
+    
+    
+              
 
-
-
-    array.forEach((ele, i) => {
-        setTimeout(() => {
-            let randomIndex = helper.getRandomInt(0, proxy.length);
-
-
-            const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = proxy[randomIndex] == undefined ? helper.proxyInit(cloneProxySet) : helper.proxyInit(proxy[randomIndex]);
-            if (proxy[randomIndex] == undefined) {
-                // process.exit(0)
-                proxy.push(cloneProxySet)
-            } else {
-                proxy.splice(randomIndex, 1);
-
-            };
-
-            let proxyOptions = {
-                host: proxyHost,
-                port: portHost,
-                proxyAuth: proxyAuth,
-                headers: {
-                    'User-Agent': UA[randomIndex]
-                },
-            };
-            let agent = tunnel.httpsOverHttp({
-                proxy: proxyOptions,
-                rejectUnauthorized: false,
-            });
-
-            stackProxy[cloneProxySet].status = 'work';
-
-
-            getProductDetail(ele, agent, header).then(() => {
-                stackProxy[cloneProxySet].status = 'off';
-
-
-
-                proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
-
-                // console.log('Function arrayIteration  Mystery Box last order  END\nProxy length ' + proxy.length);
-                console.clear()
-                console.log('Worker 1');
-
-
-
-
-
-
-            }).catch((e) => {
-                stackProxy[cloneProxySet].status = 'off';
-
-
-                proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-
-                // console.log('Error: Function arrayIteration Mystery Box last order END\nProxy length ' + proxy.length);
-                console.clear()
-                console.log('Worker 1');
-
-
-
-
-                console.log(e);
-            })
-
-        }, 50*i);
-
-
-    });
-
-    proxy.push(cloneProxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
-
+                if (array.length - 1 == i) {
+                    proxy.push(cloneProxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
+                   
+    
+                    await Promise.allSettled(arrayPromise).then(() => {
+                        console.log(arrayPromise);
+                     
+    
+                        resolve()
+                    }).catch(() => {
+                        resolve()
+                    })
+                }
+    
+            }, 50*i);
+    
+    
+        });
+    
+    
+    })
+   
 
 
 

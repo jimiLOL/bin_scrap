@@ -199,13 +199,26 @@ async function init(init_header) {
 
 
                 let data = new Date().getTime();
-  
+
                 axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/product-list', body, { headers: header, httpsAgent: agent }).then(res => {
                     console.log(res.status + ' ' + index + ' total= ' + res.data.data.total);
 
                     console.log('Send proxyVar ' + proxyVar);
+                    if (res.data.data.rows != null) {
+                    stackProxy[proxyVar].status = 'work';
+                    arrayIteration(res.data.data.rows, proxyVar).then(() => {
+                        stackProxy[proxyVar].status = 'off';
 
-                    arrayIteration(res.data.data.rows, proxyVar);
+                        if (index == 10) {
+                            resolve({ status: 'ok', name_worker: 'binance_marketplace_lastorder' })
+                        }
+                    });
+
+                    }
+
+
+
+                  
                     let n = res.data.data.total / 100;
                     console.log(Math.ceil(n));
                     let newData = new Date().getTime();
@@ -214,9 +227,7 @@ async function init(init_header) {
                         var_break = true
                     } // останавливаем итерацию
                     // console.log(`Global cycle ${i}`);
-                    if (index == 10) {
-                        resolve({ status: 'ok', name_worker: 'binance_marketplace_lastorder' })
-                    }
+
 
 
 
@@ -241,11 +252,11 @@ async function init(init_header) {
                         reject({ status: 'error', name_worker: 'binance_marketplace_lastorder' })
                     }
                 })
-           
+
                 if (index == 101 || var_break) {
                     console.log('===========break==============');
                     resolve({ status: 'ok', name_worker: 'binance_marketplace_lastorder' })
- 
+
 
 
                     var_break = false;
@@ -275,88 +286,92 @@ async function init(init_header) {
 
 let cloneProxySet;
 function arrayIteration(array, proxySet) {
-    if (proxySet != undefined) {
-        cloneProxySet = proxySet
+    return new Promise((resolve, reject) => {
+        if (proxySet != undefined) {
+            cloneProxySet = proxySet
 
-    }
-
-
-
-
-    array.forEach((ele, i) => {
-        setTimeout(() => {
-            let randomIndex = helper.getRandomInt(0, proxy.length);
-
-
-            const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = proxy[randomIndex] == undefined ? helper.proxyInit(cloneProxySet) : helper.proxyInit(proxy[randomIndex]);
-            if (proxy[randomIndex] == undefined) {
-                proxy.push(cloneProxySet)
-            } else {
-                proxy.splice(randomIndex, 1);
-
-            };
-
-            let proxyOptions = {
-                host: proxyHost,
-                port: portHost,
-                proxyAuth: proxyAuth,
-                headers: {
-                    'User-Agent': UA[randomIndex]
-                },
-            };
-            let agent = tunnel.httpsOverHttp({
-                proxy: proxyOptions,
-                rejectUnauthorized: false,
-            });
-
-            stackProxy[cloneProxySet].status = 'work';
-
-
-            getProductDetail(ele, agent, header).then(() => {
-                stackProxy[cloneProxySet].status = 'off';
-
-
-
-
-                proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
-
-                // console.log('Function arrayIteration END MarketPlace lastOrder\nProxy length ' + proxy.length);
-                console.clear()
-                console.log('Worker 4');
+        };
+        let arrayPromise = [];
 
 
 
 
 
+        array.forEach((ele, i) => {
+            setTimeout(async () => {
+                let randomIndex = helper.getRandomInt(0, proxy.length);
 
 
-            }).catch((e) => {
-                proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-                stackProxy[cloneProxySet].status = 'off';
+                const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = proxy[randomIndex] == undefined ? helper.proxyInit(cloneProxySet) : helper.proxyInit(proxy[randomIndex]);
+                if (proxy[randomIndex] == undefined) {
+                    proxy.push(cloneProxySet)
+                } else {
+                    proxy.splice(randomIndex, 1);
+
+                };
+
+                let proxyOptions = {
+                    host: proxyHost,
+                    port: portHost,
+                    proxyAuth: proxyAuth,
+                    headers: {
+                        'User-Agent': UA[randomIndex]
+                    },
+                };
+                let agent = tunnel.httpsOverHttp({
+                    proxy: proxyOptions,
+                    rejectUnauthorized: false,
+                });
 
 
- 
-                // console.log('Error: Function arrayIteration END MarketPlace lastOrder\nProxy length ' + proxy.length);
-                console.clear()
-                console.log('Worker 4');
+                arrayPromise.push(getProductDetail(ele, agent, header).then(() => {
 
 
 
 
-                console.log(e);
-            });
-            if (array.length - 1 == i) {
-                proxy.push(cloneProxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
+                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
 
-
-            }
-
-        }, 50*i);
+                    // console.log('Function arrayIteration END MarketPlace lastOrder\nProxy length ' + proxy.length);
+                    console.clear()
+                    console.log('Worker 4');
 
 
 
 
-    });
+
+
+
+                }).catch((e) => {
+                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+
+
+
+                    // console.log('Error: Function arrayIteration END MarketPlace lastOrder\nProxy length ' + proxy.length);
+                    console.clear()
+                    console.log('Worker 4');
+
+
+
+
+                    console.log(e);
+                }))
+
+
+
+                if (array.length - 1 == i) {
+                    proxy.push(cloneProxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
+                    await Promise.allSettled(arrayPromise).then(() => resolve()).catch(e => resolve())
+
+                }
+
+            }, 50 * i);
+
+
+
+
+        });
+
+    })
 
 
 

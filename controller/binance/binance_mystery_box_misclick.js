@@ -58,13 +58,9 @@ awaitArray = (val, length) => {
         function recursion() {
             return new Promise((resolve) => {
                 if (proxy.length != proxyLength && length > 0) {
-
-
                     helper.timeout(2000).then(() => {
-                        if (stackProxy[val].status == 'work' || stackProxy[val].status == 'off') {
-
+                        if (stackProxy[val].status == 'work') {
                             stackProxy[val].integer++
-
                         }
 
                         if (stackProxy[val].integer > 10000) {
@@ -76,8 +72,6 @@ awaitArray = (val, length) => {
                                 console.log(filter);
                                 proxy.splice(i, 1);
                                 console.log('length ' + proxy.length, proxyLength);
-                                // process.exit(0)
-
                             }
 
                         });
@@ -418,7 +412,7 @@ function arrayIteration(array, proxySet) {
                     })
                 }
 
-            }, 250 * i);
+            }, 50 * i);
            
 
 
