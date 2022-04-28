@@ -20,6 +20,7 @@ const util = require("util")
 
 const path = require('path');
 const Piscina = require('piscina');
+const EventEmitter = require('events');
 const {
   senDataTelegram,
   techbicaleventTelegram,
@@ -86,15 +87,22 @@ function init_workers() {
     filename: path.resolve('./controller/binance', 'binance_marketplace_lastorder.js')
   });
 
+  
+
   getHeaders().then(async (headers) => {
+    const ee = new EventEmitter();
     console.log(promiseWorker);
     Object.keys(worker).forEach(e => {
       if (util.inspect(workers[e]).includes("pending")) {
         console.log('Worker ' + [e] + ' is work..');
       } else if (workers.hasOwnProperty(e) && !util.inspect(workers[e]).includes("pending")) { 
+      // ee.emit('abort');
+      // worker[e].destroy()
+      console.log(worker[e].threads);
+      // workers[e] = 0;
         delete workers[e];
         promiseWorker.push({
-          [e]: workers[e] = worker[e].run({ headers: headers }, { name: 'init' }).then(res => {
+          [e]: workers[e] = worker[e].run({ headers: headers }, { name: 'init', signal: ee }).then(res => {
             console.log(res);
 
             clearSteck(res)
@@ -111,9 +119,16 @@ function init_workers() {
         })
 
       } else {
+      // ee.emit('abort');
+
+
+        
+        console.log(worker[e].threads);
+        // console.log(worker[e].destroy());
+
 
         promiseWorker.push({
-          [e]: workers[e] = worker[e].run({ headers: headers }, { name: 'init' }).then(res => {
+          [e]: workers[e] = worker[e].run({ headers: headers }, { name: 'init', signal: ee }).then(res => {
             console.log(res);
 
             clearSteck(res)
@@ -131,6 +146,24 @@ function init_workers() {
       }
 
     })
+    worker.binance_marketplace_lastorder.on('drain', () => {
+    console.log('======================================drain==================================');
+
+      // worker.binance_marketplace_lastorder.runTime()
+  
+    });
+    // setTimeout(() => {
+    //   console.log('=========runTime=========');
+    //   // worker.binance_marketplace_lastorder.runTime()
+
+    //   console.log(promiseWorker[0]);
+    //   promiseWorker.forEach(element => {
+    //   ee.emit('abort');
+        
+    //   });
+    //   // promiseWorker[0].binance_mystery.destroy()
+      
+    // }, 10000);
     let arrayPromise = [];
     promiseWorker.forEach(promise => {
       arrayPromise.push(Object.values(promise))

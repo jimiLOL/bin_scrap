@@ -1,5 +1,13 @@
 // модуль парсинга маркет плейса
-const { default: axios } = require("axios");
+
+
+
+
+
+
+
+async function init(init_header) {
+    const { default: axios } = require("axios");
 const tunnel = require("tunnel");
 const { getProductDetail } = require('./get_productDetali');
 const { proxy } = require("../../proxy_list_two");
@@ -35,99 +43,94 @@ let header;
 let stackProxy = {};
 
 
-
-const arrayIterator = arr => ({
-    [Symbol.asyncIterator]() {
-        let i = arr.length;
-        //   // console.log(i);
-        return {
-            index: 0,
-            async next() {
-                // console.log('=========================== ' + this.index + ' index iterator =================================================');
-                if (this.index < proxyLength) {
-                    //   // console.log(this.index, arr.length);
-
-                    return await awaitArray(arr[this.index++], --i);
-
-                } else {
-                    return { done: true }
-
+    const arrayIterator = arr => ({
+        [Symbol.asyncIterator]() {
+            let i = arr.length;
+            //   // console.log(i);
+            return {
+                index: 0,
+                async next() {
+                    // console.log('=========================== ' + this.index + ' index iterator =================================================');
+                    if (this.index < proxyLength) {
+                        //   // console.log(this.index, arr.length);
+    
+                        return await awaitArray(arr[this.index++], --i);
+    
+                    } else {
+                        return { done: true }
+    
+                    }
+    
                 }
-
             }
         }
-    }
-})
-awaitArray = (val, length) => {
-    stackProxy[val] = { status: 'init', integer: 0 };
-
-    return new Promise((resolve) => {
-        function recursion() {
-            return new Promise((resolve) => {
-                if (proxy.length != proxyLength && length > 0) {
-                    //    // console.log('leng != length ' + proxy.length, proxyLength);
-
-
-                    helper.timeout(2000).then(() => {
-                        if (stackProxy[val].status == 'work') {
-                            stackProxy[val].integer++
-
-                        }
-
-                        if (stackProxy[val].integer > 10000) {
-                            emitter.emit('infinity_recursion', { status: true, integer: stackProxy[val].integer });
-                        }
-                        proxy.forEach((ele, i) => {
-                            let filter = proxy.filter(x => x == ele);
-                            if (filter.length > 1) {
-                                proxy.splice(i, 1);
-                            }
-
-                        });
-
-
-
-                        recursion().then((res) => {
-                            stackProxy[val].integer = 0;
-
-
-                            resolve(res)
-                        })
-                    })
-
-
-                } else if (length < 0) {
-                    // // console.log('=========================leng < 0=========================');
-                    stackProxy[val].integer = 0;
-
-
-                    resolve({ done: true })
-
-                } else {
-                    // // console.log('=====!===!=========!===done: false====!=!=========!=======!==========');
-                    stackProxy[val].integer = 0;
-
-
-                    resolve({ value: val, done: false })
-                }
-            })
-
-
-        };
-        setTimeout(() => {
-            recursion().then((res) => {
-                resolve(res)
-            })
-        }, 50);
-
-
-
     })
-}
-
-
-
-async function init(init_header) {
+    awaitArray = (val, length) => {
+        stackProxy[val] = { status: 'init', integer: 0 };
+    
+        return new Promise((resolve) => {
+            function recursion() {
+                return new Promise((resolve) => {
+                    if (proxy.length != proxyLength && length > 0) {
+                        //    // console.log('leng != length ' + proxy.length, proxyLength);
+    
+    
+                        helper.timeout(2000).then(() => {
+                            if (stackProxy[val].status == 'work') {
+                                stackProxy[val].integer++
+    
+                            }
+    
+                            if (stackProxy[val].integer > 10000) {
+                                emitter.emit('infinity_recursion', { status: true, integer: stackProxy[val].integer });
+                            }
+                            proxy.forEach((ele, i) => {
+                                let filter = proxy.filter(x => x == ele);
+                                if (filter.length > 1) {
+                                    proxy.splice(i, 1);
+                                }
+    
+                            });
+    
+    
+    
+                            recursion().then((res) => {
+                                stackProxy[val].integer = 0;
+    
+    
+                                resolve(res)
+                            })
+                        })
+    
+    
+                    } else if (length < 0) {
+                        // // console.log('=========================leng < 0=========================');
+                        stackProxy[val].integer = 0;
+    
+    
+                        resolve({ done: true })
+    
+                    } else {
+                        // // console.log('=====!===!=========!===done: false====!=!=========!=======!==========');
+                        stackProxy[val].integer = 0;
+    
+    
+                        resolve({ value: val, done: false })
+                    }
+                })
+    
+    
+            };
+            setTimeout(() => {
+                recursion().then((res) => {
+                    resolve(res)
+                })
+            }, 50);
+    
+    
+    
+        })
+    }
     return new Promise(async (resolve, reject) => {
         emitter.on('infinity_recursion', (message) => {
             let magicVal = 0; // что бы не долбитть в емитор по 100 раз
@@ -211,7 +214,9 @@ async function init(init_header) {
                         res = null;
 
                         if (index == 10) {
-                            resolve({ status: 'ok', name_worker: 'binance_marketplace_lastorder' })
+                            // stackProxy = 0;
+                            init(init_header)
+                            // resolve({ status: 'ok', name_worker: 'binance_marketplace_lastorder' }) // никогда не резолвим поток
                         }
                     });
 
@@ -256,7 +261,9 @@ async function init(init_header) {
 
                 if (index == 101 || var_break) {
                     // console.log('===========break==============');
-                    resolve({ status: 'ok', name_worker: 'binance_marketplace_lastorder' })
+                    init(init_header)
+
+                    // resolve({ status: 'ok', name_worker: 'binance_marketplace_lastorder' }) // не перезапускаем
 
 
 
@@ -278,106 +285,106 @@ async function init(init_header) {
     })
 
 
-
-
-
-
-}
-
-
-let cloneProxySet;
-function arrayIteration(array, proxySet) {
-    return new Promise((resolve, reject) => {
-        if (proxySet != undefined) {
-            cloneProxySet = proxySet
-
-        };
-        let arrayPromise = [];
-
-
-
-
-
-        array.forEach((ele, i) => {
-            setTimeout(async () => {
-                let randomIndex = helper.getRandomInt(0, proxy.length);
-
-
-                const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = proxy[randomIndex] == undefined ? helper.proxyInit(cloneProxySet) : helper.proxyInit(proxy[randomIndex]);
-                if (proxy[randomIndex] == undefined) {
-                    proxy.push(cloneProxySet)
-                } else {
-                    proxy.splice(randomIndex, 1);
-
-                };
-
-                let proxyOptions = {
-                    host: proxyHost,
-                    port: portHost,
-                    proxyAuth: proxyAuth,
-                    headers: {
-                        'User-Agent': UA[randomIndex]
-                    },
-                };
-                let agent = tunnel.httpsOverHttp({
-                    proxy: proxyOptions,
-                    rejectUnauthorized: false,
-                });
-
-
-                arrayPromise.push(getProductDetail(ele, agent, header).then(() => {
-
-
-
-
-                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
-
-                    // // console.log('Function arrayIteration END MarketPlace lastOrder\nProxy length ' + proxy.length);
-                    console.clear()
-                    console.log('Worker 4');
-
-
-
-
-
-
-
-                }).catch((e) => {
-                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-
-
-
-                    // // console.log('Error: Function arrayIteration END MarketPlace lastOrder\nProxy length ' + proxy.length);
-                    console.clear()
-                    console.log('Worker 4');
-
-
-
-
-                    console.log(e);
-                }))
-
-
-
-                if (array.length - 1 == i) {
-                    proxy.push(cloneProxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
-                    await Promise.allSettled(arrayPromise).then(() => resolve()).catch(e => resolve())
-
-                }
-
-            }, 50 * i);
-
-
-
-
-        });
-
-    })
-
-
+    function arrayIteration(array, proxySet) {
+        return new Promise((resolve, reject) => {
+            if (proxySet != undefined) {
+                cloneProxySet = proxySet
+    
+            };
+            let arrayPromise = [];
+    
+    
+    
+    
+    
+            array.forEach((ele, i) => {
+                setTimeout(async () => {
+                    let randomIndex = helper.getRandomInt(0, proxy.length);
+    
+    
+                    const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = proxy[randomIndex] == undefined ? helper.proxyInit(cloneProxySet) : helper.proxyInit(proxy[randomIndex]);
+                    if (proxy[randomIndex] == undefined) {
+                        proxy.push(cloneProxySet)
+                    } else {
+                        proxy.splice(randomIndex, 1);
+    
+                    };
+    
+                    let proxyOptions = {
+                        host: proxyHost,
+                        port: portHost,
+                        proxyAuth: proxyAuth,
+                        headers: {
+                            'User-Agent': UA[randomIndex]
+                        },
+                    };
+                    let agent = tunnel.httpsOverHttp({
+                        proxy: proxyOptions,
+                        rejectUnauthorized: false,
+                    });
+    
+    
+                    arrayPromise.push(getProductDetail(ele, agent, header).then(() => {
+    
+    
+    
+    
+                        proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
+    
+                        // // console.log('Function arrayIteration END MarketPlace lastOrder\nProxy length ' + proxy.length);
+                        console.clear()
+                        console.log('Worker 4');
+    
+    
+    
+    
+    
+    
+    
+                    }).catch((e) => {
+                        proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+    
+    
+    
+                        // // console.log('Error: Function arrayIteration END MarketPlace lastOrder\nProxy length ' + proxy.length);
+                        console.clear()
+                        console.log('Worker 4');
+    
+    
+    
+    
+                        console.log(e);
+                    }))
+    
+    
+    
+                    if (array.length - 1 == i) {
+                        proxy.push(cloneProxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
+                        await Promise.allSettled(arrayPromise).then(() => resolve()).catch(e => resolve())
+    
+                    }
+    
+                }, 250 * i);
+    
+    
+    
+    
+            });
+    
+        })
+    
+    
+    
+    
+    
+    }
 
 
 
 }
+
+
+var cloneProxySet;
+
 
 module.exports = { init }

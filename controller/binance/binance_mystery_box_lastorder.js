@@ -172,12 +172,14 @@ async function init(init_header) {
                 await getInfoBinNFTMysteryBox(helper.proxyInit(proxyVar), indexLayer, body).then(res => {
                     breakSwitch = res;
                     if (indexLayer == iteration - 1) {
-                        resolve({ status: 'ok', name_worker: 'binance_mysteryLastOrder' })
+                        // resolve({ status: 'ok', name_worker: 'binance_mysteryLastOrder' })
+                        init(init_header)
                     }
                 }).catch(e => {
                     // console.log(e);
                     if (indexLayer == iteration - 1) {
-                        reject({ status: 'error', name_worker: 'binance_mysteryLastOrder' })
+                        // reject({ status: 'error', name_worker: 'binance_mysteryLastOrder' })
+                        init(init_header)
                     }
                     // process.exit(1)
                 });
@@ -394,7 +396,7 @@ function arrayIteration(array, proxySet) {
                     })
                 }
     
-            }, 50*i);
+            }, 250*i);
     
     
         });

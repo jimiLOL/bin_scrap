@@ -246,7 +246,8 @@ async function init(init_header) {
                                 stackProxy[proxyVar].status = 'off';
                                 res = null;
                                 if (i == layerList.length - 1) {
-                                    resolve({ status: 'ok', name_worker: 'binance_marketplace' })
+                                    // resolve({ status: 'ok', name_worker: 'binance_marketplace' })
+                                    init(init_header)
                                 }
                             });
 
@@ -285,8 +286,9 @@ async function init(init_header) {
                             }
                             // var_break = true;
                             if (i == layerList.length - 1) {
+                                init(init_header)
 
-                                reject({ status: 'error', name_worker: 'binance_marketplace' })
+                                // reject({ status: 'error', name_worker: 'binance_marketplace' })
                             }
                         })
                         // } else {
