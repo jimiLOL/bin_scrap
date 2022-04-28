@@ -39,13 +39,13 @@ let stackProxy = {};
 const arrayIterator = arr => ({
     [Symbol.asyncIterator]() {
         let i = arr.length;
-        //   console.log(i);
+        //   // console.log(i);
         return {
             index: 0,
             async next() {
-                console.log('=========================== ' + this.index + ' index iterator =================================================');
+                // console.log('=========================== ' + this.index + ' index iterator =================================================');
                 if (this.index < proxyLength) {
-                    //   console.log(this.index, arr.length);
+                    //   // console.log(this.index, arr.length);
 
                     return await awaitArray(arr[this.index++], --i);
 
@@ -65,7 +65,7 @@ awaitArray = (val, length) => {
         function recursion() {
             return new Promise((resolve) => {
                 if (proxy.length != proxyLength && length > 0) {
-                    //    console.log('leng != length ' + proxy.length, proxyLength);
+                    //    // console.log('leng != length ' + proxy.length, proxyLength);
 
 
                     helper.timeout(2000).then(() => {
@@ -97,14 +97,14 @@ awaitArray = (val, length) => {
 
 
                 } else if (length < 0) {
-                    // console.log('=========================leng < 0=========================');
+                    // // console.log('=========================leng < 0=========================');
                     stackProxy[val].integer = 0;
 
 
                     resolve({ done: true })
 
                 } else {
-                    // console.log('=====!===!=========!===done: false====!=!=========!=======!==========');
+                    // // console.log('=====!===!=========!===done: false====!=!=========!=======!==========');
                     stackProxy[val].integer = 0;
 
 
@@ -167,14 +167,14 @@ async function init(init_header) {
             for await (const proxyVar of arrayIterator(proxy)) {
                 helper.shuffle(proxy);
 
-                console.log('====================INIT parsing nft====================');
+                // console.log('====================INIT parsing nft====================');
                 index++
                 if (proxyVar == undefined) {
                     break
                 }
 
                 const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = helper.proxyInit(proxyVar);
-                console.log('Proxy lenght ' + proxy.length + ' index ' + index);
+                // console.log('Proxy lenght ' + proxy.length + ' index ' + index);
                 let indexProxy = proxy.indexOf(proxyVar);
                 proxy.splice(indexProxy, 1);
                 // proxy.splice(index - 1, 1);
@@ -201,13 +201,14 @@ async function init(init_header) {
                 let data = new Date().getTime();
 
                 axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/product-list', body, { headers: header, httpsAgent: agent }).then(res => {
-                    console.log(res.status + ' ' + index + ' total= ' + res.data.data.total);
+                    // console.log(res.status + ' ' + index + ' total= ' + res.data.data.total);
 
-                    console.log('Send proxyVar ' + proxyVar);
+                    // console.log('Send proxyVar ' + proxyVar);
                     if (res.data.data.rows != null) {
                     stackProxy[proxyVar].status = 'work';
                     arrayIteration(res.data.data.rows, proxyVar).then(() => {
                         stackProxy[proxyVar].status = 'off';
+                        res = null;
 
                         if (index == 10) {
                             resolve({ status: 'ok', name_worker: 'binance_marketplace_lastorder' })
@@ -220,32 +221,32 @@ async function init(init_header) {
 
                   
                     let n = res.data.data.total / 100;
-                    console.log(Math.ceil(n));
+                    // console.log(Math.ceil(n));
                     let newData = new Date().getTime();
-                    console.log(`Date cycle^ ${newData - data} ms`);
+                    // console.log(`Date cycle^ ${newData - data} ms`);
                     if (Math.ceil(n) == index) {
                         var_break = true
                     } // останавливаем итерацию
-                    // console.log(`Global cycle ${i}`);
+                    // // console.log(`Global cycle ${i}`);
 
 
 
 
                     return Math.ceil(n)
                 }).catch(e => {
-                    console.log('Error');
-                    // console.log(`Global cycle ${i}`);
+                    // console.log('Error');
+                    // // console.log(`Global cycle ${i}`);
 
                     proxy.push(proxyVar)
-                    console.log('Proxy lenght ' + proxy.length);
+                    // console.log('Proxy lenght ' + proxy.length);
 
 
                     if (e?.response?.statusText != undefined) {
-                        console.log(e?.response?.statusText);
+                        // console.log(e?.response?.statusText);
 
 
                     } else {
-                        // console.log(e);
+                        // // console.log(e);
                     }
                     // var_break = true;
                     if (index == 10) {
@@ -254,13 +255,13 @@ async function init(init_header) {
                 })
 
                 if (index == 101 || var_break) {
-                    console.log('===========break==============');
+                    // console.log('===========break==============');
                     resolve({ status: 'ok', name_worker: 'binance_marketplace_lastorder' })
 
 
 
                     var_break = false;
-                    console.log('break\nProxy length ' + proxy.length);
+                    // console.log('break\nProxy length ' + proxy.length);
 
                     break
                 } // у нас в ответе максимум 100 сущностей отсюда и 101
@@ -331,7 +332,7 @@ function arrayIteration(array, proxySet) {
 
                     proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
 
-                    // console.log('Function arrayIteration END MarketPlace lastOrder\nProxy length ' + proxy.length);
+                    // // console.log('Function arrayIteration END MarketPlace lastOrder\nProxy length ' + proxy.length);
                     console.clear()
                     console.log('Worker 4');
 
@@ -346,7 +347,7 @@ function arrayIteration(array, proxySet) {
 
 
 
-                    // console.log('Error: Function arrayIteration END MarketPlace lastOrder\nProxy length ' + proxy.length);
+                    // // console.log('Error: Function arrayIteration END MarketPlace lastOrder\nProxy length ' + proxy.length);
                     console.clear()
                     console.log('Worker 4');
 

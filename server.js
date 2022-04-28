@@ -91,7 +91,7 @@ function init_workers() {
     Object.keys(worker).forEach(e => {
       if (util.inspect(workers[e]).includes("pending")) {
         console.log('Worker ' + [e] + ' is work..');
-      } else if (workers.hasOwnProperty(e)) { 
+      } else if (workers.hasOwnProperty(e) && !util.inspect(workers[e]).includes("pending")) { 
         delete workers[e];
         promiseWorker.push({
           [e]: workers[e] = worker[e].run({ headers: headers }, { name: 'init' }).then(res => {

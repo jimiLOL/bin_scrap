@@ -45,9 +45,9 @@ const arrayIterator = arr => ({
         return {
             index: 0,
             async next() {
-                console.log('=========================== ' + this.index + ' index iterator =================================================');
+                // console.log('=========================== ' + this.index + ' index iterator =================================================');
                 if (this.index < proxyLength) {
-                    //   console.log(this.index, arr.length);
+                    //   // console.log(this.index, arr.length);
                     return await awaitArray(arr[this.index++], --i);
                 } else {
                     return { done: true }
@@ -63,7 +63,7 @@ awaitArray = (val, length) => {
         function recursion() {
             return new Promise((resolve) => {
                 if (proxy.length != proxyLength && length > 0) {
-                    // console.log('leng != length MeysteryBox ' + proxy.length, proxyLength);
+                    // // console.log('leng != length MeysteryBox ' + proxy.length, proxyLength);
 
 
                     helper.timeout(2000).then(() => {
@@ -78,9 +78,9 @@ awaitArray = (val, length) => {
                         proxy.forEach((ele, i) => {
                             let filter = proxy.filter(x => x == ele);
                             if (filter.length > 1) {
-                                console.log(filter);
+                                // console.log(filter);
                                 proxy.splice(i, 1);
-                                console.log('length ' + proxy.length, proxyLength);
+                                // console.log('length ' + proxy.length, proxyLength);
                                 // process.exit(0)
 
                             }
@@ -136,7 +136,7 @@ async function init(init_header) {
 
         for (let indexLayer = 1; indexLayer < iteration; indexLayer++) {
 
-            // console.log(layer.name);
+            // // console.log(layer.name);
             helper.shuffle(UA);
             let body = {
                 page: 1,
@@ -161,9 +161,9 @@ async function init(init_header) {
             for await (const proxyVar of arrayIterator(proxy)) {
                 helper.shuffle(proxy);
 
-                // console.log('====================INIT parsing Mystery BOX====================');
-                // console.log(proxyVar);
-                // console.log(proxy[i]);
+                // // console.log('====================INIT parsing Mystery BOX====================');
+                // // console.log(proxyVar);
+                // // console.log(proxy[i]);
                 let indexProxy = proxy.indexOf(proxyVar);
                 proxy.splice(indexProxy, 1);
 
@@ -175,7 +175,7 @@ async function init(init_header) {
                         resolve({ status: 'ok', name_worker: 'binance_mysteryLastOrder' })
                     }
                 }).catch(e => {
-                    console.log(e);
+                    // console.log(e);
                     if (indexLayer == iteration - 1) {
                         reject({ status: 'error', name_worker: 'binance_mysteryLastOrder' })
                     }
@@ -215,7 +215,7 @@ function random() {
 
 function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: proxyAuth }, i, body) {
     return new Promise(async (resolve, reject) => {
-        console.log('Start "getInfoBinNFTMysteryBox" Proxy length ' + proxy.length);
+        // console.log('Start "getInfoBinNFTMysteryBox" Proxy length ' + proxy.length);
 
 
 
@@ -248,22 +248,22 @@ function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: p
         let data = new Date().getTime();
 
         axios.post('https://www.binance.com/bapi/nft/v1/public/nft/market-mystery/mystery-list', JSON.stringify(body), { headers: header, httpsAgent: agent }).then(res => {
-            console.log(res.status + ' ' + i + ' total^ ' + res.data.data.total);
-            console.log(body);
+            // console.log(res.status + ' ' + i + ' total^ ' + res.data.data.total);
+            // console.log(body);
 
             let num = Math.ceil(res.data.data.total / 100);
-            console.log('i ' + i + ' num ' + num);
+            // console.log('i ' + i + ' num ' + num);
             if (res.data.data.total == 0 || i >= num) {
 
                 breakSwitch = true
                 proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-                console.log('End cycle "getInfoBinNFTMysteryBox" Proxy length ' + proxy.length);
+                // console.log('End cycle "getInfoBinNFTMysteryBox" Proxy length ' + proxy.length);
 
                 resolve(breakSwitch);
 
 
             } else {
-                console.log('Await parsing... cycle "getInfoBinNFTMysteryBox" Proxy length ' + proxy.length);
+                // console.log('Await parsing... cycle "getInfoBinNFTMysteryBox" Proxy length ' + proxy.length);
 
 
 
@@ -271,7 +271,9 @@ function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: p
 
                 arrayIteration(res.data.data.data, `${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`).then(() => {
                     stackProxy[`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`].status = 'off';
-                    console.log('end');
+                    res = null;
+
+                    // console.log('end');
                     // process.exit(0)
 
                     resolve(breakSwitch);
@@ -280,7 +282,7 @@ function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: p
 
 
                 let newData = new Date().getTime();
-                console.log(`Date cycle^ ${newData - data} ms`);
+                // console.log(`Date cycle^ ${newData - data} ms`);
 
             }
 
@@ -289,7 +291,7 @@ function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: p
 
 
         }).catch(e => {
-            console.log('Error');
+            // console.log('Error');
             proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
             reject()
 
@@ -350,7 +352,7 @@ function arrayIteration(array, proxySet) {
     
                     proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
     
-                    // console.log('Function arrayIteration  Mystery Box last order  END\nProxy length ' + proxy.length);
+                    // // console.log('Function arrayIteration  Mystery Box last order  END\nProxy length ' + proxy.length);
                     console.clear()
                     console.log('Worker 1');
     
@@ -365,14 +367,14 @@ function arrayIteration(array, proxySet) {
     
                     proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
     
-                    // console.log('Error: Function arrayIteration Mystery Box last order END\nProxy length ' + proxy.length);
+                    // // console.log('Error: Function arrayIteration Mystery Box last order END\nProxy length ' + proxy.length);
                     console.clear()
                     console.log('Worker 1');
     
     
     
     
-                    console.log(e);
+                    // console.log(e);
                 }))
     
     
@@ -383,7 +385,7 @@ function arrayIteration(array, proxySet) {
                    
     
                     await Promise.allSettled(arrayPromise).then(() => {
-                        console.log(arrayPromise);
+                        // console.log(arrayPromise);
                      
     
                         resolve()
