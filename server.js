@@ -64,58 +64,72 @@ mongoose.connect(process.env.MONGODB_URI).catch((error) => console.log(error));
 const helper = require('./controller/helper/helper');
 
 
-let workers = {};
-let worker = {};
-let promiseWorker = [];
 
-
-worker.binance_mystery = new Piscina({
-  filename: path.resolve('./controller/binance', 'binance_mystery_box_misclick.js')
-});
-worker.binance_marketplace = new Piscina({
-  filename: path.resolve('./controller/binance', 'binance_marketplace_misclick.js')
-});
-worker.binance_mysteryLastOrder = new Piscina({
-  filename: path.resolve('./controller/binance', 'binance_mystery_box_lastorder.js')
-});
-worker.binance_marketplace_lastorder = new Piscina({
-  filename: path.resolve('./controller/binance', 'binance_marketplace_lastorder.js')
-});
 
 
 function init_workers() {
+  let workers = {};
+  let worker = {};
+  let promiseWorker = [];
+
+
+  worker.binance_mystery = new Piscina({
+    filename: path.resolve('./controller/binance', 'binance_mystery_box_misclick.js')
+  });
+  worker.binance_marketplace = new Piscina({
+    filename: path.resolve('./controller/binance', 'binance_marketplace_misclick.js')
+  });
+  worker.binance_mysteryLastOrder = new Piscina({
+    filename: path.resolve('./controller/binance', 'binance_mystery_box_lastorder.js')
+  });
+  worker.binance_marketplace_lastorder = new Piscina({
+    filename: path.resolve('./controller/binance', 'binance_marketplace_lastorder.js')
+  });
 
   getHeaders().then(async (headers) => {
     console.log(promiseWorker);
     Object.keys(worker).forEach(e => {
-      if (workers.hasOwnProperty(e) && util.inspect(workers[e]).includes("pending")) {
+      if (util.inspect(workers[e]).includes("pending")) {
         console.log('Worker ' + [e] + ' is work..');
-      } else {
- 
+      } else if (workers.hasOwnProperty(e)) { 
+        delete workers[e];
         promiseWorker.push({
           [e]: workers[e] = worker[e].run({ headers: headers }, { name: 'init' }).then(res => {
             console.log(res);
 
-            let index = promiseWorker.findIndex(x => Object.keys(x) == res.name_worker)
+            clearSteck(res)
 
-            if (index != -1) {
-              promiseWorker.splice(index, 1)
-            }
             return res
           }).catch(e => {
             console.log(e);
 
-            let index = promiseWorker.findIndex(x => Object.keys(x) == e.name_worker)
+            clearSteck(e)
 
-            if (index != -1) {
-              promiseWorker.splice(index, 1)
-            }
+            return e
+
+          })
+        })
+
+      } else {
+
+        promiseWorker.push({
+          [e]: workers[e] = worker[e].run({ headers: headers }, { name: 'init' }).then(res => {
+            console.log(res);
+
+            clearSteck(res)
+
+            return res
+          }).catch(e => {
+            console.log(e);
+
+            clearSteck(e)
+
             return e
 
           })
         })
       }
- 
+
     })
     let arrayPromise = [];
     promiseWorker.forEach(promise => {
@@ -126,27 +140,25 @@ function init_workers() {
     return await Promise.race(arrayPromise)
   }).then(res => {
     console.log('finally');
+    clearSteck(res)
+    init_workers()
+  }).catch(e => {
+    console.log('Ошибка Worker');
+    clearSteck(e)
+
+    init_workers()
+  }) // Парсинг маркетплейса
+
+  function clearSteck(res) {
     console.log(res);
     let index = promiseWorker.findIndex(x => Object.keys(x) == res.name_worker)
 
     if (index != -1) {
-      console.log(index);
-      promiseWorker.splice(index, 1)
-    }
-    console.log(promiseWorker);
-    init_workers()
-  }).catch(e => {
-    console.log('Ошибка Worker');
-    console.log(e);
-    let index = promiseWorker.findIndex(x => Object.keys(x) == e.name_worker)
-
-    if (index != -1) {
       promiseWorker.splice(index, 1)
     }
     console.log(promiseWorker);
 
-    init_workers()
-  }) // Парсинг маркетплейса
+  }
 }
 init_workers()
 
