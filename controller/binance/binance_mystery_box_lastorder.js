@@ -1,5 +1,5 @@
 // Получаем данные из фильтра бинанса, отстование api 1-2 минуты - не подходит для мисклика, но может подходить для парсинга.
-
+'use strict';
 const { default: axios } = require("axios");
 const tunnel = require("tunnel");
 const { proxy } = require("../../proxy_list_two");
@@ -56,7 +56,7 @@ const arrayIterator = arr => ({
         }
     }
 })
-awaitArray = (val, length) => {
+const awaitArray = (val, length) => {
     stackProxy[val] = { status: 'init', integer: 0 };
 
     return new Promise((resolve) => {
@@ -347,8 +347,7 @@ function arrayIteration(array, proxySet) {
                 });
     
 
-                arrayPromise.push(  getProductDetail(ele, agent, header).then(() => {
-                    stackProxy[cloneProxySet].status = 'off';
+                arrayPromise.push(getProductDetail(ele, agent, header).then(() => {
     
     
     
@@ -364,7 +363,6 @@ function arrayIteration(array, proxySet) {
     
     
                 }).catch((e) => {
-                    stackProxy[cloneProxySet].status = 'off';
     
     
                     proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);

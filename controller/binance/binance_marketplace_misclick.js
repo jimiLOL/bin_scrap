@@ -1,4 +1,5 @@
 // модуль парсинга маркет плейса
+'use strict';
 const { default: axios } = require("axios");
 const tunnel = require("tunnel");
 const { getProductDetail } = require('./get_productDetali');
@@ -59,7 +60,7 @@ const arrayIterator = arr => ({
         }
     }
 })
-awaitArray = (val, length) => {
+const awaitArray = (val, length) => {
     stackProxy[val] = { status: 'init', integer: 0 };
     // let integer = 0; //  
     return new Promise((resolve) => {
@@ -322,7 +323,9 @@ async function init(init_header) {
 
             });
         } else {
-            reject({ status: 'error', name_worker: 'binance_marketplace', info: 'layerList no Array' })
+            // reject({ status: 'error', name_worker: 'binance_marketplace', info: 'layerList no Array' })
+            init(init_header)
+
 
 
         }
@@ -415,7 +418,7 @@ function arrayIteration(array, proxySet) {
 
                 }
 
-            }, 50 * i);
+            }, 250 * i);
 
 
 

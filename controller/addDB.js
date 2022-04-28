@@ -51,10 +51,7 @@ const ShemaNftPokemon = new Schema({
 
 
 
-
-
-
-
+ 
 
 async function addDB(element, attributes, marketpalce, extraMetadata, collectionAddress) {
   return new Promise((resolve, reject) => {
@@ -204,6 +201,7 @@ async function updatePriceDB(tokenId, price, marketpalce, collectionAddress) {
 
 
 async function add_binance_db(ele, marketpalce) {
+
   return new Promise(async (resolve, reject) => {
     const NFT = await getAddressModel(ele.nftInfo.contractAddress, marketpalce);
 

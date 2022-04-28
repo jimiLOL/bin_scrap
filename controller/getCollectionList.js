@@ -1,20 +1,47 @@
+const { MongoClient } = require('mongodb');
 const mongoose = require("mongoose");
 
 const objectTrain = require('./db_train');
+require("dotenv/config");
 
-// mongoose.connection.on('connected', function (ref) {
-//     console.log('Connected to mongo server.');
-//     // trying to get collection names
-//     mongoose.connection.db.listCollections().toArray(function (err, names) {
-//         console.log(names); // [{ name: 'dbname.myCollection' }]
-//         module.exports.Collection = names;
-//     });
-// })
+const client = new MongoClient(process.env.BINANCE_DB);
 
-async function getListCollection(db) {
-    const collections = Object.keys(mongoose.connections[2].collections);
+async function getListCollection(db_name) {
+    console.log(db_name);
+
+    await client.connect();
+    const db = client.db(db_name);
+    // console.log();
+    db.listCollections().toArray(function (err, names) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            names.forEach(function (e, i, a) {
+                console.log("--->>", e.name);
+            });
+        }
+    });
+
+    // mongoose.connection.on('connected', function (ref) {
+    //     console.log('Connected to mongo server.');
+    //     // trying to get collection names
+    //     mongoose.connection.db.listCollections().toArray(function (err, names) {
+    //         console.log(names); // [{ name: 'dbname.myCollection' }]
+    //         module.exports.Collection = names;
+    //     });
+    // })
+
+// const collections = Object.keys(mongoose.connection.collections);
+// console.log(collections);
+
+    // const collections = Object.keys(mongoose.connections[2].collections);
     // let collection = objectTrain[db];
-    console.log(collections);
+    // console.log(collection);
+    // // collection.db.listCollections.then((names) => {
+    // //     console.log(names);
+    // // })
+    // console.log(collections);
     // await collection.connection.listCollections().toArray(function (err, names) {
     //     if (err) {
     //         console.log(err);

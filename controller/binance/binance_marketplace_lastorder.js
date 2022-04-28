@@ -1,7 +1,7 @@
 // модуль парсинга маркет плейса
 
 
-
+'use strict';
 
 
 
@@ -65,7 +65,7 @@ let stackProxy = {};
             }
         }
     })
-    awaitArray = (val, length) => {
+    const awaitArray = (val, length) => {
         stackProxy[val] = { status: 'init', integer: 0 };
     
         return new Promise((resolve) => {
