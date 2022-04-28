@@ -63,7 +63,7 @@ awaitArray = (val, length) => {
 
 
                     helper.timeout(2000).then(() => {
-                        if (stackProxy[val].status == 'work') {
+                        if (stackProxy[val].status == 'work' || stackProxy[val].status == 'off') {
                             stackProxy[val].integer++
 
                         }
