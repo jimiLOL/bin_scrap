@@ -424,7 +424,7 @@ function arrayIteration(array, proxySet) {
 
             }
 
-        }, 100*i);
+        }, 50*i);
 
 
 

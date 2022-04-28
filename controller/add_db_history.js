@@ -18,6 +18,7 @@ async function add_history_binance_db(ele, marketpalce) {
         NFT.findOne({ productId: ele.productId }, (err, call) => {
             if (err) {
                 console.log(err);
+                reject(err)
             }
             if (call) {
                 if (call.total < ele.total) {
@@ -35,19 +36,24 @@ async function add_history_binance_db(ele, marketpalce) {
                         // process.exit(0)
                     }
                     // push array db
-                    filter.forEach(element => {
-                        NFT.findOneAndUpdate({productId: ele.productId}, {$addToSet: {history: element}}, (err, call) => {
-                            if (err) {
-                                console.log(err);
-                                reject(err)
-                            }
-                            if (call) {
-                                console.log('Добавили данные в историю ' + ele.productId);
-                                
-                            }
-                        })
-                    });
-                    resolve()
+                    if (Array.isArray(filter)) {
+                        filter.forEach(element => {
+                            NFT.findOneAndUpdate({productId: ele.productId}, {$addToSet: {history: element}}, (err, call) => {
+                                if (err) {
+                                    console.log(err);
+                                    reject(err)
+                                }
+                                if (call) {
+                                    console.log('Добавили данные в историю ' + ele.productId);
+                                    
+                                }
+                            })
+                        });
+                    } else {
+                        resolve()
+
+                    }
+                    
                 } else {
                     resolve()
                 }
