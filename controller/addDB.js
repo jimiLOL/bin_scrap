@@ -248,7 +248,7 @@ async function add_binance_db(ele, marketpalce) {
           _id: new mongoose.Types.ObjectId(),
           marketpalce: marketpalce,
           buyers: ele?.records || [],
-          collection_nft:  ele.collection,
+          collection_nft: ele.collection,
           collectionAddress: ele.nftInfo.contractAddress, // будет участвовать в навигации 
           collectionName: ele.collection?.collectionName || null,  
           tokenId: ele.nftInfo.tokenId, // соответственно тоже участвует в навгации
