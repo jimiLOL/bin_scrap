@@ -17,7 +17,7 @@ function DynamicSchema(namecollection, db, db_key) {
         ShemaNFT = new Schema({
             _id: mongoose.Types.ObjectId,
             marketpalce: String,
-            productId: String,
+            productId: {type: String, index: true},
             history: Array,
             total: {
                 required: true,
@@ -29,7 +29,7 @@ function DynamicSchema(namecollection, db, db_key) {
         ShemaNFT = new Schema({
             _id: mongoose.Types.ObjectId,
             marketpalce: String,
-            productId: String,
+            productId: {type: String, index: true},
             history: Array,
             total: Number
 

@@ -38,12 +38,13 @@ function DynamicSchema(namecollection, db, db_key) {
             },
             tokenId: {
                 type: String || null,
-                required: true
+                required: true,
+                index: true
             },
             amount: Number,
             isActive: Boolean,
             description: String,
-            productId: String,
+            productId: {type: String, index: true},
             title: String,
             coverUrl: String,
             tradeType: Number,
@@ -81,7 +82,8 @@ function DynamicSchema(namecollection, db, db_key) {
             },
             tokenId: {
                 type: String || null,
-                required: true
+                required: true,
+                index: true
             },
             amount: Number,
             soldAmount: Number,
