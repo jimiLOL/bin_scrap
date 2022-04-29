@@ -13,7 +13,10 @@
 //     });
 // }
 async function start(init_header) {
-const util = require("util")
+    const util = require("util");
+    const { getListCollectionName } = require('./../getCollectionList');
+const { getAddressModel } = require("../../model/nft_detalii.cjs");
+
 
     const { default: axios } = require("axios");
     const tunnel = require("tunnel");
@@ -50,7 +53,7 @@ const util = require("util")
 
 
     let stackProxy = {}; // этот объект для дублирования состояния задании по итерациям, счетчик\пердохранитель от рекурсии увеличивается только на ключи, который в работе сейчас. Имеет 4 статуса. init - при добавлении в список. work - начало рабооты (в этот момент счетчик предохранителя увеличивается). off - работа законечена, вернулся промис. 
-
+    let arrayCollections;
 
 
     const arrayIterator = arr => ({
@@ -151,7 +154,52 @@ const util = require("util")
 
         })
     }
+    function getlayerList() {
+        return new Promise((resolve) => {
+            let layerList = []
+
+            arrayCollections.forEach(async (collection, i) => {
+                const NFT = await getAddressModel(collection, 'binance');
+                NFT.find({}, {productDetail: {collection: 1}}, (err, call) => {
+                    if (err) {
+                        console.log(err);
+                    };
+                    if (call) {
+                        call.forEach(ele => {
+                            if (ele?.productDetail?.collection != null) {
+                                if (ele?.productDetail?.collection.hasOwnProperty('collectionId')) {
+
+                                    layerList.push({layerId: ele.productDetail.collection.collectionId})
+    
+                                }  
+                            }
+                           
+                        });
+                        // console.log(layerList.length);
+                        layerList.forEach((ele, i) => {
+                            let filter = layerList.filter(x => x.layerId == ele.layerId);
+                            if (filter.length > 1) {
+                                layerList.splice(i, 1);
+                            }
+
+                        });
+                        // console.log(layerList.length);
+
+                    };
+                    if (i == arrayCollections.length-1) {
+                        resolve(layerList)
+                    }
+                });
+             
+                
+
+
+            });
+
+        })
+    }
     return new Promise(async (resolve, reject) => {
+        let layerList;
         emitter.on('infinity_recursion', (message) => {
             let magicVal = 0; // что бы не долбитть в емитор по 100 раз
             if (message.status && magicVal < 2) {
@@ -165,18 +213,33 @@ const util = require("util")
 
         });
 
-
-
         header = init_header.headers; // делаем header глобальным
 
-        // header = getNewHeaders(headers);
-        const layerList = await axios.get('https://www.binance.com/bapi/nft/v1/public/nft/layer-search?keyword=', { headers: header }).then(res => {
-            return res.data.data
-        }).catch(e => {
-            // // console.log(e);
-        });
 
-        if (Array.isArray(layerList)) {
+        if (helper.getRandomInt(1,3) == 2) {
+            arrayCollections = await getListCollectionName('binance');
+
+            layerList = await getlayerList();
+                        console.log('layerList = ' + layerList.length);
+
+
+            
+        } else {
+            layerList = await axios.get('https://www.binance.com/bapi/nft/v1/public/nft/layer-search?keyword=', { headers: header }).then(res => {
+                return res.data.data
+            }).catch(e => {
+                // // console.log(e);
+            });
+        }
+
+
+
+
+
+        // header = getNewHeaders(headers);
+     
+
+        if (Array.isArray(layerList) && layerList.length != 0) {
             layerList.forEach((layer, i) => {
                 // console.log(`Init Global cycle ${i}`);
                 let body = {
@@ -254,8 +317,8 @@ const util = require("util")
                                         resolve({ status: 'ok', name_worker: 'binance_marketplace' })
                                         // init(init_header)
                                     }
-                                }).catch(e=> {
-                                 
+                                }).catch(e => {
+
                                 });
 
                             } else {
@@ -416,9 +479,9 @@ const util = require("util")
                     if (array.length - 1 == i) {
                         setTimeout(() => {
                             console.log(arrayPromise);
-                            let promiseArr = arrayPromise.filter(x=> util.inspect(x).includes("pending"))
+                            let promiseArr = arrayPromise.filter(x => util.inspect(x).includes("pending"))
                             console.log('Promisee array pending = ' + promiseArr.length);
-                            
+
                         }, 5000);
                         proxy.push(cloneProxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
                         await Promise.allSettled(arrayPromise).then(() => {
@@ -460,9 +523,11 @@ var cloneProxySet;
 
 function init(init_header) {
     return new Promise((resolve, reject) => {
-        start(init_header).then(() => {
+        start(init_header).then((res) => {
+            console.log(res);
             init(init_header)
         }).catch(e => {
+            console.log(e);
             init(init_header)
         })
     })
