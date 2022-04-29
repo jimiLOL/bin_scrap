@@ -28,7 +28,7 @@ function DynamicSchema(namecollection, db, db_key) {
                 avatarUrl: String || null,
                 canView: Boolean || null,
                 collectionId: String
-              } || null,
+              },
             collectionAddress: {
                 type: String,
                 required: true
