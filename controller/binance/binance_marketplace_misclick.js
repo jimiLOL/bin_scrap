@@ -254,7 +254,17 @@ const util = require("util")
                                         resolve({ status: 'ok', name_worker: 'binance_marketplace' })
                                         // init(init_header)
                                     }
+                                }).catch(e=> {
+                                 
                                 });
+
+                            } else {
+                                stackProxy[proxyVar].status = 'off';
+                                res = null;
+                                if (i == layerList.length - 1) {
+                                    resolve({ status: 'ok', name_worker: 'binance_marketplace' })
+                                    // init(init_header)
+                                }
 
                             };
 
