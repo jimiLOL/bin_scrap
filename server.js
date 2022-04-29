@@ -146,12 +146,12 @@ function init_workers() {
       }
 
     })
-    worker.binance_marketplace_lastorder.on('drain', () => {
-    console.log('======================================drain==================================');
+    // worker[e].on('drain', () => {
+    // console.log('======================================drain==================================');
 
-      // worker.binance_marketplace_lastorder.runTime()
+    //   // worker.binance_marketplace_lastorder.runTime()
   
-    });
+    // });
     // setTimeout(() => {
     //   console.log('=========runTime=========');
     //   // worker.binance_marketplace_lastorder.runTime()
