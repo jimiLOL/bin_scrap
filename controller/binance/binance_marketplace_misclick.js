@@ -405,7 +405,7 @@ const util = require("util")
 
                     if (array.length - 1 == i) {
                         setInterval(() => {
-                            console.log(promiseArr);
+                            console.log(arrayPromise);
                             let promiseArr = arrayPromise.filter(x=> util.inspect(x).includes("pending"))
                             console.log('Promisee array pending = ' + promiseArr.length);
                             
