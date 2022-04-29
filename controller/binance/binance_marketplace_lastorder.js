@@ -220,6 +220,14 @@ let stackProxy = {};
                         }
                     });
 
+                    } else {
+                        if (index == 10) {
+                            // stackProxy = 0;
+                            // init(init_header)
+                            resolve({ status: 'ok', name_worker: 'binance_marketplace_lastorder' }) // никогда не резолвим поток
+                        }
+
+
                     }
 
 
