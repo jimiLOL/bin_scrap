@@ -3,31 +3,42 @@ const mongoose = require("mongoose");
 
 const objectTrain = require('./db_train');
 require("dotenv/config");
+let obJectClient = {};
+obJectClient['binance'] = new MongoClient(process.env.BINANCE_DB);
+obJectClient['mochi'] = new MongoClient(process.env.MOCHI_DB);
+obJectClient['nftrade'] = new MongoClient(process.env.NFTRADE_DB);
 let connectClient = {};
-connectClient['binance'] = new MongoClient(process.env.BINANCE_DB);
-connectClient['mochi'] = new MongoClient(process.env.MOCHI_DB);
-connectClient['nftrade'] = new MongoClient(process.env.NFTRADE_DB);
+
 
 function connect(db_name) {
     return new Promise(async (resolve) => {
+        if (!connectClient.hasOwnProperty(db_name)) {
+            connectClient[db_name] = await obJectClient[db_name].connect();
+            resolve(connectClient[db_name])
 
-   
-       const client =  await connectClient[db_name].connect();
-       resolve(client)
+
+        } else {
+            resolve(connectClient[db_name])
+
+
+        }
+
+
+        //    const client =  await obJectClient[db_name].connect();
     })
 
 
-    
-} 
+
+}
 
 async function getListCollection(db_name) {
-    return new Promise(async (resolve, reject)=> {
+    return new Promise(async (resolve, reject) => {
         let arrayCollections = [];
-    
-      
+
+
 
         const client = await connect(db_name);
-    
+
         const db = client.db(db_name);
         // console.log();
         db.listCollections().toArray(function (err, names) {
@@ -36,10 +47,10 @@ async function getListCollection(db_name) {
             }
             else {
                 names.forEach(function (e, i, a) {
-    
+
                     if (/^0x[0-9a-fA-F]{40}$/.exec(e.name)) {
                         // console.log("--->>", e.name);
-    
+
                         arrayCollections.push(e.name)
                     }
                 });
@@ -47,14 +58,14 @@ async function getListCollection(db_name) {
             }
         });
     })
-  
+
 
 
 }
 
 function getListCollectionName(db_key) {
     return new Promise(async (resolve, reject) => {
-        if (!connectClient.hasOwnProperty(db_key)) {
+        if (!obJectClient.hasOwnProperty(db_key)) {
             setTimeout(() => {
                 console.log('await connect to ' + db_key + ' ....');
                 getListCollectionName(db_key).then(res => {
