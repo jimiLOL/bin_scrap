@@ -3,61 +3,58 @@ const mongoose = require("mongoose");
 
 const objectTrain = require('./db_train');
 require("dotenv/config");
+let connectClient = {};
+connectClient['binance'] = new MongoClient(process.env.BINANCE_DB);
+connectClient['mochi'] = new MongoClient(process.env.MOCHI_DB);
+connectClient['nftrade'] = new MongoClient(process.env.NFTRADE_DB);
 
-const client = new MongoClient(process.env.BINANCE_DB);
+function connect(db_name) {
+    return new Promise(async (resolve) => {
+
+   
+       const client =  await connectClient[db_name].connect();
+       resolve(client)
+    })
+
+
+    
+} 
 
 async function getListCollection(db_name) {
-    console.log(db_name);
+    return new Promise(async (resolve, reject)=> {
+        let arrayCollections = [];
+    
+      
 
-    await client.connect();
-    const db = client.db(db_name);
-    // console.log();
-    db.listCollections().toArray(function (err, names) {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            names.forEach(function (e, i, a) {
-                console.log("--->>", e.name);
-            });
-        }
-    });
+        const client = await connect(db_name);
+    
+        const db = client.db(db_name);
+        // console.log();
+        db.listCollections().toArray(function (err, names) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                names.forEach(function (e, i, a) {
+    
+                    if (/^0x[0-9a-fA-F]{40}$/.exec(e.name)) {
+                        // console.log("--->>", e.name);
+    
+                        arrayCollections.push(e.name)
+                    }
+                });
+                resolve(arrayCollections)
+            }
+        });
+    })
+  
 
-    // mongoose.connection.on('connected', function (ref) {
-    //     console.log('Connected to mongo server.');
-    //     // trying to get collection names
-    //     mongoose.connection.db.listCollections().toArray(function (err, names) {
-    //         console.log(names); // [{ name: 'dbname.myCollection' }]
-    //         module.exports.Collection = names;
-    //     });
-    // })
 
-// const collections = Object.keys(mongoose.connection.collections);
-// console.log(collections);
-
-    // const collections = Object.keys(mongoose.connections[2].collections);
-    // let collection = objectTrain[db];
-    // console.log(collection);
-    // // collection.db.listCollections.then((names) => {
-    // //     console.log(names);
-    // // })
-    // console.log(collections);
-    // await collection.connection.listCollections().toArray(function (err, names) {
-    //     if (err) {
-    //         console.log(err);
-    //     }
-    //     else {
-    //         names.forEach(function (e, i, a) {
-    //             mongoose.connection.db.dropCollection(e.name);
-    //             console.log("--->>", e.name);
-    //         });
-    //     }
-    // });
 }
 
 function getListCollectionName(db_key) {
-    return new Promise((resolve, reject) => {
-        if (!objectTrain.hasOwnProperty(db_key)) {
+    return new Promise(async (resolve, reject) => {
+        if (!connectClient.hasOwnProperty(db_key)) {
             setTimeout(() => {
                 console.log('await connect to ' + db_key + ' ....');
                 getListCollectionName(db_key).then(res => {
@@ -68,7 +65,7 @@ function getListCollectionName(db_key) {
         } else {
             console.log('connect to ' + db_key);
 
-            resolve(getListCollection(db_key))
+            resolve(await getListCollection(db_key))
         }
     })
 
