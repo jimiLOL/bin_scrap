@@ -215,8 +215,8 @@ let stackProxy = {};
 
                         if (index == 10) {
                             // stackProxy = 0;
-                            init(init_header)
-                            // resolve({ status: 'ok', name_worker: 'binance_marketplace_lastorder' }) // никогда не резолвим поток
+                            // init(init_header)
+                            resolve({ status: 'ok', name_worker: 'binance_marketplace_lastorder' }) // никогда не резолвим поток
                         }
                     });
 
@@ -261,9 +261,9 @@ let stackProxy = {};
 
                 if (index == 101 || var_break) {
                     // console.log('===========break==============');
-                    init(init_header)
+                    // init(init_header)
 
-                    // resolve({ status: 'ok', name_worker: 'binance_marketplace_lastorder' }) // не перезапускаем
+                    resolve({ status: 'ok', name_worker: 'binance_marketplace_lastorder' })  
 
 
 
@@ -364,7 +364,7 @@ let stackProxy = {};
     
                     }
     
-                }, 250 * i);
+                }, 20 * i);
     
     
     

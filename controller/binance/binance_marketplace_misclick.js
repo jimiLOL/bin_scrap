@@ -248,8 +248,8 @@ async function start(init_header) {
                                     stackProxy[proxyVar].status = 'off';
                                     res = null;
                                     if (i == layerList.length - 1) {
-                                        // resolve({ status: 'ok', name_worker: 'binance_marketplace' })
-                                        init(init_header)
+                                        resolve({ status: 'ok', name_worker: 'binance_marketplace' })
+                                        // init(init_header)
                                     }
                                 });
 
@@ -288,9 +288,9 @@ async function start(init_header) {
                             }
                             // var_break = true;
                             if (i == layerList.length - 1) {
-                                init(init_header)
+                                // init(init_header)
 
-                                // reject({ status: 'error', name_worker: 'binance_marketplace' })
+                                reject({ status: 'error', name_worker: 'binance_marketplace' })
                             }
                         })
                         // } else {
@@ -324,8 +324,8 @@ async function start(init_header) {
 
             });
         } else {
-            // reject({ status: 'error', name_worker: 'binance_marketplace', info: 'layerList no Array' })
-            init(init_header)
+            reject({ status: 'error', name_worker: 'binance_marketplace', info: 'layerList no Array' })
+            // init(init_header)
 
 
 
@@ -410,7 +410,7 @@ async function start(init_header) {
 
                     }
 
-                }, 250 * i);
+                }, 20 * i);
 
 
 
