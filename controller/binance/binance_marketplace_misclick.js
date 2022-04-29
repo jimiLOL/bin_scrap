@@ -385,7 +385,7 @@ const util = require("util")
 
                     arrayPromise.push(getProductDetail(ele, agent, header).then(() => {
                         proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
-                        console.clear()
+                        // console.clear()
                         console.log('Worker 3');
                     }).catch((e) => {
 
@@ -393,7 +393,7 @@ const util = require("util")
 
 
                         // // console.log('Error: Function arrayIteration MarketPlace\nProxy length ' + proxy.length);
-                        console.clear()
+                        // console.clear()
                         console.log('Worker 3');
 
 
