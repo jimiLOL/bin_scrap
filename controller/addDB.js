@@ -208,7 +208,7 @@ async function add_binance_db(ele, marketpalce) {
     const newNFT = new NFT({
       marketpalce: marketpalce,
       buyers: ele?.records || [],
-      collection_nft:  ele.collection,
+      collection_nft: ele.collection,
       collectionAddress: ele.nftInfo.contractAddress, // будет участвовать в навигации 
       collectionName: ele.collection?.collectionName || null,  
       tokenId: ele.nftInfo.tokenId, // соответственно тоже участвует в навгации
