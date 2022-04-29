@@ -273,6 +273,9 @@ async function start(init_header) {
 
                         resolve(breakSwitch);
 
+                    }).catch(e => {
+                        resolve(breakSwitch);
+
                     });
 
 
