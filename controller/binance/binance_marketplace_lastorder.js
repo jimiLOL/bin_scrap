@@ -6,7 +6,7 @@
 
 
 
-async function init(init_header) {
+async function start(init_header) {
     const { default: axios } = require("axios");
 const tunnel = require("tunnel");
 const { getProductDetail } = require('./get_productDetali');
@@ -382,6 +382,19 @@ let stackProxy = {};
 
 
 }
+
+
+function init(init_header) {
+    return new Promise((resolve, reject) => {
+        start(init_header).then(() => {
+            init(init_header)
+        }).catch(e => {
+            init(init_header)
+        })
+    })
+
+}
+
 
 
 var cloneProxySet;

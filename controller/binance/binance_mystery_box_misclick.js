@@ -1,113 +1,113 @@
 // Получаем данные из фильтра бинанса, отстование api 1-2 минуты - не подходит для мисклика, но может подходить для парсинга.
 
 'use strict';
-async function init(init_header) {
+async function start(init_header) {
     const { default: axios } = require("axios");
-const tunnel = require("tunnel");
-const { proxy } = require("../../proxy_list");
-const { UA } = require("../../ua");
+    const tunnel = require("tunnel");
+    const { proxy } = require("../../proxy_list");
+    const { UA } = require("../../ua");
 
-const helper = require('./../helper/helper');
-const { getNaemListNFT } = require("./getNftStat");
-const { arrayNFTCollectionName } = require("./nftArrayData");
-const Emitter = require("events");
-const emitter = new Emitter();
-const { getProductDetail } = require('./get_productDetali');
+    const helper = require('./../helper/helper');
+    const { getNaemListNFT } = require("./getNftStat");
+    const { arrayNFTCollectionName } = require("./nftArrayData");
+    const Emitter = require("events");
+    const emitter = new Emitter();
+    const { getProductDetail } = require('./get_productDetali');
 
-const proxyLength = proxy.length;
+    const proxyLength = proxy.length;
 
-let headers = {
-    Host: "www.binance.com",
-    "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0",
-    Accept: "*/*",
-    "Accept-Encoding": "gzip",
-    Referer: `https://www.binance.com/`,
-    lang: "ru",
-    "content-type": "application/json",
-    clienttype: "web",
-    Origin: "https://www.binance.com",
-    Connection: "keep-alive",
-    "Sec-Fetch-Dest": "empty",
-    "Sec-Fetch-Mode": "cors",
-    "Sec-Fetch-Site": "same-origin",
-};
+    let headers = {
+        Host: "www.binance.com",
+        "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0",
+        Accept: "*/*",
+        "Accept-Encoding": "gzip",
+        Referer: `https://www.binance.com/`,
+        lang: "ru",
+        "content-type": "application/json",
+        clienttype: "web",
+        Origin: "https://www.binance.com",
+        Connection: "keep-alive",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
+    };
 
-let header;
-let stackProxy = {};
+    let header;
+    let stackProxy = {};
 
-const arrayIterator = arr => ({
-    [Symbol.asyncIterator]() {
-        let i = arr.length;
-        return {
-            index: 0,
-            async next() {
-                // console.log('=========================== ' + this.index + ' index iterator =================================================');
-                if (this.index < proxyLength) {
-                    //   // console.log(this.index, arr.length);
-                    return await awaitArray(arr[this.index++], --i);
-                } else {
-                    return { done: true }
+    const arrayIterator = arr => ({
+        [Symbol.asyncIterator]() {
+            let i = arr.length;
+            return {
+                index: 0,
+                async next() {
+                    // console.log('=========================== ' + this.index + ' index iterator =================================================');
+                    if (this.index < proxyLength) {
+                        //   // console.log(this.index, arr.length);
+                        return await awaitArray(arr[this.index++], --i);
+                    } else {
+                        return { done: true }
+                    }
                 }
             }
         }
-    }
-})
-const awaitArray = (val, length) => {
-    stackProxy[val] = { status: 'init', integer: 0 };
+    })
+    const awaitArray = (val, length) => {
+        stackProxy[val] = { status: 'init', integer: 0 };
 
-    return new Promise((resolve) => {
-        function recursion() {
-            return new Promise((resolve) => {
-                if (proxy.length != proxyLength && length > 0) {
-                    helper.timeout(2000).then(() => {
-                        if (stackProxy[val].status == 'work') {
-                            stackProxy[val].integer++
-                        }
-
-                        if (stackProxy[val].integer > 10000) {
-                            emitter.emit('infinity_recursion', { status: true, integer: stackProxy[val].integer });
-                        }
-                        proxy.forEach((ele, i) => {
-                            let filter = proxy.filter(x => x == ele);
-                            if (filter.length > 1) {
-                                // console.log(filter);
-                                proxy.splice(i, 1);
-                                // console.log('length ' + proxy.length, proxyLength);
+        return new Promise((resolve) => {
+            function recursion() {
+                return new Promise((resolve) => {
+                    if (proxy.length != proxyLength && length > 0) {
+                        helper.timeout(2000).then(() => {
+                            if (stackProxy[val].status == 'work') {
+                                stackProxy[val].integer++
                             }
 
-                        });
+                            if (stackProxy[val].integer > 10000) {
+                                emitter.emit('infinity_recursion', { status: true, integer: stackProxy[val].integer });
+                            }
+                            proxy.forEach((ele, i) => {
+                                let filter = proxy.filter(x => x == ele);
+                                if (filter.length > 1) {
+                                    // console.log(filter);
+                                    proxy.splice(i, 1);
+                                    // console.log('length ' + proxy.length, proxyLength);
+                                }
 
-                        recursion().then((res) => {
-                            stackProxy[val].integer = 0;
+                            });
 
-                            resolve(res)
+                            recursion().then((res) => {
+                                stackProxy[val].integer = 0;
+
+                                resolve(res)
+                            })
                         })
-                    })
-                } else if (length < 0) {
+                    } else if (length < 0) {
 
-                    stackProxy[val].integer = 0;
+                        stackProxy[val].integer = 0;
 
-                    resolve({ done: true })
-                } else {
-                    stackProxy[val].integer = 0;
+                        resolve({ done: true })
+                    } else {
+                        stackProxy[val].integer = 0;
 
-                    resolve({ value: val, done: false })
-                }
-            })
-        };
-        setTimeout(() => {
-            recursion().then((res) => {
-                resolve(res)
-            })
-        }, 50);
-
+                        resolve({ value: val, done: false })
+                    }
+                })
+            };
+            setTimeout(() => {
+                recursion().then((res) => {
+                    resolve(res)
+                })
+            }, 50);
 
 
 
-    })
-}
-//header - мы прокидываем при инциализации потока
+
+        })
+    }
+    //header - мы прокидываем при инциализации потока
 
     return new Promise(async (resolve, reject) => {
         emitter.on('infinity_recursion', (message) => {
@@ -165,8 +165,8 @@ const awaitArray = (val, length) => {
                     await getInfoBinNFTMysteryBox(helper.proxyInit(proxyVar), i, body).then(res => {
                         breakSwitch = res;
                         if (indexLayer == layerList.length - 1) {
-                            // resolve({ status: 'ok', name_worker: 'binance_mystery' })
-                            init(init_header)
+                            resolve({ status: 'ok', name_worker: 'binance_mystery' })
+                            // init(init_header)
                         }
                     }).catch(e => {
                         // console.log(e);
@@ -174,8 +174,8 @@ const awaitArray = (val, length) => {
                             breakSwitch = e
                         }
                         if (indexLayer == layerList.length - 1) {
-                            // reject({ status: 'error', name_worker: 'binance_mystery' })
-                            init(init_header)
+                            reject({ status: 'error', name_worker: 'binance_mystery' })
+                            // init(init_header)
                         }
                         // process.exit(1)
                     });
@@ -204,9 +204,9 @@ const awaitArray = (val, length) => {
     function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: proxyAuth }, i, body) {
         return new Promise(async (resolve, reject) => {
             // console.log('Start "getInfoBinNFTMysteryBox" Proxy length ' + proxy.length);
-    
-    
-    
+
+
+
             header["user-agent"] = UA[i];
             let proxyOptions = {
                 host: proxyHost,
@@ -220,21 +220,21 @@ const awaitArray = (val, length) => {
                 proxy: proxyOptions,
                 rejectUnauthorized: false,
             });
-    
+
             let breakSwitch = false;
             // helper.getIP(agent);
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
             body.page = i; // смена страницы  
             // body.params.setStartTime = (function () { return new Date().getTime() })();
             // body.params.orderBy = random();
             let data = new Date().getTime();
-    
+
             axios.post('https://www.binance.com/bapi/nft/v1/public/nft/market-mystery/mystery-list', JSON.stringify(body), { headers: header, httpsAgent: agent }).then(res => {
                 // console.log(res.status + ' ' + i + ' total^ ' + res.data.data.total);
                 // console.log(body);
@@ -242,88 +242,88 @@ const awaitArray = (val, length) => {
                 let num = Math.ceil(res.data.data.total / 100);
                 // console.log('i ' + i + ' num ' + num);
                 if (res.data.data.total == 0 || i >= num) {
-    
+
                     breakSwitch = true
                     proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
                     // console.log('End cycle "getInfoBinNFTMysteryBox" Proxy length ' + proxy.length);
-    
+
                     resolve(breakSwitch);
-    
-    
+
+
                 } else {
                     // console.log('Await parsing... cycle "getInfoBinNFTMysteryBox" Proxy length ' + proxy.length);
-    
-    
+
+
                     // if (res.data.data?.data[0]?.setStartTime != undefined) {
                     //     // console.log(res.data.data.data[0].productId);
-    
-    
+
+
                     // } else {
                     //     // console.log(res.data.data);
-    
-    
+
+
                     // }
                     stackProxy[`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`].status = 'work';
-    
+
                     arrayIteration(res.data.data.data, `${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`).then(() => {
                         stackProxy[`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`].status = 'off';
                         res = null;
                         // console.log('end');
                         // process.exit(0)
-    
+
                         resolve(breakSwitch);
-    
+
                     });
-    
-    
+
+
                     let newData = new Date().getTime();
                     // console.log(`Date cycle^ ${newData - data} ms`);
-    
+
                 }
-    
-    
-    
-    
+
+
+
+
             }).catch(e => {
                 // console.log('Error');
                 proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
                 reject(breakSwitch)
-    
-    
+
+
             })
-    
+
         })
-    
-    
+
+
     }
-    
-    
+
+
     function arrayIteration(array, proxySet) {
         return new Promise((resolve, reject) => {
             if (proxySet != undefined) {
                 cloneProxySet = proxySet
-    
+
             };
             let arrayPromise = [];
-    
-    
-    
-    
+
+
+
+
             array.forEach((ele, i) => {
                 setTimeout(async () => {
                     let randomIndex = helper.getRandomInt(0, proxy.length);
                     // // console.log('Proxy length ' + proxy.length + ' randomIndex ' + randomIndex + ' ' + proxy[randomIndex] + ' ' + cloneProxySet);
-    
-    
+
+
                     const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = proxy[randomIndex] == undefined ? helper.proxyInit(cloneProxySet) : helper.proxyInit(proxy[randomIndex]);
                     if (proxy[randomIndex] == undefined) {
                         // process.exit(0)
                         proxy.push(cloneProxySet)
                     } else {
                         proxy.splice(randomIndex, 1);
-    
+
                     };
-    
+
                     let proxyOptions = {
                         host: proxyHost,
                         port: portHost,
@@ -336,88 +336,97 @@ const awaitArray = (val, length) => {
                         proxy: proxyOptions,
                         rejectUnauthorized: false,
                     });
-    
+
                     arrayPromise.push(getProductDetail(ele, agent, header).then(() => {
-    
-    
-    
+
+
+
                         proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
-    
+
                         // // console.log('Function arrayIteration  Mystery Box END\nProxy length ' + proxy.length);
                         console.clear()
                         console.log('Worker 2');
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
                     }).catch((e) => {
-    
+
                         // let index = proxy.indexOf(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
                         // // console.log(index);
                         // if (index == -1) {
                         // proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-    
-    
+
+
                         // }
                         proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-    
+
                         // proxy.forEach((ele, i) => {
                         //     let filter = proxy.filter(x => x == ele);
                         //     if (filter.length > 1) {
                         //         proxy.splice(i, 1);
                         //     }
-    
+
                         // });
                         // // console.log('Error: Function arrayIteration Mystery Box END\nProxy length ' + proxy.length);
                         console.clear()
                         console.log('Worker 2');
-    
-    
-    
-    
+
+
+
+
                         // console.log(e);
                     }))
-    
-    
-                  
+
+
+
                     if (array.length - 1 == i) {
                         proxy.push(cloneProxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
-                       
-        
+
+
                         await Promise.allSettled(arrayPromise).then(() => {
                             console.log(arrayPromise);
-                         
-        
+
+
                             resolve()
                         }).catch(() => {
                             resolve()
                         })
                     }
-    
+
                 }, 250 * i);
-               
-    
-    
+
+
+
             });
-    
-    
-    
+
+
+
         })
-    
-    
-    
-    
-    
+
+
+
+
+
     }
 
 }
 var cloneProxySet;
 
 
+function init(init_header) {
+    return new Promise((resolve, reject) => {
+        start(init_header).then(()=> {
+            init(init_header)
+        }).catch(e=> {
+            init(init_header)
+        })
+    })
 
+}
 
 function random() {
     let min = Math.ceil(1);
