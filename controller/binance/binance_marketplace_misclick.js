@@ -13,6 +13,8 @@
 //     });
 // }
 async function start(init_header) {
+const util = require("util")
+
     const { default: axios } = require("axios");
     const tunnel = require("tunnel");
     const { getProductDetail } = require('./get_productDetali');
@@ -402,6 +404,11 @@ async function start(init_header) {
 
 
                     if (array.length - 1 == i) {
+                        setInterval(() => {
+                            let promiseArr = arrayPromise.filter(x=> util.inspect(x).includes("pending"))
+                            console.log(promiseArr);
+                            
+                        }, 5000);
                         proxy.push(cloneProxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
                         await Promise.allSettled(arrayPromise).then(() => {
                             resolve()
