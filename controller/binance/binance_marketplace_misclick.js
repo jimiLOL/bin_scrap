@@ -405,8 +405,9 @@ const util = require("util")
 
                     if (array.length - 1 == i) {
                         setInterval(() => {
-                            let promiseArr = arrayPromise.filter(x=> util.inspect(x).includes("pending"))
                             console.log(promiseArr);
+                            let promiseArr = arrayPromise.filter(x=> util.inspect(x).includes("pending"))
+                            console.log('Promisee array pending = ' + promiseArr.length);
                             
                         }, 5000);
                         proxy.push(cloneProxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
