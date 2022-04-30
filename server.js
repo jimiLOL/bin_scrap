@@ -74,15 +74,15 @@ function init_workers() {
   let promiseWorker = [];
 
 
-  worker.binance_mystery = new Piscina({
-    filename: path.resolve('./controller/binance', 'binance_mystery_box_misclick.js')
-  });
+  // worker.binance_mystery = new Piscina({
+  //   filename: path.resolve('./controller/binance', 'binance_mystery_box_misclick.js')
+  // });
   worker.binance_marketplace = new Piscina({
     filename: path.resolve('./controller/binance', 'binance_marketplace_misclick.js')
   });
-  worker.binance_mysteryLastOrder = new Piscina({
-    filename: path.resolve('./controller/binance', 'binance_mystery_box_lastorder.js')
-  });
+  // worker.binance_mysteryLastOrder = new Piscina({
+  //   filename: path.resolve('./controller/binance', 'binance_mystery_box_lastorder.js')
+  // });
   worker.binance_marketplace_lastorder = new Piscina({
     filename: path.resolve('./controller/binance', 'binance_marketplace_lastorder.js')
   });
@@ -491,7 +491,7 @@ const jobs = new CronJob(dataCron, async function () {
         console.log(
           `Время цикла ${index} "Work add nft...." : ${end - start}ms`
         );
-        console.clear();
+        ;
         // setTimeout(
         //   () =>
         //     techbicaleventTelegram(index, `New cycle end ${end - start}ms`, "Work add nft....."),
