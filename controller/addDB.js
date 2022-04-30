@@ -280,7 +280,7 @@ async function add_binance_db(ele, marketpalce) {
             // process.exit(1)
           };
           if (callback) {
-            console.log('Сохранили данные');
+            // console.log('Сохранили данные');
             // console.log(binNFT);
             // process.exit(0)
             resolve()

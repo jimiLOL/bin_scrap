@@ -101,7 +101,7 @@ async function add_history_binance_db(ele, marketpalce) {
                         // process.exit(1)
                     };
                     if (callback) {
-                        console.log('Сохранили данные истории');
+                        // console.log('Сохранили данные истории');
                         // console.log(binNFT);
                         // process.exit(0)
                         resolve()
