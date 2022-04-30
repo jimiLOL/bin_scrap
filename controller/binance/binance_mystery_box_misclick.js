@@ -347,7 +347,7 @@ async function start(init_header) {
                         proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
 
                         // // console.log('Function arrayIteration  Mystery Box END\nProxy length ' + proxy.length);
-                        console.clear()
+                        
                         console.log('Worker 2');
 
 
@@ -375,7 +375,7 @@ async function start(init_header) {
 
                         // });
                         // // console.log('Error: Function arrayIteration Mystery Box END\nProxy length ' + proxy.length);
-                        console.clear()
+                        
                         console.log('Worker 2');
 
 

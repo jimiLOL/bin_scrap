@@ -458,7 +458,7 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
 
                     arrayPromise.push(getProductDetail(ele, agent, header).then(() => {
                         proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
-                        // console.clear()
+                        // 
                         console.log('Worker 3');
                     }).catch((e) => {
 
@@ -466,7 +466,7 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
 
 
                         // // console.log('Error: Function arrayIteration MarketPlace\nProxy length ' + proxy.length);
-                        // console.clear()
+                        // 
                         console.log('Worker 3');
 
 

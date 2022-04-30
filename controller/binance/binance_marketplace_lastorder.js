@@ -340,7 +340,7 @@ let stackProxy = {};
                         proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
     
                         // // console.log('Function arrayIteration END MarketPlace lastOrder\nProxy length ' + proxy.length);
-                        console.clear()
+                        
                         console.log('Worker 4');
     
     
@@ -355,7 +355,7 @@ let stackProxy = {};
     
     
                         // // console.log('Error: Function arrayIteration END MarketPlace lastOrder\nProxy length ' + proxy.length);
-                        console.clear()
+                        
                         console.log('Worker 4');
     
     
