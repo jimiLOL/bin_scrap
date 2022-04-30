@@ -21,45 +21,65 @@ async function add_history_binance_db(ele, marketpalce) {
                 reject(err)
             }
             if (call) {
-                if (call.total < ele.total) {
+                let date = [];
+                call.history.forEach(history => {
+                    date.push(history.setStartTime)
+                });
+                let DateMax = Math.max(...date);
+
+                // total это количество данных по истории сделок, мы опиремся на него, как на один из индикаторов изменений
+                
+                if (call.total < ele.total || ele.setStartTime > DateMax) {
                     //
-                    let date = [];
-                    call.history.forEach(history => {
-                        date.push(history.createTime)
-                    });
-                    let DateMax = Math.max(...date);
+                   
 
-                    let filter = ele.records.filter(x => x.createTime > DateMax);
-                    if (filter.length > 0) {
-                        console.log(call.history);
-                        console.log(filter);
-                        // process.exit(0)
-                    }
+                    // let filter = ele.records.filter(x => x.setStartTime > DateMax);
+                    // if (filter.length > 0) {
+                    //     console.log(call.history);
+                    //     console.log(filter);
+                    //     // process.exit(0)
+                    // }
                     // push array db
-                    if (Array.isArray(filter)) {
-                        let arrayPromise = [];
-                        filter.forEach(element => {
-                           const req = NFT.findOneAndUpdate({productId: ele.productId}, {$addToSet: {history: element}}, (err, call) => {
-                                if (err) {
-                                    console.log(err);
-                                    reject(err)
-                                }
-                                if (call) {
-                                    console.log('Добавили данные в историю ' + ele.productId);
-                                    resolve()
+                    // if (Array.isArray(filter)) {
+                    //     let arrayPromise = [];
+                    //     filter.forEach(element => {
+                    //        const req = NFT.findOneAndUpdate({productId: ele.productId}, {$addToSet: {history: element}}, (err, call) => {
+                    //             if (err) {
+                    //                 console.log(err);
+                    //                 reject(err)
+                    //             }
+                    //             if (call) {
+                    //                 console.log('Добавили данные в историю ' + ele.productId);
+                    //                 resolve()
                                     
-                                } else {
-                                    resolve()
-                                }
-                            });
-                            arrayPromise.push(req);
-                        });
-                     await Promise.allSettled(arrayPromise).then(()=> resolve())
+                    //             } else {
+                    //                 resolve()
+                    //             }
+                    //         });
+                    //         arrayPromise.push(req);
+                    //     });
+                    //  await Promise.allSettled(arrayPromise).then(()=> resolve())
 
-                    } else {
-                        resolve()
+                    // } else {
+                    //     resolve()
 
-                    }
+                    // }
+
+                    let newData = {setStartTime:ele.setStartTime,amount:ele.amount,status:ele.status};
+
+                    const req = NFT.findOneAndUpdate({productId: ele.productId}, {$addToSet: {history: newData}}, (err, call) => {
+                        if (err) {
+                            console.log(err);
+                            reject(err)
+                        }
+                        if (call) {
+                            console.log('Добавили данные в историю ' + ele.productId);
+                            resolve()
+                            
+                        } else {
+                            resolve()
+                        }
+                    });
                     
                 } else {
                     resolve()
@@ -68,7 +88,7 @@ async function add_history_binance_db(ele, marketpalce) {
                 const binNFT = new NFT({
                     _id: new mongoose.Types.ObjectId(),
                     marketpalce: marketpalce,
-                    history: ele?.records || [],
+                    history: [{setStartTime:ele.setStartTime,amount:ele.amount,status:ele.status}],
                     productId: ele.productId,
                     total: ele.total
 
