@@ -365,11 +365,22 @@ async function start(init_header) {
 
 
                     if (array.length - 1 == i) {
+                        let promiseArr = arrayPromise.filter(x => util.inspect(x).includes("pending"))
+
+                        console.log('Worker 1 -- Await Promisee array pending = ' + promiseArr.length);
+
+                        setTimeout(() => {
+                            // console.log(arrayPromise);
+                            let promiseArr = arrayPromise.filter(x => util.inspect(x).includes("pending"))
+                            console.log('Worker 1 -- Promisee array pending = ' + promiseArr.length);
+
+                        }, 5000);
                         proxy.push(cloneProxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
 
 
                         await Promise.allSettled(arrayPromise).then(() => {
-                            console.log(arrayPromise);
+                            console.log('Worker 1 -- Promisee array Fulfil = ' + arrayPromise.length);
+
 
 
                             resolve()

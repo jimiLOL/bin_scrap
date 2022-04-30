@@ -475,14 +475,20 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
 
 
                     if (array.length - 1 == i) {
+                        let promiseArr = arrayPromise.filter(x => util.inspect(x).includes("pending"))
+
+                        console.log('Worker 3 -- Await Promisee array pending = ' + promiseArr.length);
+
                         setTimeout(() => {
-                            console.log(arrayPromise);
+                            // console.log(arrayPromise);
                             let promiseArr = arrayPromise.filter(x => util.inspect(x).includes("pending"))
-                            console.log('Promisee array pending = ' + promiseArr.length);
+                            console.log('Worker 3 -- Promisee array pending = ' + promiseArr.length);
 
                         }, 5000);
                         proxy.push(cloneProxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
                         await Promise.allSettled(arrayPromise).then(() => {
+                            console.log('Worker 3 -- Promisee array Fulfil = ' + arrayPromise.length);
+
                             resolve()
                         }).catch(() => {
                             resolve()
