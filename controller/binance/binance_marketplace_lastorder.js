@@ -17,6 +17,8 @@ const Emitter = require("events");
 const emitter = new Emitter();
 const proxyLength = proxy.length;
 // const {arrayIterator, setConstant} = require('./arrayiterator.js') // надо перенести итератор в отдельный модуль
+const util = require("util");
+
 
 // setConstant(proxy)
 

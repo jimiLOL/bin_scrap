@@ -6,6 +6,7 @@ async function start(init_header) {
     const tunnel = require("tunnel");
     const { proxy } = require("../../proxy_list");
     const { UA } = require("../../ua");
+    const util = require("util");
 
     const helper = require('./../helper/helper');
     const { getNaemListNFT } = require("./getNftStat");
