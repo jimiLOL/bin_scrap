@@ -192,7 +192,9 @@ async function start(init_header) {
 
 
             }
-        }
+        };
+        resolve({ status: 'ok', name_worker: 'binance_mysteryLastOrder' })
+
 
 
     })
