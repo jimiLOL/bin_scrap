@@ -414,9 +414,11 @@ var cloneProxySet;
 
 function init(init_header) {
     return new Promise((resolve, reject) => {
-        start(init_header).then(() => {
+        start(init_header).then((res) => {
+            console.log(res);
             init(init_header)
         }).catch(e => {
+            console.log(e);
             init(init_header)
         })
     })
