@@ -340,7 +340,7 @@ async function start(init_header) {
 
                         // // console.log('Function arrayIteration  Mystery Box last order  END\nProxy length ' + proxy.length);
                         
-                        console.log('Worker 1');
+                        // console.log('Worker 1');
 
 
 
@@ -354,7 +354,6 @@ async function start(init_header) {
 
                         // // console.log('Error: Function arrayIteration Mystery Box last order END\nProxy length ' + proxy.length);
                         
-                        console.log('Worker 1');
 
 
 
@@ -370,7 +369,7 @@ async function start(init_header) {
 
 
                         await Promise.allSettled(arrayPromise).then(() => {
-                            // console.log(arrayPromise);
+                            console.log(arrayPromise);
 
 
                             resolve()
@@ -415,9 +414,12 @@ var cloneProxySet;
 function init(init_header) {
     return new Promise((resolve, reject) => {
         start(init_header).then((res) => {
+          console.log('Worker 1');
             console.log(res);
             init(init_header)
         }).catch(e => {
+            console.log('Worker 1');
+
             console.log(e);
             init(init_header)
         })

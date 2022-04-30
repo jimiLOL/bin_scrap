@@ -459,7 +459,6 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
                     arrayPromise.push(getProductDetail(ele, agent, header).then(() => {
                         proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
                         // 
-                        console.log('Worker 3');
                     }).catch((e) => {
 
                         proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
@@ -467,7 +466,6 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
 
                         // // console.log('Error: Function arrayIteration MarketPlace\nProxy length ' + proxy.length);
                         // 
-                        console.log('Worker 3');
 
 
 
@@ -524,10 +522,13 @@ var cloneProxySet;
 function init(init_header) {
     return new Promise((resolve, reject) => {
         start(init_header).then((res) => {
+            console.log('Worker 3');
+
             console.log(res);
             init(init_header)
         }).catch(e => {
-            console.log(e);
+            console.log('Worker 3');
+
             init(init_header)
         })
     })
