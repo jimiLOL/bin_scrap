@@ -133,13 +133,8 @@ async function add_history_binance_db(ele, marketpalce) {
                     total: ele.total
 
                 });
-                binNFT.save().then((err, callback) => {
-                    if (err) {
-                        console.log('Не удалось сохранить данные истории');
-                        console.log(err);
-                        reject()
-                        // process.exit(1)
-                    };
+                binNFT.save().then((callback) => {
+                  
                     if (callback) {
                         console.log('Сохранили данные истории ' + ele.productId);
                         // console.log(binNFT);
@@ -148,6 +143,13 @@ async function add_history_binance_db(ele, marketpalce) {
                     } else {
                         reject()
                     }
+                }).catch(e=> {
+                    if (e) {
+                        console.log('Не удалось сохранить данные истории');
+                        console.log(e);
+                        reject()
+                        // process.exit(1)
+                    };
                 })
                     
 
