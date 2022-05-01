@@ -358,7 +358,7 @@ async function start(init_header) {
                         })
                     }
 
-                }, 300 * i);
+                }, 20 * i+1);
 
 
 
