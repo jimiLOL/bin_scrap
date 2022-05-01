@@ -176,17 +176,18 @@ async function start(init_header) {
                     breakSwitch = res;
                     if (indexLayer == iteration - 1) {
                         resolve({ status: 'ok', name_worker: 'binance_mysteryLastOrder' })
-                        // init(init_header)
                     }
                 }).catch(e => {
-                    // console.log(e);
+
                     if (indexLayer == iteration - 1) {
                         reject({ status: 'error', name_worker: 'binance_mysteryLastOrder' })
-                        // init(init_header)
                     }
                     // process.exit(1)
                 });
                 if (breakSwitch) {
+                    if (indexLayer == iteration - 1) {
+                        reject({ status: 'error', name_worker: 'binance_mysteryLastOrder' })
+                    }
                     
                     break
                 }

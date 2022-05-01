@@ -302,8 +302,6 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
 
 
                         let data = new Date().getTime();
-                        // await helper.timeout(100 * index).then(() => {
-                        // if (!var_break) {
                         axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/product-list', body, { headers: header, httpsAgent: agent }).then(res => {
                             // console.log(res.status + ' ' + index + ' total= ' + res.data.data.total);
 
@@ -364,23 +362,17 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
                             }
                             // var_break = true;
                             if (i == layerList.length - 1) {
-                                // init(init_header)
 
                                 reject({ status: 'error', name_worker: 'binance_marketplace' })
                             }
                         })
-                        // } else {
-                        //     proxy.push(proxyVar);
-                        //     // delDublicateProxy()
+                      
 
-                        // }
-
-                        // });
                         if (index == 101 || var_break) {
-                            // console.log('===========break==============');
-                            // console.log(`Global cycle ${i}`);
-                            // proxy.push(proxyVar);
-                            // delDublicateProxy();
+                            if (i == layerList.length - 1) {
+
+                                reject({ status: 'error', name_worker: 'binance_marketplace' })
+                            }
 
 
                             var_break = false;

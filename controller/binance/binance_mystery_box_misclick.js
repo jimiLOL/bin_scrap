@@ -43,9 +43,7 @@ async function start(init_header) {
             return {
                 index: 0,
                 async next() {
-                    // console.log('=========================== ' + this.index + ' index iterator =================================================');
                     if (this.index < proxyLength) {
-                        //   // console.log(this.index, arr.length);
                         return await awaitArray(arr[this.index++], --i);
                     } else {
                         return { done: true }
@@ -155,9 +153,6 @@ async function start(init_header) {
                 for await (const proxyVar of arrayIterator(proxy)) {
                     helper.shuffle(proxy);
 
-                    // // console.log('====================INIT parsing Mystery BOX====================');
-                    // // console.log(proxyVar);
-                    // // console.log(proxy[i]);
                     let indexProxy = proxy.indexOf(proxyVar);
                     proxy.splice(indexProxy, 1);
 
@@ -167,7 +162,6 @@ async function start(init_header) {
                         breakSwitch = res;
                         if (indexLayer == layerList.length - 1) {
                             resolve({ status: 'ok', name_worker: 'binance_mystery' })
-                            // init(init_header)
                         }
                     }).catch(e => {
                         // console.log(e);
@@ -176,27 +170,19 @@ async function start(init_header) {
                         }
                         if (indexLayer == layerList.length - 1) {
                             reject({ status: 'error', name_worker: 'binance_mystery' })
-                            // init(init_header)
                         }
-                        // process.exit(1)
                     });
                     if (breakSwitch) {
+                        if (indexLayer == layerList.length - 1) {
+                            reject({ status: 'error', name_worker: 'binance_mystery' })
+                        }
                         break
                     }
-                    // if (i == proxy.length - 1) {
-                    //     // console.log('!');
-                    //     init();
-                    // } // рекурсия
-
-
                 }
-
             })
         } else {
             reject({ status: 'error', name_worker: 'binance_marketplace', info: 'layerList no Array' })
-
         }
-
 
     })
 
@@ -204,10 +190,6 @@ async function start(init_header) {
 
     function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: proxyAuth }, i, body) {
         return new Promise(async (resolve, reject) => {
-            // console.log('Start "getInfoBinNFTMysteryBox" Proxy length ' + proxy.length);
-
-
-
             header["user-agent"] = UA[i];
             let proxyOptions = {
                 host: proxyHost,
@@ -225,52 +207,26 @@ async function start(init_header) {
             let breakSwitch = false;
             // helper.getIP(agent);
 
-
-
-
-
-
-
             body.page = i; // смена страницы  
             // body.params.setStartTime = (function () { return new Date().getTime() })();
             // body.params.orderBy = random();
             let data = new Date().getTime();
-
             axios.post('https://www.binance.com/bapi/nft/v1/public/nft/market-mystery/mystery-list', JSON.stringify(body), { headers: header, httpsAgent: agent }).then(res => {
-                // console.log(res.status + ' ' + i + ' total^ ' + res.data.data.total);
-                // console.log(body);
-                // // console.log(res.data.data.data[0]);
+
                 let num = Math.ceil(res.data.data.total / 100);
-                // console.log('i ' + i + ' num ' + num);
                 if (res.data.data.total == 0 || i >= num) {
 
                     breakSwitch = true
                     proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-                    // console.log('End cycle "getInfoBinNFTMysteryBox" Proxy length ' + proxy.length);
-
                     resolve(breakSwitch);
-
-
                 } else {
-                    // console.log('Await parsing... cycle "getInfoBinNFTMysteryBox" Proxy length ' + proxy.length);
 
-
-                    // if (res.data.data?.data[0]?.setStartTime != undefined) {
-                    //     // console.log(res.data.data.data[0].productId);
-
-
-                    // } else {
-                    //     // console.log(res.data.data);
-
-
-                    // }
                     stackProxy[`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`].status = 'work';
 
                     arrayIteration(res.data.data.data, `${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`).then(() => {
                         stackProxy[`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`].status = 'off';
                         res = null;
-                        // console.log('end');
-                        // process.exit(0)
+
 
                         resolve(breakSwitch);
 
@@ -281,7 +237,6 @@ async function start(init_header) {
 
 
                     let newData = new Date().getTime();
-                    // console.log(`Date cycle^ ${newData - data} ms`);
 
                 }
 
@@ -289,7 +244,6 @@ async function start(init_header) {
 
 
             }).catch(e => {
-                // console.log('Error');
                 proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
                 reject(breakSwitch)
 
@@ -316,7 +270,6 @@ async function start(init_header) {
             array.forEach((ele, i) => {
                 setTimeout(async () => {
                     let randomIndex = helper.getRandomInt(0, proxy.length);
-                    // // console.log('Proxy length ' + proxy.length + ' randomIndex ' + randomIndex + ' ' + proxy[randomIndex] + ' ' + cloneProxySet);
 
 
                     const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = proxy[randomIndex] == undefined ? helper.proxyInit(cloneProxySet) : helper.proxyInit(proxy[randomIndex]);
@@ -347,8 +300,7 @@ async function start(init_header) {
 
                         proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
 
-                        // // console.log('Function arrayIteration  Mystery Box END\nProxy length ' + proxy.length);
-                        
+
 
 
 
@@ -359,7 +311,6 @@ async function start(init_header) {
                     }).catch((e) => {
 
                         // let index = proxy.indexOf(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-                        // // console.log(index);
                         // if (index == -1) {
                         // proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
 
@@ -374,13 +325,11 @@ async function start(init_header) {
                         //     }
 
                         // });
-                        // // console.log('Error: Function arrayIteration Mystery Box END\nProxy length ' + proxy.length);
-                        
 
 
 
 
-                        // console.log(e);
+
                     }))
 
 
@@ -391,7 +340,6 @@ async function start(init_header) {
                         console.log('Worker 2 -- Await Promisee array pending = ' + promiseArr.length);
 
                         setTimeout(() => {
-                            // console.log(arrayPromise);
                             let promiseArr = arrayPromise.filter(x => util.inspect(x).includes("pending"))
                             console.log('Worker 2 -- Promisee array pending = ' + promiseArr.length);
 
@@ -432,12 +380,12 @@ var cloneProxySet;
 
 function init(init_header) {
     return new Promise((resolve, reject) => {
-        start(init_header).then((res)=> {
+        start(init_header).then((res) => {
             console.log('Worker 2');
             console.log(res);
 
             init(init_header)
-        }).catch(e=> {
+        }).catch(e => {
             console.log('Worker 2');
             console.log(e);
             init(init_header)
