@@ -21,8 +21,8 @@ function getProductDetail(productBinance, agent, header) {
       let productDetail = res.data.data;
 
       if (res.data.code != '000000') {
-        console.log('res.data.code != "000000"');
-        console.log(res.data);
+        // console.log('res.data.code != "000000"');
+        console.log(res.data?.message);
         helper.getIP(agent).then(() => {
           // process.exit(1)
 
