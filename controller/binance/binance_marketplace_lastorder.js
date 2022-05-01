@@ -10,7 +10,7 @@ async function start(init_header) {
     const { default: axios } = require("axios");
 const tunnel = require("tunnel");
 const { getProductDetail } = require('./get_productDetali');
-const { proxy } = require("../../proxy_list_two");
+const { proxy } = require("../../proxy_list_four");
 const { UA } = require("../../ua");
 const helper = require('./../helper/helper');
 const Emitter = require("events");
