@@ -15,7 +15,7 @@ async function add_history_binance_db(ele, marketpalce) {
         //     productId: ele.productId
         // })
 
-        await NFT.findOne({ productId: ele.productId }).then(async (err, call) => {
+        await NFT.findOne({ productId: ele.productId }).then(async (call) => {
             console.log(call);
             if (call) {
                 let date = [];
@@ -66,11 +66,7 @@ async function add_history_binance_db(ele, marketpalce) {
 
                     // status 4 -- закрытая сделка
                    await NFT.findOneAndUpdate({productId: ele.productId, 'history.setStartTime': DateMax}, {$set:{'history.$.status':4}}).then(async () => {
-                        const req = await NFT.findOneAndUpdate({productId: ele.productId}, {$addToSet: {history: newData}}, (error, callback) => {
-                            if (error) {
-                                console.log(error);
-                                reject(error)
-                            }
+                        const req = await NFT.findOneAndUpdate({productId: ele.productId}, {$addToSet: {history: newData}}).then((callback)=> {
                             if (callback) {
                                 console.log('Добавили данные в историю ' + ele.productId);
                                 resolve()
@@ -78,7 +74,13 @@ async function add_history_binance_db(ele, marketpalce) {
                             } else {
                                 resolve()
                             }
-                        });
+
+                        }).catch(e=> {
+                            if (e) {
+                                console.log(e);
+                                reject(error)
+                            }
+                        }) 
 
                     }).catch(e=> {
                         console.log(e);
@@ -106,12 +108,9 @@ async function add_history_binance_db(ele, marketpalce) {
                     resolve()
                 }
             } else if(ele.amount != call?.history[call.history-1]?.amount && ele.setStartTime == call?.history[call.history-1]?.setStartTime) {
-             NFT.findOneAndUpdate({productId: ele.productId, 'history.setStartTime': ele.setStartTime}, {$set:{'history.$.amount':ele.amount, 'history.$.status':ele.status}}).then((err, callback)=> {
-                if (err) {
-                    console.log(err);
-                    reject(err)
-                }
-                if (call) {
+            await NFT.findOneAndUpdate({productId: ele.productId, 'history.setStartTime': ele.setStartTime}, {$set:{'history.$.amount':ele.amount, 'history.$.status':ele.status}}).then((callback)=> {
+              
+                if (callback) {
                     console.log('Обновили данные в историю ' + ele.productId);
                     resolve()
                     
@@ -119,7 +118,10 @@ async function add_history_binance_db(ele, marketpalce) {
                     resolve()
                 }
              }).catch(e=> {
-                reject(e)
+                if (e) {
+                    console.log(e);
+                    reject(e)
+                }
 
              })
      
