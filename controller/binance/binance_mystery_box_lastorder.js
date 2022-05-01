@@ -141,6 +141,8 @@ async function start(init_header) {
 
             // // console.log(layer.name);
             helper.shuffle(UA);
+            helper.shuffle(proxy);
+
             let body = {
                 page: 1,
                 size: 100,
@@ -162,7 +164,6 @@ async function start(init_header) {
             // let i = 0;
             let breakSwitch = false;
             for await (const proxyVar of arrayIterator(proxy)) {
-                helper.shuffle(proxy);
 
                 // // console.log('====================INIT parsing Mystery BOX====================');
                 // // console.log(proxyVar);

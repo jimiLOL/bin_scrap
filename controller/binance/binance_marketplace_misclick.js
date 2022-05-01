@@ -260,6 +260,8 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
                 };
                 body.collectionId = layer.layerId;
                 helper.shuffle(UA);
+                        helper.shuffle(proxy);
+
                 let var_break = false;
 
 
@@ -268,7 +270,6 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
                 (async () => {
                     let index = 0;
                     for await (const proxyVar of arrayIterator(proxy)) {
-                        // helper.shuffle(proxy);
                         // // console.log(stackProxy);
 
                         // console.log('====================INIT parsing nft====================');

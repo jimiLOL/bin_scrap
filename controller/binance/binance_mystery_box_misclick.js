@@ -150,8 +150,9 @@ async function start(init_header) {
                 body.params.serialNo.push(layer.serialsNo);
                 let i = 0;
                 let breakSwitch = false;
+                helper.shuffle(proxy);
+
                 for await (const proxyVar of arrayIterator(proxy)) {
-                    helper.shuffle(proxy);
 
                     let indexProxy = proxy.indexOf(proxyVar);
                     proxy.splice(indexProxy, 1);

@@ -163,6 +163,8 @@ let stackProxy = {};
         // body.collectionId = layer.layerId;
         helper.shuffle(UA);
         let var_break = false;
+        helper.shuffle(proxy);
+
 
 
 
@@ -170,7 +172,6 @@ let stackProxy = {};
         (async () => {
             let index = 0;
             for await (const proxyVar of arrayIterator(proxy)) {
-                helper.shuffle(proxy);
 
                 // console.log('====================INIT parsing nft====================');
                 index++
