@@ -15,7 +15,8 @@ async function add_history_binance_db(ele, marketpalce) {
         //     productId: ele.productId
         // })
 
-        NFT.findOne({ productId: ele.productId }).then((call) => {
+        await NFT.findOne({ productId: ele.productId }).then((call) => {
+            console.log(call);
             if (call) {
                 let date = [];
                 call.history.forEach(history => {
