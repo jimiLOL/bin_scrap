@@ -36,8 +36,8 @@ function getProductDetail(productBinance, agent, header) {
       header['x-ui-request-trace'] = t;
       header['x-trace-id'] = t;
 
+      if (productDetail != null) {
       header.Referer = `https://www.binance.com/ru/nft/goods/detail?productId=${productDetail.productDetail.id}&isProduct=1`
-
       axios.get(`https://www.binance.com/bapi/nft/v1/public/nft/nft-info/event/simple/${productDetail.nftInfo.nftId}?page=1&pageSize=10&salesOnlyFlag=false`, { headers: header, httpsAgent: agent, timeout: 9000 }).then(response => {
         productDetail.records = response.data.data.records;
         productDetail.total = response.data.data.total;
@@ -61,6 +61,15 @@ function getProductDetail(productBinance, agent, header) {
         addDB(productBinance, productDetail);
         reject({status: 'error', proxy: agent.proxyOptions.host})
       })
+
+      } else {
+        addDB(productBinance, {});
+
+
+      }
+
+
+    
 
     }).catch(e => {
       if (process.env.PROD == 'dev') {
