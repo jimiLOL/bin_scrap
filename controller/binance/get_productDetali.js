@@ -21,8 +21,8 @@ function getProductDetail(productBinance, agent, header) {
       let productDetail = res.data.data;
 
       if (res.data.code != '000000') {
-        console.log(res.data?.message + ' для proxy: ' + agent?.proxyOptions.host + ' спим 300ms..');
-        helper.timeout(300)
+        console.log(res.data?.message + ' для proxy: ' + agent?.proxyOptions.host + ' спим 3000 ms..');
+        helper.timeout(3020)
 
         // helper.getIP(agent).then(() => {
         //   // process.exit(1)
