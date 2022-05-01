@@ -496,7 +496,7 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
 
                     }
 
-                }, 20 * i);
+                }, 300 * i);
 
 
 
