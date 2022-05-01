@@ -228,7 +228,8 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
             layerList = await axios.get('https://www.binance.com/bapi/nft/v1/public/nft/layer-search?keyword=', { headers: header }).then(res => {
                 return res.data.data
             }).catch(e => {
-                // // console.log(e);
+                reject({ status: 'error', name_worker: 'binance_marketplace', info: 'layerList no Array' })
+
             });
         }
 
@@ -307,13 +308,13 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
 
 
                         let data = new Date().getTime();
-                        axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/product-list', body, { headers: header, httpsAgent: agent }).then(res => {
+                        await axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/product-list', body, { headers: header, httpsAgent: agent }).then(async res => {
                             // console.log(res.status + ' ' + index + ' total= ' + res.data.data.total);
 
                             // console.log('Send proxyVar ' + proxyVar);
                             if (res.data.data.rows != null) {
                                 stackProxy[proxyVar].status = 'work';
-                                arrayIteration(res.data.data.rows, proxyVar).then(() => {
+                                await arrayIteration(res.data.data.rows, proxyVar).then(() => {
                                     stackProxy[proxyVar].status = 'off';
                                     res = null;
                                     if (i == layerList.length - 1) {
@@ -321,6 +322,10 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
                                         // init(init_header)
                                     }
                                 }).catch(e => {
+                                    if (i == layerList.length - 1) {
+                                        resolve({ status: 'ok', name_worker: 'binance_marketplace' })
+                                        // init(init_header)
+                                    }
 
                                 });
 
