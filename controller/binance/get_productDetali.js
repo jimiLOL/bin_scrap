@@ -17,12 +17,12 @@ function getProductDetail(productBinance, agent, header) {
     header['x-ui-request-trace'] = t;
     header['x-trace-id'] = t;
  
-    axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/nft-trade/product-detail', body, { headers: header, httpsAgent: agent, timeout: 5000 }).then(res => {
+    axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/nft-trade/product-detail', body, { headers: header, httpsAgent: agent, timeout: 5000 }).then(async res => {
       let productDetail = res.data.data;
 
       if (res.data.code != '000000') {
         console.log(res.data?.message + ' для proxy: ' + agent?.proxyOptions.host + ' спим 3000 ms..');
-        helper.timeout(3020)
+        await helper.timeout(3020)
 
         // helper.getIP(agent).then(() => {
         //   // process.exit(1)
