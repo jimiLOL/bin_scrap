@@ -187,15 +187,13 @@ async function start(init_header) {
                     // process.exit(1)
                 });
                 if (breakSwitch) {
-                    breakSwitch = false;
-
+                    
                     break
                 }
 
 
 
             }
-            
         };
         // resolve({ status: 'ok', name_worker: 'binance_mysteryLastOrder' })
 
@@ -343,7 +341,7 @@ async function start(init_header) {
                         proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
 
                         // // console.log('Function arrayIteration  Mystery Box last order  END\nProxy length ' + proxy.length);
-
+                        
                         // console.log('Worker 1');
 
 
@@ -357,7 +355,7 @@ async function start(init_header) {
                         proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
 
                         // // console.log('Error: Function arrayIteration Mystery Box last order END\nProxy length ' + proxy.length);
-
+                        
 
 
 
@@ -429,7 +427,7 @@ var cloneProxySet;
 function init(init_header) {
     return new Promise((resolve, reject) => {
         start(init_header).then((res) => {
-            console.log('Worker 1');
+          console.log('Worker 1');
             console.log(res);
             init(init_header)
         }).catch(e => {
