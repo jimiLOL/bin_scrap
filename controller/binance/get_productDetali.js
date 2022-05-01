@@ -63,7 +63,7 @@ function getProductDetail(productBinance, agent, header) {
       })
 
       } else {
-        addDB(productBinance, {}).then(() => {
+        addDB(productBinance, null).then(() => {
           productBinance = null;
           resolve({status: 'ok', proxy: agent.proxyOptions.host})
         }).catch(e => {
