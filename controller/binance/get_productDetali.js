@@ -21,8 +21,7 @@ function getProductDetail(productBinance, agent, header) {
       let productDetail = res.data.data;
 
       if (res.data.code != '000000') {
-        // console.log('res.data.code != "000000"');
-        console.log(res.data?.message + ' для proxy: ' + agent?.proxyOptions.host);
+        // console.log(res.data?.message + ' для proxy: ' + agent?.proxyOptions.host);
         // helper.getIP(agent).then(() => {
         //   // process.exit(1)
 
@@ -81,10 +80,10 @@ function getProductDetail(productBinance, agent, header) {
       if (process.env.PROD == 'dev') {
         fs.appendFile(`./errorProxy.txt`, `\n${agent.proxyOptions.host}`, function (error) {
           if (error) throw error; // если возникла ошибка
-          console.log("Ожидание записи...");
+          // console.log("Ожидание записи...");
           let start = new Date().getTime();
           let end = new Date().getTime();
-          console.log(`Запись: ${end - start}ms`);
+          // console.log(`Запись: ${end - start}ms`);
           reject([e?.code, agent?.proxyOptions.host])
 
         });
