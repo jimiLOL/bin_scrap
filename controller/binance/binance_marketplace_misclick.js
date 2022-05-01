@@ -273,6 +273,11 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
                         // console.log('====================INIT parsing nft====================');
                         index++
                         if (proxyVar == undefined) {
+                            if (i == layerList.length - 1) {
+                                resolve({ status: 'ok', name_worker: 'binance_marketplace' })
+                                // init(init_header)
+                            }
+                            var_break = false;
                             break
                         }
 
