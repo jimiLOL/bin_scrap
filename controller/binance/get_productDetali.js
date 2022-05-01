@@ -127,7 +127,7 @@ function addDB(productBinance, responseProductDetail = null) {
 
     } else {
       productBinance = null;
-      console.log('else');
+      // console.log('else');
       resolve()
       // process.exit(0)
 
