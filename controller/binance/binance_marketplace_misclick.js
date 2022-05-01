@@ -369,13 +369,14 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
                       
 
                         if (index == 101 || var_break) {
+                            var_break = false;
+
                             if (i == layerList.length - 1) {
 
                                 reject({ status: 'error', name_worker: 'binance_marketplace' })
                             }
 
 
-                            var_break = false;
                             // console.log('break\nProxy length ' + proxy.length);
 
                             break
