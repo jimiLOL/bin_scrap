@@ -101,7 +101,7 @@ async function add_history_binance_db(ele, marketpalce) {
                 } else {
                     resolve()
                 }
-            } else if(ele.amount != call.history[call.history-1].amount && ele.setStartTime == call.history[call.history-1].setStartTime) {
+            } else if(ele.amount != call?.history[call.history-1]?.amount && ele.setStartTime == call?.history[call.history-1]?.setStartTime) {
                 const req = NFT.findOneAndUpdate({productId: ele.productId, 'history.setStartTime': ele.setStartTime}, {$set:{'history.$.amount':ele.amount, 'history.$.status':ele.status}}, (err, call) => {
                     if (err) {
                         console.log(err);
