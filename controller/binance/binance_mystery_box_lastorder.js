@@ -391,7 +391,7 @@ async function start(init_header) {
                         })
                     }
 
-                }, 20 * i);
+                }, 220 * i);
 
 
             });
