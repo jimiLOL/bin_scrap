@@ -195,10 +195,7 @@ async function start(init_header) {
 
 
             }
-            if (indexLayer == iteration - 1) {
-                resolve({ status: 'ok', name_worker: 'binance_mysteryLastOrder' })
-                // init(init_header)
-            }
+            
         };
         // resolve({ status: 'ok', name_worker: 'binance_mysteryLastOrder' })
 
