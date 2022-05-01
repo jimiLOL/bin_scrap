@@ -68,7 +68,7 @@ async function add_history_binance_db(ele, marketpalce) {
                     let newData = {setStartTime:ele.setStartTime,amount:ele.amount,status:ele.status};
 
                     // status 4 -- закрытая сделка
-                    await NFT.findOneAndUpdate({productId: ele.productId, 'history.setStartTime': DateMax}, {$set:{'history.$.status':4}}).then(async (res) => {
+                    await NFT.findOneAndUpdate({productId: ele.productId, 'history.setStartTime': DateMax}, {$set:{'history.$.status':4}}).then(async () => {
                         const req = await NFT.findOneAndUpdate({productId: ele.productId}, {$addToSet: {history: newData}}, (err, call) => {
                             if (err) {
                                 console.log(err);
@@ -150,7 +150,7 @@ async function add_history_binance_db(ele, marketpalce) {
                 })
 
             }
-        })
+        }).clone()
 
     
     })
