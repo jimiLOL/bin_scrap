@@ -74,7 +74,7 @@ function getProductDetail(productBinance, agent, header) {
 
         });
       } else {
-        reject([e?.code, agent?.proxyOptions.host])
+        reject([e?.code || e, agent?.proxyOptions.host])
 
         
       }
