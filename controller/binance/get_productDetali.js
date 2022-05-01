@@ -22,11 +22,11 @@ function getProductDetail(productBinance, agent, header) {
 
       if (res.data.code != '000000') {
         // console.log('res.data.code != "000000"');
-        console.log(res.data?.message);
-        helper.getIP(agent).then(() => {
-          // process.exit(1)
+        console.log(res.data?.message + ' для proxy: ' + agent?.proxyOptions.host);
+        // helper.getIP(agent).then(() => {
+        //   // process.exit(1)
 
-        });
+        // });
 
 
       }
