@@ -23,9 +23,9 @@ async function add_history_binance_db(ele, marketpalce) {
                 });
                 let DateMax = Math.max(...date);
 
-                // total это количество данных по истории сделок, мы опиремся на него, как на один из индикаторов изменений
+                // total это количество данных по истории сделок, мы опиремся на него, как на один из индикаторов изменений call.total < ele.total || 
 
-                if (call.total < ele.total || ele.setStartTime > DateMax) {
+                if (ele.setStartTime > DateMax) {
                     //
 
 
