@@ -243,7 +243,7 @@ async function start(init_header) {
 
         if (Array.isArray(layerList) && layerList.length != 0) {
             layerList.forEach((layer, i) => {
-                // console.log(`Init Global cycle ${i}`);
+                console.log(`Init Global cycle ${i} in ${layerList.length}`);
                 // let body = {
                 //     currency: "BUSD",
                 //     mediaType: [],
@@ -403,7 +403,7 @@ async function start(init_header) {
                         })
 
 
-                        if (index == 101 || var_break) {
+                        if (index == 100 || var_break) {
                             var_break = false;
 
                             if (i == layerList.length - 1) {
