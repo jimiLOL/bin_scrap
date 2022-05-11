@@ -292,7 +292,7 @@ async function start(init_header) {
 
                         // console.log('====================INIT parsing nft====================');
                         index++
-                        if (proxyVar == undefined) {
+                        if (proxyVar == undefined || var_break) {
                             if (i == layerList.length - 1) {
                                 resolve({ status: 'ok', name_worker: 'binance_marketplace' })
                                 // init(init_header)
