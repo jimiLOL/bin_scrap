@@ -216,7 +216,7 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
         header = init_header.headers; // делаем header глобальным
 
 
-        if (helper.getRandomInt(1,3) == 2) {
+        if (2 == 2) {
             arrayCollections = await getListCollectionName('binance');
 
             layerList = await getlayerList();
@@ -228,6 +228,7 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
             layerList = await axios.get('https://www.binance.com/bapi/nft/v1/public/nft/layer-search?keyword=', { headers: header }).then(res => {
                 return res.data.data
             }).catch(e => {
+                console.log(e);
                 reject({ status: 'error', name_worker: 'binance_marketplace', info: 'layerList no Array' })
 
             });
@@ -243,21 +244,38 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
         if (Array.isArray(layerList) && layerList.length != 0) {
             layerList.forEach((layer, i) => {
                 // console.log(`Init Global cycle ${i}`);
+                // let body = {
+                //     currency: "BUSD",
+                //     mediaType: [],
+                //     tradeType: "",
+                //     amountFrom: "",
+                //     amountTo: "",
+                //     collectionId: '',
+                //     categorys: [],
+                //     // keyword: "",
+                //     // orderBy: "list_time", // когда размещенно
+                //     // orderType: 1, // статус.
+                //     page: 1,
+                //     rows: 100,
+                //     productIds: []
+                // }; от старого api
+
                 let body = {
-                    currency: (function () { return "BUSD" })(),
-                    mediaType: "",
-                    tradeType: "",
-                    // amountFrom: "0.1",
-                    // amountTo: "2",
-                    collectionId: '',
+                    amountFrom: "",
+                    amountTo: "",
                     categorys: [],
-                    keyword: "",
-                    // orderBy: "list_time", // когда размещенно
-                    // orderType: 1, // статус.
+                    currency: "",
+                    mediaType: [],
+                    tradeType: [],
+                    collectionId: "",
+                    statusList: [
+                        1
+                    ],
                     page: 1,
                     rows: 100,
-                    productIds: []
-                };
+                    // orderBy: "list_time",
+                    orderType: -1
+                }
                 body.collectionId = layer.layerId;
                 helper.shuffle(UA);
                         helper.shuffle(proxy);
@@ -302,6 +320,7 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
                         });
 
                         body.page = index;
+                        console.log(body);
                         header["user-agent"] = UA[index];
                         // let t = helper.uuid();
                         // header['x-ui-request-trace'] = t;
@@ -309,15 +328,15 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
 
 
                         let data = new Date().getTime();
-                        await axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/product-list', body, { headers: header, httpsAgent: agent }).then(async res => {
-                            // console.log(res.status + ' ' + index + ' total= ' + res.data.data.total);
+                        await axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/mgs/product-list', body, { headers: header, httpsAgent: agent }).then(async res => {
+                            console.log(res.status + ' ' + index + ' total= ' + res.data.data.total);
 
                             // console.log('Send proxyVar ' + proxyVar);
                             if (res.data.data.rows != null) {
                                 stackProxy[proxyVar].status = 'work';
                                 await arrayIteration(res.data.data.rows, proxyVar).then(() => {
                                     stackProxy[proxyVar].status = 'off';
-                                    res = null;
+                                    // res = null;
                                     if (i == layerList.length - 1) {
                                         resolve({ status: 'ok', name_worker: 'binance_marketplace' })
                                         // init(init_header)
@@ -332,7 +351,11 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
 
                             } else {
                                 stackProxy[proxyVar].status = 'off';
-                                res = null;
+                                var_break = true
+
+                                // res = null;
+                            proxy.push(proxyVar)
+
                                 if (i == layerList.length - 1) {
                                     resolve({ status: 'ok', name_worker: 'binance_marketplace' })
                                     // init(init_header)
@@ -345,7 +368,7 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
 
                             let n = res.data.data.total / 100;
                             // console.log(Math.ceil(n));
-                            let newData = new Date().getTime();
+                            // let newData = new Date().getTime();
                             // console.log(`Date cycle^ ${newData - data} ms`);
                             if (Math.ceil(n) == index) {
                                 var_break = true
@@ -357,7 +380,8 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
 
                             return Math.ceil(n)
                         }).catch(e => {
-                            // console.log('Error');
+                            console.log('Error');
+                            console.log(e);
                             // console.log(`Global cycle ${i}`);
 
                             proxy.push(proxyVar)
@@ -537,7 +561,7 @@ function init(init_header) {
             console.log(res);
             init(init_header)
         }).catch(e => {
-            console.log('Worker 3');
+            console.log('Worker 3 error');
 
             init(init_header)
         })

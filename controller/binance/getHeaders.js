@@ -45,7 +45,7 @@ function getNewHeaders(headers) {
     headers.csrftoken = header.csrftoken;
     headers["x-nft-checkbot-sitekey"] =
       "6LeUPckbAAAAAIX0YxfqgiXvD3EOXSeuq0OpO8u_";
-    headers.cookie = full;
+    // headers.cookie = full;
   } catch (e) {
     console.log(e);
     console.log(header);

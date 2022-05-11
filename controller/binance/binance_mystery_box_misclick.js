@@ -123,8 +123,10 @@ async function start(init_header) {
         // header = getNewHeaders(headers); // поток не имеет доступа к результату этой функции;
         header = init_header.headers; // делаем header глобальным
 
-        const layerList = await axios.get('https://www.binance.com/bapi/nft/v1/public/nft/mystery-box/list?page=1&size=1000', { headers: header }).then(res => {
+        const layerList = await axios.get('https://www.binance.com/bapi/nft/v1/public/nft/mystery-box/list?page=1&size=100', { headers: header }).then(res => {
             return res.data.data
+        }).catch(e=> {
+            console.log(e);
         });
         if (Array.isArray(layerList)) {
             layerList.forEach(async (layer, indexLayer) => {
