@@ -15,7 +15,7 @@
 async function start(init_header) {
     const util = require("util");
     const { getListCollectionName } = require('./../getCollectionList');
-const { getAddressModel } = require("../../model/nft_detalii.cjs");
+    const { getAddressModel } = require("../../model/nft_detalii.cjs");
 
 
     const { default: axios } = require("axios");
@@ -160,7 +160,7 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
 
             arrayCollections.forEach(async (collection, i) => {
                 const NFT = await getAddressModel(collection, 'binance');
-                NFT.find({}, {productDetail: {collection: 1}}, (err, call) => {
+                NFT.find({}, { productDetail: { collection: 1 } }, (err, call) => {
                     if (err) {
                         console.log(err);
                     };
@@ -169,11 +169,11 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
                             if (ele?.productDetail?.collection != null) {
                                 if (ele?.productDetail?.collection.hasOwnProperty('collectionId')) {
 
-                                    layerList.push({layerId: ele.productDetail.collection.collectionId})
-    
-                                }  
+                                    layerList.push({ layerId: ele.productDetail.collection.collectionId })
+
+                                }
                             }
-                           
+
                         });
                         // console.log(layerList.length);
                         layerList.forEach((ele, i) => {
@@ -186,12 +186,12 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
                         // console.log(layerList.length);
 
                     };
-                    if (i == arrayCollections.length-1) {
+                    if (i == arrayCollections.length - 1) {
                         resolve(layerList)
                     }
                 });
-             
-                
+
+
 
 
             });
@@ -220,10 +220,10 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
             arrayCollections = await getListCollectionName('binance');
 
             layerList = await getlayerList();
-                        console.log('layerList = ' + layerList.length);
+            console.log('layerList = ' + layerList.length);
 
 
-            
+
         } else {
             layerList = await axios.get('https://www.binance.com/bapi/nft/v1/public/nft/layer-search?keyword=', { headers: header }).then(res => {
                 return res.data.data
@@ -239,7 +239,7 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
 
 
         // header = getNewHeaders(headers);
-     
+
 
         if (Array.isArray(layerList) && layerList.length != 0) {
             layerList.forEach((layer, i) => {
@@ -278,7 +278,7 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
                 }
                 body.collectionId = layer.layerId;
                 helper.shuffle(UA);
-                        helper.shuffle(proxy);
+                helper.shuffle(proxy);
 
                 let var_break = false;
 
@@ -354,7 +354,7 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
                                 var_break = true
 
                                 // res = null;
-                            proxy.push(proxyVar)
+                                proxy.push(proxyVar)
 
                                 if (i == layerList.length - 1) {
                                     resolve({ status: 'ok', name_worker: 'binance_marketplace' })
@@ -401,7 +401,7 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
                                 reject({ status: 'error', name_worker: 'binance_marketplace' })
                             }
                         })
-                      
+
 
                         if (index == 101 || var_break) {
                             var_break = false;
@@ -524,7 +524,7 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
 
                     }
 
-                }, 20 * i+1);
+                }, 20 * i + 1);
 
 
 
@@ -561,7 +561,9 @@ function init(init_header) {
             console.log(res);
             init(init_header)
         }).catch(e => {
+
             console.log('Worker 3 error');
+            console.log(e);
 
             init(init_header)
         })
