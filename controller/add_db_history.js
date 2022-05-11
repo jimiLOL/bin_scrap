@@ -50,7 +50,8 @@ async function add_history_binance_db(ele, marketpalce) {
 
                     })
 
-                }
+                };
+                console.log(newDataArray);
 
 
                 if (ele.setStartTime > DateMax) {
