@@ -145,21 +145,38 @@ let stackProxy = {};
 
         header = init_header.headers; // делаем header глобальным
 
+        // let body = {
+        //     currency: "BUSD",
+        //     mediaType: "",
+        //     tradeType: "",
+        //     // amountFrom: "0.1",
+        //     // amountTo: "2",
+        //     collectionId: '',
+        //     categorys: [],
+        //     keyword: "",
+        //     orderBy: "list_time", // когда размещенно
+        //     // orderType: 1, // статус.
+        //     page: 1,
+        //     rows: 100,
+        //     productIds: []
+        // };
         let body = {
+            amountFrom: "",
             currency: "BUSD",
-            mediaType: "",
-            tradeType: "",
-            // amountFrom: "0.1",
-            // amountTo: "2",
-            collectionId: '',
+            amountTo: "",
             categorys: [],
-            keyword: "",
-            orderBy: "list_time", // когда размещенно
-            // orderType: 1, // статус.
+            currency: "",
+            mediaType: [],
+            tradeType: [],
+            collectionId: "",
+            statusList: [
+                1
+            ],
             page: 1,
             rows: 100,
-            productIds: []
-        };
+            orderBy: "list_time",
+            orderType: -1
+        }
         // body.collectionId = layer.layerId;
         helper.shuffle(UA);
         let var_break = false;
@@ -206,7 +223,7 @@ let stackProxy = {};
 
                 let data = new Date().getTime();
 
-                axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/product-list', body, { headers: header, httpsAgent: agent }).then(res => {
+                axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/mgs/product-list', body, { headers: header, httpsAgent: agent }).then(res => {
                     // console.log(res.status + ' ' + index + ' total= ' + res.data.data.total);
 
                     // console.log('Send proxyVar ' + proxyVar);

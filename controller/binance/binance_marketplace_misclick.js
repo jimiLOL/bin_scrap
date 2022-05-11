@@ -264,7 +264,7 @@ async function start(init_header) {
                     amountFrom: "",
                     amountTo: "",
                     categorys: [],
-                    currency: "",
+                    currency: "BUSD",
                     mediaType: [],
                     tradeType: [],
                     collectionId: "",

@@ -51,7 +51,7 @@ async function add_history_binance_db(ele, marketpalce) {
                     })
 
                 };
-                console.log(newDataArray);
+                // console.log(newDataArray);
 
 
                 if (ele.setStartTime > DateMax) {
@@ -90,7 +90,7 @@ async function add_history_binance_db(ele, marketpalce) {
 
                     // }
 
-                    let newData = { setStartTime: ele.setStartTime, amount: ele.amount, status: ele.status, userNickName: ele.owner.nickName, userId: ele.owner.userId, avatarUrl: ele.owner.avatarUrl, asset: ele.currency };
+                    let newData = { setStartTime: ele.setStartTime, amount: ele.amount, status: ele.status, userNickName: ele.owner?.nickName || ele.nftInfo.owner.nickName, userId: ele.owner?.userId || null, avatarUrl: ele.owner?.avatarUrl || ele.nftInfo.owner.avatarUrl, asset: ele.currency };
                     newDataArray.push(newData);
                     // { $push: { "achieve": {$each : [77,49,83 ]} } }
                     // { $addToSet: { history: elementHistory } }
@@ -165,6 +165,7 @@ async function add_history_binance_db(ele, marketpalce) {
                 }
             } else {
                 let newArrayRecords = [];
+                // console.log(ele);
 
                 if (Array.isArray(ele.records)) {
                     let recordsArray = ele.records.filter(x => x.eventType == 5);
@@ -178,7 +179,7 @@ async function add_history_binance_db(ele, marketpalce) {
 
 
                 };
-                newArrayRecords.push({ setStartTime: ele.setStartTime, amount: ele.amount, status: ele.status, userNickName: ele.owner.nickName, userId: ele.owner.userId, avatarUrl: ele.owner.avatarUrl, asset: ele.currency })
+                newArrayRecords.push({ setStartTime: ele.setStartTime, amount: ele.amount, status: ele.status, userNickName: ele.owner?.nickName || ele.nftInfo.owner.nickName, userId: ele.owner?.userId || null, avatarUrl: ele.owner?.avatarUrl || ele.nftInfo.owner.avatarUrl, asset: ele.currency })
 
                 const binNFT = new NFT({
                     _id: new mongoose.Types.ObjectId(),
