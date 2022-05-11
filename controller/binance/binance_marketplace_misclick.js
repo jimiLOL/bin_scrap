@@ -216,7 +216,7 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
         header = init_header.headers; // делаем header глобальным
 
 
-        if (2 == 2) {
+        if (helper.getRandomInt(1, 3) == 2) {
             arrayCollections = await getListCollectionName('binance');
 
             layerList = await getlayerList();
