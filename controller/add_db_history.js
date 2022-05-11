@@ -29,20 +29,28 @@ async function add_history_binance_db(ele, marketpalce) {
 
                 if (Array.isArray(ele.records)) {
                     call.history.forEach(oldHistory => {
-                        let newArray = ele.records.filter(x => x.amount != oldHistory.amount && x.eventType == 5);
-                        if (newArray.length != 0) {
-                            newArray.forEach(element => {
-                                let newData = { setStartTime: element.createTime, amount: element.amount, status: 4 };
-                                newDataArray.push(newData)
+                        if (!ele.records.some(x => x.amount == oldHistory.amount)) {
+                            let newArray = ele.records.filter(x => x.amount != oldHistory.amount && x.eventType == 5);
+                            if (newArray.length != 0) {
+                                newArray.forEach(element => {
+                                    if (!newDataArray.some(x => x.setStartTime == element.createTime)) {
+                                        let newData = { setStartTime: element.createTime, amount: element.amount, status: 4, userNickName: element.userNickName, asset: element.asset };
+                                        newDataArray.push(newData)
 
-                            });
+                                    }
 
+
+                                });
+
+
+                            }
 
                         }
 
+
                     })
 
-                } 
+                }
 
 
                 if (ele.setStartTime > DateMax) {
@@ -81,7 +89,7 @@ async function add_history_binance_db(ele, marketpalce) {
 
                     // }
 
-                    let newData = { setStartTime: ele.setStartTime, amount: ele.amount, status: ele.status };
+                    let newData = { setStartTime: ele.setStartTime, amount: ele.amount, status: ele.status, userNickName: ele.owner.nickName, userId: ele.owner.userId, avatarUrl: ele.owner.avatarUrl, asset: ele.currency };
                     newDataArray.push(newData);
                     // { $push: { "achieve": {$each : [77,49,83 ]} } }
                     // { $addToSet: { history: elementHistory } }
@@ -155,12 +163,28 @@ async function add_history_binance_db(ele, marketpalce) {
                     resolve()
                 }
             } else {
+                let newArrayRecords = [];
+
+                if (Array.isArray(ele.records)) {
+                    let recordsArray = ele.records.filter(x => x.eventType == 5);
+
+                    recordsArray.forEach(record => {
+                        let newData = { setStartTime: record.createTime, amount: record.amount, status: 4, userNickName: record.userNickName, asset: record.asset };
+                        newArrayRecords.push(newData)
+
+
+                    });
+
+
+                };
+                newArrayRecords.push({ setStartTime: ele.setStartTime, amount: ele.amount, status: ele.status, userNickName: ele.owner.nickName, userId: ele.owner.userId, avatarUrl: ele.owner.avatarUrl, asset: ele.currency })
+
                 const binNFT = new NFT({
                     _id: new mongoose.Types.ObjectId(),
                     marketpalce: marketpalce,
-                    history: [{ setStartTime: ele.setStartTime, amount: ele.amount, status: ele.status }],
+                    history: newArrayRecords,
                     productId: ele.productId,
-                    total: ele.total || 0
+                    total: ele.total || newArrayRecords.length
 
                 });
                 binNFT.save().then((callback) => {
