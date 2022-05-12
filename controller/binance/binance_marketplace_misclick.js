@@ -282,15 +282,16 @@ async function start(init_header) {
                 helper.shuffle(proxy);
 
                 let var_break = false;
-                mag_i++
 
 
 
 
                 (async () => {
                     let index = 0;
+                    mag_i++
+
                     for await (const proxyVar of arrayIterator(proxy)) {
-                console.log(`Init Global cycle ${mag_i} in ${layerList.length}`);
+                        console.log(`Init Global cycle ${mag_i} in ${layerList.length}`);
 
                         // // console.log(stackProxy);
 
