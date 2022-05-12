@@ -371,7 +371,7 @@ async function start(init_header) {
                             // console.log(Math.ceil(n));
                             // let newData = new Date().getTime();
                             // console.log(`Date cycle^ ${newData - data} ms`);
-                            if (Math.ceil(n) == index) {
+                            if (index >= Math.ceil(n)) {
                                 var_break = true
                             } // останавливаем итерацию
                             // console.log(`Global cycle ${i}`);
@@ -379,7 +379,7 @@ async function start(init_header) {
 
 
 
-                            return Math.ceil(n)
+                            // return Math.ceil(n)
                         }).catch(e => {
                             console.log('Error');
                             console.log(e);
