@@ -243,7 +243,6 @@ async function start(init_header) {
 
         if (Array.isArray(layerList) && layerList.length != 0) {
             layerList.forEach((layer, i) => {
-                console.log(`Init Global cycle ${i} in ${layerList.length}`);
                 // let body = {
                 //     currency: "BUSD",
                 //     mediaType: [],
@@ -288,6 +287,8 @@ async function start(init_header) {
                 (async () => {
                     let index = 0;
                     for await (const proxyVar of arrayIterator(proxy)) {
+                console.log(`Init Global cycle ${i} in ${layerList.length}`);
+
                         // // console.log(stackProxy);
 
                         // console.log('====================INIT parsing nft====================');
