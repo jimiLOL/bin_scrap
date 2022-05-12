@@ -288,9 +288,10 @@ async function start(init_header) {
 
                 (async () => {
                     let index = 0;
-                    mag_i++
 
                     for await (const proxyVar of arrayIterator(proxy)) {
+                    mag_i++
+
                         console.log(`Init Global cycle ${mag_i} in ${layerList.length}`);
 
                         // // console.log(stackProxy);
