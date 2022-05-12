@@ -240,6 +240,8 @@ async function start(init_header) {
 
         // header = getNewHeaders(headers);
 
+        let mag_i = 0;
+
 
         if (Array.isArray(layerList) && layerList.length != 0) {
             layerList.forEach((layer, i) => {
@@ -280,6 +282,7 @@ async function start(init_header) {
                 helper.shuffle(proxy);
 
                 let var_break = false;
+                mag_i++
 
 
 
@@ -287,14 +290,14 @@ async function start(init_header) {
                 (async () => {
                     let index = 0;
                     for await (const proxyVar of arrayIterator(proxy)) {
-                console.log(`Init Global cycle ${i} in ${layerList.length}`);
+                console.log(`Init Global cycle ${mag_i} in ${layerList.length}`);
 
                         // // console.log(stackProxy);
 
                         // console.log('====================INIT parsing nft====================');
                         index++
                         if (proxyVar == undefined || var_break) {
-                            if (i == layerList.length - 1) {
+                            if (mag_i == layerList.length - 1) {
                                 resolve({ status: 'ok', name_worker: 'binance_marketplace' })
                                 // init(init_header)
                             }
@@ -338,12 +341,12 @@ async function start(init_header) {
                                 await arrayIteration(res.data.data.rows, proxyVar).then(() => {
                                     stackProxy[proxyVar].status = 'off';
                                     // res = null;
-                                    if (i == layerList.length - 1) {
+                                    if (mag_i == layerList.length - 1) {
                                         resolve({ status: 'ok', name_worker: 'binance_marketplace' })
                                         // init(init_header)
                                     }
                                 }).catch(e => {
-                                    if (i == layerList.length - 1) {
+                                    if (mag_i == layerList.length - 1) {
                                         resolve({ status: 'ok', name_worker: 'binance_marketplace' })
                                         // init(init_header)
                                     }
@@ -357,7 +360,7 @@ async function start(init_header) {
                                 // res = null;
                                 proxy.push(proxyVar)
 
-                                if (i == layerList.length - 1) {
+                                if (mag_i == layerList.length - 1) {
                                     resolve({ status: 'ok', name_worker: 'binance_marketplace' })
                                     // init(init_header)
                                 }
@@ -397,7 +400,7 @@ async function start(init_header) {
                                 // // console.log(e);
                             }
                             // var_break = true;
-                            if (i == layerList.length - 1) {
+                            if (mag_i == layerList.length - 1) {
 
                                 reject({ status: 'error', name_worker: 'binance_marketplace' })
                             }
@@ -407,7 +410,7 @@ async function start(init_header) {
                         if (index == 100 || var_break) {
                             var_break = false;
 
-                            if (i == layerList.length - 1) {
+                            if (mag_i == layerList.length - 1) {
 
                                 reject({ status: 'error', name_worker: 'binance_marketplace' })
                             }
