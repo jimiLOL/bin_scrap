@@ -225,6 +225,16 @@ async function start(init_header) {
 
             layerList = await Promise.all([getlayerList()]);
             layerList = layerList[0]
+            for (let index = 0; index < 20; index++) {
+                layerList.forEach((ele, i) => {
+                    let filter = layerList.filter(x => x.layerId == ele.layerId);
+                    if (filter.length > 1) {
+                        layerList.splice(i, 1);
+                    }
+
+                });
+                
+            }
             console.log('layerList = ' + layerList.length);
 
 
@@ -247,7 +257,6 @@ async function start(init_header) {
 
 
         if (Array.isArray(layerList) && layerList.length != 0) {
-            console.log(layerList);
             layerList.forEach((layer, i) => {
                 // let body = {
                 //     currency: "BUSD",
@@ -294,13 +303,7 @@ async function start(init_header) {
                     let index = 0;
                     let n_break = 0;
                     for await (const proxyVar of arrayIterator(proxy)) {
-                        layerList.forEach((ele, i) => {
-                            let filter = layerList.filter(x => x.layerId == ele.layerId);
-                            if (filter.length > 1) {
-                                layerList.splice(i, 1);
-                            }
-
-                        });
+                       
                         console.log(`Init Global cycle ${i} in ${layerList.length}`);
 
                         // // console.log(stackProxy);
