@@ -85,7 +85,7 @@ async function start(init_header) {
             function recursion() {
                 return new Promise((resolve) => {
                     if (proxy.length != proxyLength && length > 0) {
-                        //    // console.log('leng != length ' + proxy.length, proxyLength);
+                           console.log('leng != length ' + proxy.length, proxyLength);
 
 
                         helper.timeout(2000).then(() => {
@@ -286,6 +286,7 @@ async function start(init_header) {
 
                 (async () => {
                     let index = 0;
+                    let n_break = 0;
                     for await (const proxyVar of arrayIterator(proxy)) {
                         console.log(`Init Global cycle ${i} in ${layerList.length}`);
 
@@ -328,7 +329,6 @@ async function start(init_header) {
                         // header['x-trace-id'] = t;
 
 
-                        let data = new Date().getTime();
                         await axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/mgs/product-list', body, { headers: header, httpsAgent: agent }).then(async res => {
                             console.log(res.status + ' ' + index + ' total= ' + res.data.data.total);
 
@@ -352,7 +352,8 @@ async function start(init_header) {
 
                             } else {
                                 stackProxy[proxyVar].status = 'off';
-                                var_break = true
+                                var_break = true;
+                                
 
                                 // res = null;
                                 proxy.push(proxyVar)
@@ -367,36 +368,25 @@ async function start(init_header) {
 
 
 
-                            let n = res.data.data.total / 100;
-                            // console.log(Math.ceil(n));
-                            // let newData = new Date().getTime();
-                            // console.log(`Date cycle^ ${newData - data} ms`);
-                            if (index >= Math.ceil(n)) {
+                            let n_break = res.data.data.total / 100;
+                            if (index+1 >= Math.ceil(n_break)) {
                                 var_break = true
                             } // останавливаем итерацию
-                            // console.log(`Global cycle ${i}`);
 
 
 
 
                             // return Math.ceil(n)
                         }).catch(e => {
+                            if (index+1 >= Math.ceil(n_break)) {
+                                var_break = true
+                            } // останавливаем итерацию
                             console.log('Error');
                             console.log(e);
-                            // console.log(`Global cycle ${i}`);
 
                             proxy.push(proxyVar)
-                            // console.log('Proxy lenght ' + proxy.length);
 
-
-                            if (e?.response?.statusText != undefined) {
-                                // console.log(e?.response?.statusText);
-
-
-                            } else {
-                                // // console.log(e);
-                            }
-                            // var_break = true;
+ 
                             if (i == layerList.length - 1) {
 
                                 reject({ status: 'error', name_worker: 'binance_marketplace' })
