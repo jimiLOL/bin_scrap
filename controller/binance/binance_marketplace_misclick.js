@@ -85,7 +85,7 @@ async function start(init_header) {
             function recursion() {
                 return new Promise((resolve) => {
                     if (proxy.length != proxyLength && length > 0) {
-                        //    console.log('leng != length ' + proxy.length, proxyLength);
+                           console.log('leng != length ' + proxy.length, proxyLength);
 
 
                         helper.timeout(2000).then(() => {
