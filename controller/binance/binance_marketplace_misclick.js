@@ -220,7 +220,7 @@ async function start(init_header) {
         header = init_header.headers; // делаем header глобальным
 
 
-        if (2 == 2) {
+        if (helper.getRandomInt(1,3) == 2) {
             arrayCollections = await getListCollectionName('binance');
 
             layerList = await Promise.all([getlayerList()]);
@@ -318,7 +318,7 @@ async function start(init_header) {
                         // console.log('====================INIT parsing nft====================');
                         index++
                         if (proxyVar == undefined || var_break) {
-                            if (i >= layerList.length - 1) {
+                            if (i >= layerList.length - 2) {
                                 resolve({ status: 'ok', name_worker: 'binance_marketplace' })
                                 // init(init_header)
                             }
@@ -362,12 +362,12 @@ async function start(init_header) {
                                     
                                     stackProxy[proxyVar].status = 'off';
                                     // res = null;
-                                    if (i >= layerList.length - 1) {
+                                    if (i >= layerList.length - 2) {
                                         resolve({ status: 'ok', name_worker: 'binance_marketplace' })
                                         // init(init_header)
                                     }
                                 }).catch(e => {
-                                    if (i >= layerList.length - 1) {
+                                    if (i >= layerList.length - 2) {
                                         resolve({ status: 'ok', name_worker: 'binance_marketplace' })
                                         // init(init_header)
                                     }
@@ -382,7 +382,7 @@ async function start(init_header) {
                                 // res = null;
                                 proxy.push(proxyVar)
 
-                                if (i >= layerList.length - 1) {
+                                if (i >= layerList.length - 2) {
                                     resolve({ status: 'ok', name_worker: 'binance_marketplace' })
                                     // init(init_header)
                                 }
@@ -411,7 +411,7 @@ async function start(init_header) {
                             proxy.push(proxyVar)
 
  
-                            if (i == layerList.length - 1) {
+                            if (i == layerList.length - 2) {
 
                                 reject({ status: 'error', name_worker: 'binance_marketplace' })
                             }
@@ -426,7 +426,7 @@ async function start(init_header) {
 
                             }
 
-                            if (i >= layerList.length - 1) {
+                            if (i >= layerList.length - 2) {
 
                                 reject({ status: 'error', name_worker: 'binance_marketplace' })
                             }
