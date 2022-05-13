@@ -202,7 +202,6 @@ async function start(init_header) {
         })
     }
     return new Promise(async (resolve, reject) => {
-        let i = 0;
         let layerList;
         emitter.on('infinity_recursion', (message) => {
             let magicVal = 0; // что бы не долбитть в емитор по 100 раз
@@ -246,7 +245,7 @@ async function start(init_header) {
 
 
         if (Array.isArray(layerList) && layerList.length != 0) {
-            layerList.forEach((layer) => {
+            layerList.forEach((layer, i) => {
                 // let body = {
                 //     currency: "BUSD",
                 //     mediaType: [],
@@ -292,7 +291,6 @@ async function start(init_header) {
                     let index = 0;
                     let n_break = 0;
                     for await (const proxyVar of arrayIterator(proxy)) {
-                        i++
                         layerList.forEach((ele, i) => {
                             let filter = layerList.filter(x => x.layerId == ele.layerId);
                             if (filter.length > 1) {
