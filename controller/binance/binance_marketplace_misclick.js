@@ -162,7 +162,6 @@ async function start(init_header) {
             arrayCollections.forEach(async (collection) => {
                 const NFT = await getAddressModel(collection, 'binance');
                 NFT.find({}, { productDetail: { collection: 1 } }, (err, call) => {
-                    i++
                     if (err) {
                         console.log(err);
                     };
@@ -188,7 +187,10 @@ async function start(init_header) {
                         // console.log(layerList.length);
 
                     };
+                    i++
+                    console.log(i);
                     if (i == arrayCollections.length - 1) {
+                        console.log('Fulfuit');
                         resolve(layerList)
                     }
                 });
@@ -222,7 +224,7 @@ async function start(init_header) {
         if (2 == 2) {
             arrayCollections = await getListCollectionName('binance');
 
-            layerList = await getlayerList();
+            layerList = await Promise.all([getlayerList()]);
             console.log('layerList = ' + layerList.length);
 
 
