@@ -303,6 +303,13 @@ async function start(init_header) {
                     let index = 0;
                     let n_break = 0;
                     for await (const proxyVar of arrayIterator(proxy)) {
+                        layerList.forEach((ele, i) => {
+                            let filter = layerList.filter(x => x.layerId == ele.layerId);
+                            if (filter.length > 1) {
+                                layerList.splice(i, 1);
+                            }
+        
+                        });
                        
                         console.log(`Init Global cycle ${i} in ${layerList.length}`);
 
