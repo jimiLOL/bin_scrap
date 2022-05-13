@@ -85,7 +85,7 @@ async function start(init_header) {
             function recursion() {
                 return new Promise((resolve) => {
                     if (proxy.length != proxyLength && length > 0) {
-                           console.log('leng != length ' + proxy.length, proxyLength);
+                        //    console.log('leng != length ' + proxy.length, proxyLength);
 
 
                         helper.timeout(2000).then(() => {
@@ -157,10 +157,12 @@ async function start(init_header) {
     function getlayerList() {
         return new Promise((resolve) => {
             let layerList = []
+            let i = 0;
 
-            arrayCollections.forEach(async (collection, i) => {
+            arrayCollections.forEach(async (collection) => {
                 const NFT = await getAddressModel(collection, 'binance');
                 NFT.find({}, { productDetail: { collection: 1 } }, (err, call) => {
+                    i++
                     if (err) {
                         console.log(err);
                     };
@@ -196,9 +198,11 @@ async function start(init_header) {
 
             });
 
+
         })
     }
     return new Promise(async (resolve, reject) => {
+        let i = 0;
         let layerList;
         emitter.on('infinity_recursion', (message) => {
             let magicVal = 0; // что бы не долбитть в емитор по 100 раз
@@ -216,7 +220,7 @@ async function start(init_header) {
         header = init_header.headers; // делаем header глобальным
 
 
-        if (helper.getRandomInt(1, 3) == 2) {
+        if (2 == 2) {
             arrayCollections = await getListCollectionName('binance');
 
             layerList = await getlayerList();
@@ -242,7 +246,7 @@ async function start(init_header) {
 
 
         if (Array.isArray(layerList) && layerList.length != 0) {
-            layerList.forEach((layer, i) => {
+            layerList.forEach((layer) => {
                 // let body = {
                 //     currency: "BUSD",
                 //     mediaType: [],
@@ -288,6 +292,14 @@ async function start(init_header) {
                     let index = 0;
                     let n_break = 0;
                     for await (const proxyVar of arrayIterator(proxy)) {
+                        i++
+                        layerList.forEach((ele, i) => {
+                            let filter = layerList.filter(x => x.layerId == ele.layerId);
+                            if (filter.length > 1) {
+                                layerList.splice(i, 1);
+                            }
+
+                        });
                         console.log(`Init Global cycle ${i} in ${layerList.length}`);
 
                         // // console.log(stackProxy);
@@ -336,6 +348,7 @@ async function start(init_header) {
                             if (res.data.data.rows != null) {
                                 stackProxy[proxyVar].status = 'work';
                                 await arrayIteration(res.data.data.rows, proxyVar).then(() => {
+                                    
                                     stackProxy[proxyVar].status = 'off';
                                     // res = null;
                                     if (i >= layerList.length - 1) {
@@ -396,6 +409,11 @@ async function start(init_header) {
 
                         if (index >= 100 || var_break) {
                             var_break = false;
+                            if (proxy.length < proxyLength) {
+                            proxy.push(proxyVar)
+
+
+                            }
 
                             if (i >= layerList.length - 1) {
 
@@ -403,7 +421,7 @@ async function start(init_header) {
                             }
 
 
-                            // console.log('break\nProxy length ' + proxy.length);
+                            console.log('break\nProxy length ' + proxy.length);
 
                             break
                         } // у нас в ответе максимум 100 сущностей отсюда и 101
