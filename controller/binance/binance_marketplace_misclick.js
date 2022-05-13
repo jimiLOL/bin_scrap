@@ -188,7 +188,6 @@ async function start(init_header) {
 
                     };
                     i++
-                    console.log(i);
                     if (i == arrayCollections.length - 1) {
                         console.log('Fulfuit');
                         resolve(layerList)
@@ -225,6 +224,7 @@ async function start(init_header) {
             arrayCollections = await getListCollectionName('binance');
 
             layerList = await Promise.all([getlayerList()]);
+            layerList = layerList[0]
             console.log('layerList = ' + layerList.length);
 
 
@@ -247,6 +247,7 @@ async function start(init_header) {
 
 
         if (Array.isArray(layerList) && layerList.length != 0) {
+            console.log(layerList);
             layerList.forEach((layer, i) => {
                 // let body = {
                 //     currency: "BUSD",
