@@ -129,13 +129,13 @@ async function start(init_header) {
 
 
                     } else if (length < 0) {
-                        console.log('=========================leng < 0=========================');
+                        // console.log('=========================leng < 0=========================');
                         stackProxy[val].integer = 0;
 
                         resolve({ done: true })
 
                     } else {
-                        console.log('=====!===!=========!===done: false====!=!=========!=======!==========');
+                        // console.log('=====!===!=========!===done: false====!=!=========!=======!==========');
                         stackProxy[val].integer = 0;
 
                         resolve({ value: val, done: false })
