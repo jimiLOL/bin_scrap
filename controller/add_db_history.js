@@ -100,7 +100,7 @@ async function add_history_binance_db(ele, marketpalce) {
                         const req = await NFT.findOneAndUpdate({ productId: ele.productId }, { $push: { "history": { $each: newDataArray } } }).then((callback) => {
                             if (callback) {
                                 console.log('Добавили данные в историю ' + ele.productId);
-                                process.exit(0)
+                                // process.exit(0)
                                 resolve()
 
                             } else {
