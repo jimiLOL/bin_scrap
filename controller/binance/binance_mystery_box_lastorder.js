@@ -263,12 +263,18 @@ async function start(init_header) {
 
                     arrayIteration(res.data.data.data, `${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`).then(() => {
                         stackProxy[`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`].status = 'off';
-                        res = null;
+                        // res = null;
 
                         // console.log('end');
                         // process.exit(0)
 
                         resolve(breakSwitch);
+
+                    }).catch(()=> {
+                        // stackProxy[`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`].status = 'off';
+
+                        resolve(breakSwitch);
+
 
                     });
 
@@ -285,7 +291,7 @@ async function start(init_header) {
             }).catch(e => {
                 // console.log('Error');
                 proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-                reject()
+                reject(breakSwitch)
 
 
             })

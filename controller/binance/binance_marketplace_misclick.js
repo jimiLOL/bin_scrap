@@ -375,7 +375,7 @@ async function start(init_header) {
                                 });
 
                             } else {
-                                stackProxy[proxyVar].status = 'off';
+                                // stackProxy[proxyVar].status = 'off';
                                 var_break = true;
                                 
 
