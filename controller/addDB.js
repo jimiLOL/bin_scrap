@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 const { getAddressModel } = require("../model/nft_detalii.cjs");
+const coverModelBinance = require("../model/nft_cover_binance.js");
+
 
 
 const ShemaNftPokemon = new Schema({
@@ -295,4 +297,54 @@ async function add_binance_db(ele, marketpalce) {
 
 
 }
-module.exports = { addDB, updatePriceDB, add_binance_db }  
+
+function addDBCoverBinance(ele) {
+  coverModelBinance.find({collectionId: ele.collectionId}).then(call => {
+    if (call) {
+      const newCoverModelBinance = new coverModelBinance({
+        collectionId: ele.collectionId,
+        floorPrice: ele.floorPrice,
+        dailyTradePrice: ele.dailyTradePrice,
+        lastTransaction: ele.lastTransaction,
+        totalAsset: ele.totalAsset
+        
+      });
+      coverModelBinance.findOneAndUpdate({collectionId: ele.collectionId}, newCoverModelBinance, (err, callback) => {
+        if (err) {
+          console.log('Ошибка обновления Cover');
+          console.log(err);
+        }
+        if (callback) {
+          console.log('Обновили Cover');
+        }
+      })
+     
+
+    } else {
+      const newCoverModelBinance = new coverModelBinance({
+        _id: new mongoose.Types.ObjectId(),
+        collectionId: ele.collectionId,
+        floorPrice: ele.floorPrice,
+        dailyTradePrice: ele.dailyTradePrice,
+        lastTransaction: ele.lastTransaction,
+        totalAsset: ele.totalAsset
+        
+      });
+      newCoverModelBinance.save((err, callback) => {
+        if (err) {
+          console.log('Ошибка сохранения Cover');
+          console.log(err);
+        }
+        if (callback) {
+          console.log(' Сохранили Cover');
+        }
+      })
+    }
+    
+  }).catch(e=> {
+    console.log('Ошибка поиска Cover Binance');
+    console.log(e);
+  })
+
+}
+module.exports = { addDB, updatePriceDB, add_binance_db, addDBCoverBinance }  

@@ -1,5 +1,5 @@
 const { default: axios } = require("axios");
-const { add_binance_db } = require('./../addDB');
+const { add_binance_db, addDBCoverBinance } = require('./../addDB');
 const { add_history_binance_db } = require('./../add_db_history');
 const helper = require('./../helper/helper');
 require("dotenv/config");
@@ -31,6 +31,33 @@ function getProductDetail(productBinance, agent, header) {
 
 
       }
+      // let reqCoverUrl = '';
+      // try {
+      //   if (res.data.data.hasOwnProperty('mysteryBoxProductDetailVo')) {
+      //     reqCoverUrl = `https://www.binance.com/bapi/nft/v1/public/nft/mystery-box-collection-page/collection-price?collectionId=${res.data.data.productDetail.collection.collectionId}`
+  
+      //   } else {
+      //     reqCoverUrl = `https://www.binance.com/bapi/nft/v1/public/nft/home-layer-price?collectionId=${res.data.data.productDetail.collection.collectionId}`
+  
+      //   }
+      //   let newHeader = header;
+      //   newHeader.referer = `https://www.binance.com/en/nft/collection/wonderfulday-tiger-nft-${res.data.data.productDetail.collection.collectionId}?orderBy=list_time&orderType=-1&isBack=1&id=${res.data.data.productDetail.collection.collectionId}&order=list_time%40-1`
+      //    axios.get(reqCoverUrl, { headers: newHeader, httpsAgent: agent, timeout: 15000 }).then(resCover=> {
+      //   resCover.data['collectionId'] = res.data.data.productDetail.collection.collectionId;
+      //   addDBCoverBinance(resCover.data)
+
+      // }).catch(e=> {
+      //   console.log(e);
+      // })
+
+      // } catch (e) {
+      //   // console.log(e);
+      // // console.log(res.data.data);
+
+      // }
+      
+
+     
 
       // console.log(res.data);
       t = helper.uuid();
