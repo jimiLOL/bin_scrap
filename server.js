@@ -100,22 +100,37 @@ function init_workers() {
       // worker[e].destroy()
       // console.log(worker[e].threads);
       // workers[e] = 0;
-        delete workers[e];
-        promiseWorker.push({
-          [e]: workers[e] = worker[e].run({ headers: headers }, { name: 'init', signal: ee }).then(res => {
-            console.log(res);
 
-            clearSteck(res)
+        // delete workers[e];
+        // promiseWorker.push({
+        //   [e]: workers[e] = worker[e].run({ headers: headers }, { name: 'init', signal: ee }).then(res => {
+        //     console.log(res);
 
-            return res
-          }).catch(e => {
-            console.log(e);
+        //     // clearSteck(res)
 
-            clearSteck(e)
+        //     return res
+        //   }).catch(e => {
+        //     console.log(e);
 
-            return e
+        //     // clearSteck(e)
 
-          })
+        //     return e
+
+        //   })
+        // })
+        worker[e].run({ headers: headers }, { name: 'init', signal: ee }).then(res => {
+          console.log(res);
+
+          // clearSteck(res)
+
+          return res
+        }).catch(e => {
+          console.log(e);
+
+          // clearSteck(e)
+
+          return e
+
         })
 
       } else {
@@ -131,13 +146,13 @@ function init_workers() {
           [e]: workers[e] = worker[e].run({ headers: headers }, { name: 'init', signal: ee }).then(res => {
             console.log(res);
 
-            clearSteck(res)
+            // clearSteck(res)
 
             return res
           }).catch(e => {
             console.log(e);
 
-            clearSteck(e)
+            // clearSteck(e)
 
             return e
 
