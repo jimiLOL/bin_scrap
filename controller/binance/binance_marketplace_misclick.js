@@ -304,6 +304,8 @@ async function start(init_header) {
                     let index = 0;
                     let n_break = 0;
                     for await (const proxyVar of arrayIterator(proxy)) {
+                        stackProxy[proxyVar].status = 'work';
+
                         layerList.forEach((ele, i) => {
                             let filter = layerList.filter(x => x.layerId == ele.layerId);
                             if (filter.length > 1) {
@@ -588,14 +590,16 @@ function init(init_header) {
         start(init_header).then((res) => {
             console.log('Worker 3');
 
-            console.log(res);
-            init(init_header)
+            resolve(res);
+            // init(init_header)
         }).catch(e => {
 
             console.log('Worker 3 error');
             console.log(e);
+            reject(res);
 
-            init(init_header)
+
+            // init(init_header)
         })
     })
 
