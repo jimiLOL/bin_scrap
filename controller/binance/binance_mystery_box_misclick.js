@@ -214,7 +214,7 @@ async function start(init_header) {
             // body.params.setStartTime = (function () { return new Date().getTime() })();
             // body.params.orderBy = random();
             let data = new Date().getTime();
-            axios.post('https://www.binance.com/bapi/nft/v1/public/nft/market-mystery/mystery-list', JSON.stringify(body), { headers: header, httpsAgent: agent }).then(res => {
+            axios.post('https://www.binance.com/bapi/nft/v1/public/nft/market-mystery/mystery-list', JSON.stringify(body), { headers: header, httpsAgent: agent }).then(async res => {
 
                 let num = Math.ceil(res.data.data.total / 100);
                 if (res.data.data.total == 0 || i >= num) {

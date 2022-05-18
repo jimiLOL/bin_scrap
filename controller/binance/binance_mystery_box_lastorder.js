@@ -239,7 +239,7 @@ async function start(init_header) {
             body.params.orderBy = 'list_time';
             let data = new Date().getTime();
 
-            axios.post('https://www.binance.com/bapi/nft/v1/public/nft/market-mystery/mystery-list', JSON.stringify(body), { headers: header, httpsAgent: agent }).then(res => {
+            axios.post('https://www.binance.com/bapi/nft/v1/public/nft/market-mystery/mystery-list', JSON.stringify(body), { headers: header, httpsAgent: agent }).then(async res => {
                 // console.log(res.status + ' ' + i + ' total^ ' + res.data.data.total);
                 // console.log(body);
 
