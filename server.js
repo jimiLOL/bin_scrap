@@ -188,11 +188,11 @@ function init_workers() {
     return await Promise.race(arrayPromise)
   }).then(res => {
     console.log('finally');
-    clearSteck(res)
+    // clearSteck(res)
     init_workers()
   }).catch(e => {
     console.log('Ошибка Worker');
-    clearSteck(e)
+    // clearSteck(e)
 
     init_workers()
   }) // Парсинг маркетплейса
