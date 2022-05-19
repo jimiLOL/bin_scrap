@@ -19,6 +19,7 @@
     "cron": "^1.8.2",
     "dotenv": "^10.0.0",
     "express": "4.16.3",
+    "heapdump": "^0.3.15",
     "html-pdf": "^3.0.1",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",

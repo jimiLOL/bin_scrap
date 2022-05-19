@@ -65,7 +65,13 @@ mongoose.connect(process.env.MONGODB_URI).catch((error) => console.log(error));
 const helper = require('./controller/helper/helper');
 
 
+app.get('/heapdump', (req, res) => {
+  heapdump.writeSnapshot(`heapDump-${Date.now()}.heapsnapshot`, (err, filename) => {
+    console.log("Heap dump of a bloated server written to", filename);
 
+    res.status(200).send({msg: "successfully took a heap dump"})
+  });
+});
 
 
 function init_workers() {
