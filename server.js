@@ -16,7 +16,8 @@ const moment = require("moment");
 const CronJob = require("cron").CronJob;
 const CronTime = require("cron").CronTime;
 const { default: axios } = require("axios");
-const util = require("util")
+const util = require("util");
+const heapdump = require("heapdump");
 
 const path = require('path');
 const Piscina = require('piscina');
