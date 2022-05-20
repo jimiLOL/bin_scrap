@@ -436,12 +436,12 @@ function init(init_header) {
     return new Promise((resolve, reject) => {
         start(init_header).then((res) => {
           console.log('Worker 1');
-            console.log(res);
+          resolve(res);
             init(init_header)
         }).catch(e => {
             console.log('Worker 1');
 
-            console.log(e);
+            resolve(e);
             init(init_header)
         })
     })
