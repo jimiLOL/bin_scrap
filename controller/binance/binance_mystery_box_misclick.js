@@ -163,7 +163,7 @@ async function start(init_header) {
 
                     await getInfoBinNFTMysteryBox(helper.proxyInit(proxyVar), i, body).then(res => {
                         breakSwitch = res;
-                        if (indexLayer == layerList.length - 3) {
+                        if (indexLayer >= layerList.length - 3) {
                             resolve({ status: 'ok', name_worker: 'binance_mystery' })
                         }
                     }).catch(e => {
@@ -171,12 +171,12 @@ async function start(init_header) {
                         if (typeof e == "boolean") {
                             breakSwitch = e
                         }
-                        if (indexLayer == layerList.length - 3) {
+                        if (indexLayer >= layerList.length - 3) {
                             reject({ status: 'error', name_worker: 'binance_mystery' })
                         }
                     });
                     if (breakSwitch) {
-                        if (indexLayer == layerList.length - 3) {
+                        if (indexLayer >= layerList.length - 3) {
                             reject({ status: 'error', name_worker: 'binance_mystery' })
                         }
                         break

@@ -367,7 +367,7 @@ async function start(init_header) {
 
                                     // stackProxy[proxyVar].status = 'off';
                                     // res = null;
-                                    if (i >= layerList.length - 95) {
+                                    if (i >= layerList.length - 2) {
                                         console.log('i >= layerList.length - 2 ' + i >= layerList.length - 2);
 
                                         resolve({ status: 'ok', name_worker: 'binance_marketplace' })
@@ -378,7 +378,7 @@ async function start(init_header) {
                                  
 
 
-                                    if (i >= layerList.length - 95) {
+                                    if (i >= layerList.length - 2) {
                                         console.log('i >= layerList.length - 2 ' + i >= layerList.length - 2);
 
                                         resolve({ status: 'ok', name_worker: 'binance_marketplace' })
@@ -395,7 +395,7 @@ async function start(init_header) {
                                 // res = null;
                                 proxy.push(proxyVar)
 
-                                if (i >= layerList.length - 95) {
+                                if (i >= layerList.length - 2) {
                                     console.log('i >= layerList.length - 2 ' + i >= layerList.length - 2);
 
                                     resolve({ status: 'ok', name_worker: 'binance_marketplace' })
