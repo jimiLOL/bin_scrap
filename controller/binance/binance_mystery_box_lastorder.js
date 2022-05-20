@@ -18,7 +18,7 @@ async function start(init_header) {
 
     const proxyLength = proxy.length;
 
-    const iteration = 3;
+    const iteration = 2;
 
 
 
