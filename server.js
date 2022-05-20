@@ -75,27 +75,32 @@ app.get('/heapdump', (req, res) => {
 });
 
 
+let worker = {};
+
+
+worker.binance_marketplace = new Piscina({
+  filename: path.resolve('./controller/binance', 'binance_marketplace_misclick.js'),
+  maxQueue: 1,
+  maxThreads: 1
+});
+// worker.binance_mystery = new Piscina({
+//   filename: path.resolve('./controller/binance', 'binance_mystery_box_misclick.js')
+// });
+worker.binance_mysteryLastOrder = new Piscina({
+  filename: path.resolve('./controller/binance', 'binance_mystery_box_lastorder.js'),
+  maxQueue: 1,
+  maxThreads: 1
+});
+// worker.binance_marketplace_lastorder = new Piscina({
+//   filename: path.resolve('./controller/binance', 'binance_marketplace_lastorder.js')
+// });
+
+
 function init_workers() {
   let workers = {};
-  let worker = {};
-  let promiseWorker = [];
+  const promiseWorker = [];
 
-  worker.binance_marketplace = new Piscina({
-    filename: path.resolve('./controller/binance', 'binance_marketplace_misclick.js'),
-    maxQueue: 1,
-    maxThreads: 1
-  });
-  // worker.binance_mystery = new Piscina({
-  //   filename: path.resolve('./controller/binance', 'binance_mystery_box_misclick.js')
-  // });
-  worker.binance_mysteryLastOrder = new Piscina({
-    filename: path.resolve('./controller/binance', 'binance_mystery_box_lastorder.js'),
-    maxQueue: 1,
-    maxThreads: 1
-  });
-  // worker.binance_marketplace_lastorder = new Piscina({
-  //   filename: path.resolve('./controller/binance', 'binance_marketplace_lastorder.js')
-  // });
+  
 
   
 
@@ -106,6 +111,8 @@ function init_workers() {
       if (util.inspect(workers[e]).includes("pending")) {
         console.log('Worker ' + [e] + ' is work..');
       } else if (workers.hasOwnProperty(e) && !util.inspect(workers[e]).includes("pending")) { 
+        console.log('Reload worker ' + [e]);
+
       // ee.emit('abort');
       // worker[e].destroy()
       console.log(worker[e].threads);
@@ -144,6 +151,8 @@ function init_workers() {
         })
 
       } else {
+        console.log('Start new worker ' + [e]);
+
       // ee.emit('abort');
 
 
