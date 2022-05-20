@@ -385,13 +385,13 @@ function init(init_header) {
     return new Promise((resolve, reject) => {
         start(init_header).then((res) => {
             console.log('Worker 2');
-            console.log(res);
+            resolve(res);
 
-            init(init_header)
+            // init(init_header)
         }).catch(e => {
             console.log('Worker 2');
-            console.log(e);
-            init(init_header)
+            reject(e);
+            // init(init_header)
         })
     })
 
