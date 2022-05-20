@@ -51,8 +51,8 @@ async function add_history_binance_db(ele, marketpalce) {
                     })
 
                 };
-                console.log(ele.setStartTime + ' > ' + DateMax + ' ? ');
-                console.log(ele.setStartTime > DateMax);
+                // console.log(ele.setStartTime + ' > ' + DateMax + ' ? ');
+                // console.log(ele.setStartTime > DateMax);
 
 
                 if (ele.setStartTime > DateMax) {
@@ -168,6 +168,7 @@ async function add_history_binance_db(ele, marketpalce) {
 
 
                 } else {
+
                     call = 0;
 
                     resolve()
