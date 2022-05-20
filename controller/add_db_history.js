@@ -217,7 +217,7 @@ async function add_history_binance_db(ele, marketpalce) {
                 binNFT.save().then((callback) => {
 
                     if (callback) {
-                        console.log('Сохранили данные истории ' + ele.productId);
+                        // console.log('Сохранили данные истории ' + ele.productId);
                         // console.log(binNFT);
                         // process.exit(0)
                         ele = null;
