@@ -51,7 +51,7 @@ async function add_history_binance_db(ele, marketpalce) {
                     })
 
                 };
-                // console.log(newDataArray);
+                console.log(ele.setStartTime + ' > ' + DateMax + ' ? ' + ele.setStartTime > DateMax);
 
 
                 if (ele.setStartTime > DateMax) {
@@ -101,9 +101,12 @@ async function add_history_binance_db(ele, marketpalce) {
                             if (callback) {
                                 console.log('Добавили данные в историю ' + ele.productId);
                                 // process.exit(0)
+                                call = 0;
+                                callback = 0;
                                 resolve()
 
                             } else {
+                                call = 0;
                                 resolve()
                             }
 
@@ -146,6 +149,9 @@ async function add_history_binance_db(ele, marketpalce) {
 
                         if (callback) {
                             console.log('Обновили данные в историю ' + ele.productId);
+                            call = 0;
+                            callback = 0;
+
                             resolve()
 
                         } else {
@@ -161,6 +167,8 @@ async function add_history_binance_db(ele, marketpalce) {
 
 
                 } else {
+                    call = 0;
+
                     resolve()
                 }
             } else {
@@ -195,8 +203,11 @@ async function add_history_binance_db(ele, marketpalce) {
                         // console.log('Сохранили данные истории ' + ele.productId);
                         // console.log(binNFT);
                         // process.exit(0)
+                        binNFT = 0;
                         resolve()
                     } else {
+                        binNFT = 0;
+
                         reject()
                     }
                 }).catch(e => {
