@@ -47,7 +47,7 @@ const jobss = new CronJob("0 */2 * * * *", async function () {
     console.log(e);
   });
 })
-jobss.start()
+// jobss.start()
 
 
 async function techbicaleventTelegram(index, error, functions) {

@@ -53,7 +53,7 @@ const ShemaNftPokemon = new Schema({
 
 
 
- 
+
 
 async function addDB(element, attributes, marketpalce, extraMetadata, collectionAddress) {
   return new Promise((resolve, reject) => {
@@ -212,7 +212,7 @@ async function add_binance_db(ele, marketpalce) {
       buyers: ele?.records || [],
       collection_nft: ele.productDetail.collection || ele.collection,
       collectionAddress: ele.nftInfo.contractAddress, // будет участвовать в навигации 
-      collectionName: ele.collection?.collectionName || null,  
+      collectionName: ele.collection?.collectionName || null,
       tokenId: ele.nftInfo.tokenId, // соответственно тоже участвует в навгации
       amount: ele.amount,
       isActive: ele.status == 1 ? true : false,
@@ -232,22 +232,25 @@ async function add_binance_db(ele, marketpalce) {
       nftInfo: ele.nftInfo,
       mysteryBoxProductDetailVo: ele.mysteryBoxProductDetailVo,
       productDetail: ele.productDetail,
-  
+
     })
-  
+
     NFT.findOneAndUpdate({ productId: ele.productId }, newNFT, (err, call) => {
       if (err) {
         console.log('Не удалось обновить данные ' + ele.productId + ' для биржи ' + marketpalce);
         console.log(err);
         call = 0;
+        ele = null;
+
         reject()
       };
       if (call) {
         call = 0;
+        ele = null;
 
         // console.log('Обновили данные ' + ele.productId + ' для биржи ' + marketpalce);
         resolve()
-  
+
       } else {
         const binNFT = new NFT({
           _id: new mongoose.Types.ObjectId(),
@@ -255,7 +258,7 @@ async function add_binance_db(ele, marketpalce) {
           buyers: ele?.records || [],
           collection_nft: ele.collection,
           collectionAddress: ele.nftInfo.contractAddress, // будет участвовать в навигации 
-          collectionName: ele.collection?.collectionName || null,  
+          collectionName: ele.collection?.collectionName || null,
           tokenId: ele.nftInfo.tokenId, // соответственно тоже участвует в навгации
           amount: ele.amount,
           isActive: ele.status == 1 ? true : false,
@@ -275,25 +278,31 @@ async function add_binance_db(ele, marketpalce) {
           nftInfo: ele.nftInfo,
           mysteryBoxProductDetailVo: ele.mysteryBoxProductDetailVo,
           productDetail: ele.productDetail,
-      
+
         });
         binNFT.save((err, callback) => {
           if (err) {
             console.log('Не удалось сохранить данные');
             console.log(err);
+            ele = null;
+
             reject()
             // process.exit(1)
           };
           if (callback) {
-            binNFT = 0;
             // console.log('Сохранили данные');
             // console.log(binNFT);
             // process.exit(0)
+            ele = null;
+
             resolve()
           } else {
+            ele = null;
+
             reject()
           }
-        })
+        });
+
       }
     })
   })
@@ -303,7 +312,7 @@ async function add_binance_db(ele, marketpalce) {
 }
 
 function addDBCoverBinance(ele) {
-  coverModelBinance.find({collectionId: ele.collectionId}).then(call => {
+  coverModelBinance.find({ collectionId: ele.collectionId }).then(call => {
     if (call) {
       const newCoverModelBinance = new coverModelBinance({
         collectionId: ele.collectionId,
@@ -311,9 +320,9 @@ function addDBCoverBinance(ele) {
         dailyTradePrice: ele.dailyTradePrice,
         lastTransaction: ele.lastTransaction,
         totalAsset: ele.totalAsset
-        
+
       });
-      coverModelBinance.findOneAndUpdate({collectionId: ele.collectionId}, newCoverModelBinance, (err, callback) => {
+      coverModelBinance.findOneAndUpdate({ collectionId: ele.collectionId }, newCoverModelBinance, (err, callback) => {
         if (err) {
           console.log('Ошибка обновления Cover');
           console.log(err);
@@ -322,7 +331,7 @@ function addDBCoverBinance(ele) {
           console.log('Обновили Cover');
         }
       })
-     
+
 
     } else {
       const newCoverModelBinance = new coverModelBinance({
@@ -332,7 +341,7 @@ function addDBCoverBinance(ele) {
         dailyTradePrice: ele.dailyTradePrice,
         lastTransaction: ele.lastTransaction,
         totalAsset: ele.totalAsset
-        
+
       });
       newCoverModelBinance.save((err, callback) => {
         if (err) {
@@ -344,8 +353,8 @@ function addDBCoverBinance(ele) {
         }
       })
     }
-    
-  }).catch(e=> {
+
+  }).catch(e => {
     console.log('Ошибка поиска Cover Binance');
     console.log(e);
   })
