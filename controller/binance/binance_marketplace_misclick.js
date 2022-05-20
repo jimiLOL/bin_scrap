@@ -455,6 +455,7 @@ async function start(init_header) {
 
 
                     }
+                    return
                 })()
 
 
