@@ -599,7 +599,7 @@ function init(init_header) {
         }).catch(e => {
 
             console.log('Worker 3 error');
-            console.log(e);
+            // console.log(e);
             reject(res);
 
 

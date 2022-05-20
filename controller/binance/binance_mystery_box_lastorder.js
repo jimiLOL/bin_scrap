@@ -443,7 +443,7 @@ function init(init_header) {
         }).catch(e => {
             console.log('Worker 1');
 
-            resolve(e);
+            reject(e);
             // init(init_header)
         })
     })
