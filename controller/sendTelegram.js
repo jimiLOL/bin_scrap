@@ -43,6 +43,8 @@ const jobss = new CronJob("0 */2 * * * *", async function () {
   .then((res) => {
     // console.log(res.data.binancecoin);
     price.priceBnb = res.data.binancecoin.usd;
+  }).catch(e=> {
+    console.log(e);
   });
 })
 jobss.start()
