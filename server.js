@@ -108,7 +108,7 @@ function init_workers() {
       } else if (workers.hasOwnProperty(e) && !util.inspect(workers[e]).includes("pending")) { 
       // ee.emit('abort');
       // worker[e].destroy()
-      // console.log(worker[e].threads);
+      console.log(worker[e].threads);
       // workers[e] = 0;
 
         // delete workers[e];
