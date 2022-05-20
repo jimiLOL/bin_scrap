@@ -239,9 +239,12 @@ async function add_binance_db(ele, marketpalce) {
       if (err) {
         console.log('Не удалось обновить данные ' + ele.productId + ' для биржи ' + marketpalce);
         console.log(err);
+        call = 0;
         reject()
       };
       if (call) {
+        call = 0;
+
         // console.log('Обновили данные ' + ele.productId + ' для биржи ' + marketpalce);
         resolve()
   
@@ -282,6 +285,7 @@ async function add_binance_db(ele, marketpalce) {
             // process.exit(1)
           };
           if (callback) {
+            binNFT = 0;
             // console.log('Сохранили данные');
             // console.log(binNFT);
             // process.exit(0)
