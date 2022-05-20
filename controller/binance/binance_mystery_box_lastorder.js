@@ -263,6 +263,8 @@ async function start(init_header) {
 
                     await arrayIteration(res.data.data.data, `${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`).then(() => {
                         stackProxy[`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`].status = 'off';
+                        res.data.data.rows = null;
+
                         // res = null;
 
                         // console.log('end');
