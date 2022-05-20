@@ -364,7 +364,7 @@ async function start(init_header) {
                                 await arrayIteration(res.data.data.rows, proxyVar).then(() => {
                                     console.log('arrayIteration successfully end');
 
-                                    stackProxy[proxyVar].status = 'off';
+                                    // stackProxy[proxyVar].status = 'off';
                                     // res = null;
                                     if (i >= layerList.length - 2) {
                                         console.log('i >= layerList.length - 2 ' + i >= layerList.length - 2);
