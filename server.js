@@ -70,12 +70,16 @@ app.get('/heapdump', (req, res) => {
   heapdump.writeSnapshot(`heapDump-${Date.now()}.heapsnapshot`, (err, filename) => {
     console.log("Heap dump of a bloated server written to", filename);
 
-    res.status(200).send({msg: "successfully took a heap dump"})
+    res.status(200).send({ msg: "successfully took a heap dump" })
   });
 });
 
 
 let worker = {};
+let workers = {};
+const promiseWorker = [];
+
+
 
 
 worker.binance_marketplace = new Piscina({
@@ -97,85 +101,71 @@ worker.binance_mysteryLastOrder = new Piscina({
 
 
 function init_workers() {
-  let workers = {};
-  const promiseWorker = [];
 
-  
 
-  
+
+
 
   getHeaders().then(async (headers) => {
     const ee = new EventEmitter();
-    console.log(promiseWorker);
     Object.keys(worker).forEach(e => {
       if (util.inspect(workers[e]).includes("pending")) {
         console.log('Worker ' + [e] + ' is work..');
-      } else if (workers.hasOwnProperty(e) && !util.inspect(workers[e]).includes("pending")) { 
+      } else if (workers.hasOwnProperty(e) && !util.inspect(workers[e]).includes("pending")) {
         console.log('Reload worker ' + [e]);
 
-      // ee.emit('abort');
-      // worker[e].destroy()
-      console.log(worker[e].threads);
-      // workers[e] = 0;
-
-        // delete workers[e];
-        // promiseWorker.push({
-        //   [e]: workers[e] = worker[e].run({ headers: headers }, { name: 'init', signal: ee }).then(res => {
-        //     console.log(res);
-
-        //     // clearSteck(res)
-
-        //     return res
-        //   }).catch(e => {
-        //     console.log(e);
-
-        //     // clearSteck(e)
-
-        //     return e
-
-        //   })
-        // })
-        worker[e].run({ headers: headers }, { name: 'init', signal: ee }).then(res => {
-          console.log(res);
-
-          // clearSteck(res)
-
-          return res
-        }).catch(e => {
-          console.log(e);
-
-          // clearSteck(e)
-
-          return e
-
-        })
-
-      } else {
-        console.log('Start new worker ' + [e]);
-
-      // ee.emit('abort');
-
-
-        
+        // ee.emit('abort');
+        // worker[e].destroy()
         // console.log(worker[e].threads);
-        // console.log(worker[e].destroy());
+        // workers[e] = 0;
 
-
+        delete workers[e];
         promiseWorker.push({
           [e]: workers[e] = worker[e].run({ headers: headers }, { name: 'init', signal: ee }).then(res => {
             console.log(res);
 
-            // clearSteck(res)
+            clearSteck(res)
 
             return res
           }).catch(e => {
             console.log(e);
 
-            // clearSteck(e)
+            clearSteck(e)
 
             return e
 
           })
+        })
+       
+
+      } else {
+        console.log('Start new worker ' + [e]);
+
+        // ee.emit('abort');
+
+
+
+        // console.log(worker[e].threads);
+        // console.log(worker[e].destroy());
+        workers[e] = worker[e].run({ headers: headers }, { name: 'init', signal: ee }).then(res => {
+          console.log(res);
+
+          clearSteck(res)
+
+          return res
+        }).catch(e => {
+          console.log(e);
+
+          clearSteck(e)
+
+          return e
+
+        })
+   
+
+
+        promiseWorker.push({
+          [e]: workers[e]
         })
       }
 
@@ -184,7 +174,7 @@ function init_workers() {
     // console.log('======================================drain==================================');
 
     //   // worker.binance_marketplace_lastorder.runTime()
-  
+
     // });
     // setTimeout(() => {
     //   console.log('=========runTime=========');
@@ -193,25 +183,26 @@ function init_workers() {
     //   console.log(promiseWorker[0]);
     //   promiseWorker.forEach(element => {
     //   ee.emit('abort');
-        
+
     //   });
     //   // promiseWorker[0].binance_mystery.destroy()
-      
+
     // }, 10000);
     let arrayPromise = [];
     promiseWorker.forEach(promise => {
       arrayPromise.push(Object.values(promise))
     });
     arrayPromise = arrayPromise.flat();
+    console.log('arrayPromise');
     console.log(arrayPromise);
     return await Promise.race(arrayPromise)
   }).then(res => {
     console.log('finally');
-    // clearSteck(res)
+    clearSteck(res)
     init_workers()
   }).catch(e => {
     console.log('Ошибка Worker');
-    // clearSteck(e)
+    clearSteck(e)
 
     init_workers()
   }) // Парсинг маркетплейса
@@ -229,7 +220,7 @@ function init_workers() {
 }
 init_workers()
 
- 
+
 
 
 

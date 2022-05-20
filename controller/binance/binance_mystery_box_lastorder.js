@@ -439,12 +439,12 @@ function init(init_header) {
         start(init_header).then((res) => {
           console.log('Worker 1');
           resolve(res);
-            init(init_header)
+            // init(init_header)
         }).catch(e => {
             console.log('Worker 1');
 
             resolve(e);
-            init(init_header)
+            // init(init_header)
         })
     })
 
