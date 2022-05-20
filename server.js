@@ -112,6 +112,15 @@ function init_workers() {
 
   getHeaders().then(async (headers) => {
     const ee = new EventEmitter();
+
+    Object.keys(worker).forEach(e => {
+      if (util.inspect(workers[e]).includes("Error")) {
+        console.log('Deleting problem worker');
+        delete workers[e];
+
+
+      }
+    })
     Object.keys(worker).forEach(e => {
       if (util.inspect(workers[e]).includes("pending")) {
         console.log('Worker ' + [e] + ' is work..');
@@ -213,18 +222,33 @@ function init_workers() {
 
   function clearSteck(res) {
     console.log(res);
-    let index = promiseWorker.findIndex(x => Object.keys(x) == res.name_worker)
+    let index = promiseWorker.findIndex(x => Object.keys(x) == res.name_worker);
 
     if (index != -1) {
       promiseWorker.splice(index, 1)
     }
+    index = promiseWorker.findIndex(x => util.inspect(x).includes("Error"));
+    if (index != -1) {
+      promiseWorker.splice(index, 1)
+    };
     console.log(promiseWorker);
+
+
 
   }
 }
 init_workers()
 
+const destroyWorker = new CronJob("00 00 00 * * *", async function () {
+  console.log('Init destroyWorker');
+  Object.keys(worker).forEach(e => {
+    // console.log(e);
+    worker[e].destroy()
+  });
+  init_workers()
 
+});
+destroyWorker.start();
 
 
 
