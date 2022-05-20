@@ -51,7 +51,8 @@ async function add_history_binance_db(ele, marketpalce) {
                     })
 
                 };
-                console.log(ele.setStartTime + ' > ' + DateMax + ' ? ' + ele.setStartTime > DateMax);
+                console.log(ele.setStartTime + ' > ' + DateMax + ' ? ');
+                console.log(ele.setStartTime > DateMax);
 
 
                 if (ele.setStartTime > DateMax) {
@@ -200,7 +201,7 @@ async function add_history_binance_db(ele, marketpalce) {
                 binNFT.save().then((callback) => {
 
                     if (callback) {
-                        // console.log('Сохранили данные истории ' + ele.productId);
+                        console.log('Сохранили данные истории ' + ele.productId);
                         // console.log(binNFT);
                         // process.exit(0)
                         binNFT = 0;
