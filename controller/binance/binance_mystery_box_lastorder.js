@@ -175,22 +175,22 @@ async function start(init_header) {
 
                 await getInfoBinNFTMysteryBox(helper.proxyInit(proxyVar), indexLayer, body).then(res => {
                     breakSwitch = res;
-                    if (indexLayer == iteration - 1) {
+                    if (indexLayer >= iteration - 1) {
                         resolve({ status: 'ok', name_worker: 'binance_mysteryLastOrder' })
                     }
                 }).catch(e => {
 
-                    if (indexLayer == iteration - 1) {
+                    if (indexLayer >= iteration - 1) {
                         reject({ status: 'error', name_worker: 'binance_mysteryLastOrder' })
                     }
                     // process.exit(1)
                 });
                 if (breakSwitch) {
-                    if (indexLayer == iteration - 1) {
+                    if (indexLayer >= iteration - 1) {
                         reject({ status: 'error', name_worker: 'binance_mysteryLastOrder' })
                     }
                     
-                    break
+                    // break не прирываем цикл
                 }
 
 
@@ -237,7 +237,7 @@ async function start(init_header) {
             body.page = i; // смена страницы  
             body.params.setStartTime = new Date().getTime();
             body.params.orderBy = 'list_time';
-            let data = new Date().getTime();
+            // let data = new Date().getTime();
 
             axios.post('https://www.binance.com/bapi/nft/v1/public/nft/market-mystery/mystery-list', JSON.stringify(body), { headers: header, httpsAgent: agent }).then(async res => {
                 // console.log(res.status + ' ' + i + ' total^ ' + res.data.data.total);
@@ -281,7 +281,7 @@ async function start(init_header) {
                     });
 
 
-                    let newData = new Date().getTime();
+                    // let newData = new Date().getTime();
                     // console.log(`Date cycle^ ${newData - data} ms`);
 
                 }
