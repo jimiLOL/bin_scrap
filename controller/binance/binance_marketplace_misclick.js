@@ -450,7 +450,7 @@ async function start(init_header) {
                             console.log('break\nProxy length ' + proxy.length);
 
                             break
-                        } // у нас в ответе максимум 100 сущностей отсюда и 101
+                        } // у нас в ответе максимум 100  
 
 
 
@@ -600,7 +600,7 @@ function init(init_header) {
 
             console.log('Worker 3 error');
             // console.log(e);
-            reject(res);
+            reject(e);
 
 
             // init(init_header)
