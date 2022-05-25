@@ -3,7 +3,8 @@
 
 'use strict';
 
-
+const Emitter = require("events");
+const emitter = new Emitter();
 
 
 async function start(init_header) {
@@ -13,8 +14,7 @@ const { getProductDetail } = require('./get_productDetali');
 const { proxy } = require("../../proxy_list_four");
 const { UA } = require("../../ua");
 const helper = require('./../helper/helper');
-const Emitter = require("events");
-const emitter = new Emitter();
+
 const proxyLength = proxy.length;
 // const {arrayIterator, setConstant} = require('./arrayiterator.js') // надо перенести итератор в отдельный модуль
 const util = require("util");
@@ -427,10 +427,14 @@ function init(init_header) {
     return new Promise((resolve, reject) => {
         start(init_header).then((res) => {
             console.log('Worker 4');
+            emitter.removeListener('infinity_recursion', {});
+
             resolve(res);
             // init(init_header)
         }).catch(e => {
             console.log('Worker 4');
+            emitter.removeListener('infinity_recursion', {});
+
             reject(e);
             // init(init_header)
         })

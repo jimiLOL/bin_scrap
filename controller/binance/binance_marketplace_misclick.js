@@ -1,7 +1,8 @@
 // модуль парсинга маркет плейса
 'use strict';
 
-
+const Emitter = require("events");
+const emitter = new Emitter();
 
 // function delDublicateProxy() {
 //     proxy.forEach((ele, i) => {
@@ -23,8 +24,7 @@ const { getProductDetail } = require('./get_productDetali');
 const { proxy } = require("../../proxy_list_tree");
 const { UA } = require("../../ua");
 const helper = require('./../helper/helper');
-const Emitter = require("events");
-const emitter = new Emitter();
+
 const proxyLength = proxy.length;
 // const {arrayIterator, setConstant} = require('./arrayiterator.js') // надо перенести итератор в отдельный модуль
 
@@ -593,10 +593,13 @@ function init(init_header) {
     return new Promise((resolve, reject) => {
         start(init_header).then((res) => {
             console.log('Worker 3');
+            emitter.removeListener('infinity_recursion', {});
 
             resolve(res);
             // init(init_header)
         }).catch(e => {
+            emitter.removeListener('infinity_recursion', {});
+
 
             console.log('Worker 3 error');
             // console.log(e);

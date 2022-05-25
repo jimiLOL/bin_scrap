@@ -1,6 +1,7 @@
 // Получаем данные из фильтра бинанса, отстование api 1-2 минуты - не подходит для мисклика, но может подходить для парсинга.
 'use strict';
-
+const Emitter = require("events");
+const emitter = new Emitter();
 //header - мы прокидываем при инциализации потока
 async function start(init_header) {
     const { default: axios } = require("axios");
@@ -12,8 +13,7 @@ async function start(init_header) {
     const helper = require('./../helper/helper');
     const { getNaemListNFT } = require("./getNftStat");
     const { arrayNFTCollectionName } = require("./nftArrayData");
-    const Emitter = require("events");
-    const emitter = new Emitter();
+  
     const { getProductDetail } = require('./get_productDetali');
 
     const proxyLength = proxy.length;
@@ -438,10 +438,14 @@ function init(init_header) {
     return new Promise((resolve, reject) => {
         start(init_header).then((res) => {
           console.log('Worker 1');
+          emitter.removeListener('infinity_recursion', {});
+
           resolve(res);
             // init(init_header)
         }).catch(e => {
             console.log('Worker 1');
+            emitter.removeListener('infinity_recursion', {});
+
 
             reject(e);
             // init(init_header)
