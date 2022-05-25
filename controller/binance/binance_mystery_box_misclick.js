@@ -352,7 +352,8 @@ async function start(init_header) {
 
 
                         await Promise.allSettled(arrayPromise).then(() => {
-                            console.log('Worker 2 -- Promisee array Fulfil = ' + arrayPromise.length);
+                            let newDate = new Date();
+                            console.log(newDate + ' Worker 2 -- Promisee array Fulfil = ' + arrayPromise.length);
 
 
 

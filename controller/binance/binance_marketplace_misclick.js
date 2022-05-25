@@ -559,7 +559,8 @@ function arrayIteration(array, proxySet) {
                     }, 5000);
                     proxy.push(cloneProxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
                     await Promise.allSettled(arrayPromise).then(() => {
-                        console.log('Worker 3 -- Promisee array Fulfil = ' + arrayPromise.length);
+                        let newDate = new Date();
+                        console.log(newDate + ' Worker 3 -- Promisee array Fulfil = ' + arrayPromise.length);
 
                         resolve()
                     }).catch(() => {
