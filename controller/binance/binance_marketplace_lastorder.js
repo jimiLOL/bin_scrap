@@ -429,13 +429,13 @@ function init(init_header) {
     return new Promise((resolve, reject) => {
         start(init_header).then((res) => {
             console.log('Worker 4');
-            emitter.removeListener('infinity_recursion', {});
+            emitter.removeAllListeners('infinity_recursion');
 
             resolve(res);
             // init(init_header)
         }).catch(e => {
             console.log('Worker 4');
-            emitter.removeListener('infinity_recursion', {});
+            emitter.removeAllListeners('infinity_recursion');
 
             reject(e);
             // init(init_header)
