@@ -5,6 +5,7 @@
 
 const Emitter = require("events");
 const emitter = new Emitter();
+let emitFunction;
 
 
 async function start(init_header) {
@@ -134,7 +135,7 @@ let stackProxy = {};
         })
     }
     return new Promise(async (resolve, reject) => {
-        emitter.on('infinity_recursion', (message) => {
+        emitFunction = emitter.on('infinity_recursion', (message) => {
             let magicVal = 0; // что бы не долбитть в емитор по 100 раз
             if (message.status && magicVal < 2) {
                 reject({ status: 'error', name_worker: 'binance_marketplace_lastorder', integer: message.integer })
