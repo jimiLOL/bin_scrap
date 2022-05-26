@@ -321,6 +321,8 @@ async function start(init_header) {
                         // console.log('====================INIT parsing nft====================');
                         index++
                         if (proxyVar == undefined || var_break) {
+                            stackProxy[proxyVar].status = 'work';
+
                             if (i >= layerList.length - 2) {
                                 resolve({ status: 'ok', name_worker: 'binance_marketplace' })
                                 // init(init_header)
@@ -436,7 +438,9 @@ async function start(init_header) {
                         if (index >= 100 || var_break) {
                             var_break = false;
                             if (proxy.length < proxyLength) {
-                                proxy.push(proxyVar)
+                                proxy.push(proxyVar);
+                                stackProxy[proxyVar].status = 'work';
+
 
 
                             }
