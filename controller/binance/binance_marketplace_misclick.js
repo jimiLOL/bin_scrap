@@ -3,6 +3,7 @@
 
 const Emitter = require("events");
 const emitter = new Emitter();
+let emitFunction;
 
 // function delDublicateProxy() {
 //     proxy.forEach((ele, i) => {
@@ -205,7 +206,7 @@ async function start(init_header) {
 
     return new Promise(async (resolve, reject) => {
         let layerList;
-        emitter.on('infinity_recursion', (message) => {
+        emitFunction = emitter.on('infinity_recursion', (message) => {
             let magicVal = 0; // что бы не долбитть в емитор по 100 раз
             if (message.status && magicVal < 2) {
                 magicVal++
@@ -598,12 +599,12 @@ function init(init_header) {
     return new Promise((resolve, reject) => {
         start(init_header).then((res) => {
             console.log('Worker 3');
-            emitter.removeListener('infinity_recursion', {});
+            emitter.removeListener('infinity_recursion', emitFunction);
 
             resolve(res);
             // init(init_header)
         }).catch(e => {
-            emitter.removeListener('infinity_recursion', {});
+            emitter.removeListener('infinity_recursion', emitFunction);
 
 
             console.log('Worker 3 error');
