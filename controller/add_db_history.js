@@ -211,6 +211,7 @@ async function add_history_binance_db(ele, marketpalce) {
                     marketpalce: marketpalce,
                     history: newArrayRecords,
                     productId: ele.productId,
+                    title: ele.title,
                     total: ele.total || newArrayRecords.length
 
                 });
