@@ -34,7 +34,7 @@ async function add_history_binance_db(ele, marketpalce) {
                             if (newArray.length != 0) {
                                 newArray.forEach(element => {
                                     if (!newDataArray.some(x => x.setStartTime == element.createTime)) {
-                                        let newData = { setStartTime: element.createTime, amount: element.amount, status: 4, userNickName: element.userNickName, asset: element.asset };
+                                        let newData = { setStartTime: element.createTime, amount: element.amount, status: 4, userNickName: element.userNickName, asset: element.asset, title: ele.title };
                                         newDataArray.push(newData)
 
                                     }
@@ -91,7 +91,7 @@ async function add_history_binance_db(ele, marketpalce) {
 
                     // }
 
-                    let newData = { setStartTime: ele.setStartTime, amount: ele.amount, status: ele.status, userNickName: ele.owner?.nickName || ele.nftInfo.owner.nickName, userId: ele.owner?.userId || null, avatarUrl: ele.owner?.avatarUrl || ele.nftInfo.owner.avatarUrl, asset: ele.currency };
+                    let newData = { setStartTime: ele.setStartTime, amount: ele.amount, status: ele.status, userNickName: ele.owner?.nickName || ele.nftInfo.owner.nickName, userId: ele.owner?.userId || null, avatarUrl: ele.owner?.avatarUrl || ele.nftInfo.owner.avatarUrl, asset: ele.currency, title: ele.title };
                     newDataArray.push(newData);
                     // { $push: { "achieve": {$each : [77,49,83 ]} } }
                     // { $addToSet: { history: elementHistory } }
@@ -196,7 +196,7 @@ async function add_history_binance_db(ele, marketpalce) {
                     let recordsArray = ele.records.filter(x => x.eventType == 5);
 
                     recordsArray.forEach(record => {
-                        let newData = { setStartTime: record.createTime, amount: record.amount, status: 4, userNickName: record.userNickName, asset: record.asset };
+                        let newData = { setStartTime: record.createTime, amount: record.amount, status: 4, userNickName: record.userNickName, asset: record.asset, title: ele.title };
                         newArrayRecords.push(newData)
 
 
@@ -204,7 +204,7 @@ async function add_history_binance_db(ele, marketpalce) {
 
 
                 };
-                newArrayRecords.push({ setStartTime: ele.setStartTime, amount: ele.amount, status: ele.status, userNickName: ele.owner?.nickName || ele.nftInfo.owner.nickName, userId: ele.owner?.userId || null, avatarUrl: ele.owner?.avatarUrl || ele.nftInfo.owner.avatarUrl, asset: ele.currency })
+                newArrayRecords.push({ setStartTime: ele.setStartTime, amount: ele.amount, status: ele.status, userNickName: ele.owner?.nickName || ele.nftInfo.owner.nickName, userId: ele.owner?.userId || null, avatarUrl: ele.owner?.avatarUrl || ele.nftInfo.owner.avatarUrl, asset: ele.currency, title: ele.title })
 
                 const binNFT = new NFT({
                     _id: new mongoose.Types.ObjectId(),
