@@ -225,7 +225,7 @@ async function start(init_header) {
             arrayCollections = await getListCollectionName('binance');
 
             layerList = await Promise.all([getlayerList()]);
-            layerList = layerList[0]
+            layerList = layerList[0];
             for (let index = 0; index < 20; index++) {
                 layerList.forEach((ele, i) => {
                     let filter = layerList.filter(x => x.layerId == ele.layerId);
@@ -241,7 +241,21 @@ async function start(init_header) {
 
 
         } else {
-            layerList = await axios.get('https://www.binance.com/bapi/nft/v1/public/nft/layer-search?keyword=', { headers: header }).then(res => {
+            const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = helper.proxyInit(proxy[helper.getRandomInt(1, proxy.length - 1)]);
+
+            let proxyOptions = {
+                host: proxyHost,
+                port: portHost,
+                proxyAuth: proxyAuth,
+                headers: {
+                    'User-Agent': UA[helper.getRandomInt(1, UA.length - 1)]
+                },
+            };
+            let agent = tunnel.httpsOverHttp({
+                proxy: proxyOptions,
+                rejectUnauthorized: false,
+            });
+            layerList = await axios.get('https://www.binance.com/bapi/nft/v1/public/nft/layer-search?keyword=', { headers: header, httpsAgent: agent}).then(res => {
                 return res.data.data
             }).catch(e => {
                 console.log(e);
