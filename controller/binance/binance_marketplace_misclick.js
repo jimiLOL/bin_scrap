@@ -287,7 +287,7 @@ async function start(init_header) {
                         1
                     ],
                     page: 1,
-                    rows: 100,
+                    rows: 16,
                     // orderBy: "list_time",
                     orderType: -1
                 }
@@ -314,7 +314,7 @@ async function start(init_header) {
 
                         });
 
-                        console.log(`Init Global cycle ${i} in ${layerList.length}`);
+                        console.log(`Worker 3 - Init Global cycle ${i} in ${layerList.length}`);
 
                         // // console.log(stackProxy);
 
@@ -356,13 +356,15 @@ async function start(init_header) {
                         // header['x-ui-request-trace'] = t;
                         // header['x-trace-id'] = t;
 
+                        let n_break = 100; // дефолтное значения прерывателя
+
 
                         await axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/mgs/product-list', body, { headers: header, httpsAgent: agent }).then(async res => {
-                            console.log(res.data);
+                            // console.log(res.data);
                             console.log(res.status + ' ' + index + ' total= ' + res.data.data.total);
 
                             // console.log('Send proxyVar ' + proxyVar);
-                            if (res.data.data.rows != null) {
+                            if (res.data.data?.rows) {
                                 stackProxy[proxyVar].status = 'work';
                                 await arrayIteration(res.data.data.rows, proxyVar).then(() => {
                                     console.log('arrayIteration successfully end');
@@ -410,7 +412,7 @@ async function start(init_header) {
 
 
 
-                            let n_break = res.data.data.total / 100;
+                            n_break = res.data.data.total / 16;
                             if (index + 1 >= Math.ceil(n_break)) {
                                 var_break = true
                             } // останавливаем итерацию
@@ -420,6 +422,7 @@ async function start(init_header) {
 
                             // return Math.ceil(n)
                         }).catch(e => {
+
                             if (index + 1 >= Math.ceil(n_break)) {
                                 var_break = true
                             } // останавливаем итерацию
@@ -436,7 +439,7 @@ async function start(init_header) {
                         })
 
 
-                        if (index >= 100 || var_break) {
+                        if (index >= n_break || var_break) {
                             var_break = false;
                             if (proxy.length < proxyLength) {
                                 proxy.push(proxyVar);

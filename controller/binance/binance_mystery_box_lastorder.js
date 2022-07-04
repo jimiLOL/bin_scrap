@@ -3,121 +3,109 @@
 const Emitter = require("events");
 const emitter = new Emitter();
 //header - мы прокидываем при инциализации потока
-async function start(init_header) {
-    const { default: axios } = require("axios");
-    const tunnel = require("tunnel");
-    const { proxy } = require("../../proxy_list_two");
-    const { UA } = require("../../ua");
-    const util = require("util");
+const { default: axios } = require("axios");
+const tunnel = require("tunnel");
+const { proxy } = require("../../proxy_list_two");
+const { UA } = require("../../ua");
+const util = require("util");
 
-    const helper = require('./../helper/helper');
-    const { getNaemListNFT } = require("./getNftStat");
-    const { arrayNFTCollectionName } = require("./nftArrayData");
-  
-    const { getProductDetail } = require('./get_productDetali');
+const helper = require('./../helper/helper');
+const { getNaemListNFT } = require("./getNftStat");
+const { arrayNFTCollectionName } = require("./nftArrayData");
 
-    const proxyLength = proxy.length;
+const { getProductDetail } = require('./get_productDetali');
 
-    const iteration = 4;
+const proxyLength = proxy.length;
 
-
+const iteration = 4;
+const num = 5; // через сколько прервать итерацию из функции getInfoBinNFTMysteryBox
 
 
-    let headers = {
-        Host: "www.binance.com",
-        "User-Agent":
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0",
-        Accept: "*/*",
-        "Accept-Encoding": "gzip",
-        Referer: `https://www.binance.com/`,
-        lang: "ru",
-        "content-type": "application/json",
-        clienttype: "web",
-        Origin: "https://www.binance.com",
-        Connection: "keep-alive",
-        "Sec-Fetch-Dest": "empty",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Site": "same-origin",
-    };
 
-    let header;
-    let stackProxy = {};
 
-    const arrayIterator = arr => ({
-        [Symbol.asyncIterator]() {
-            let i = arr.length;
-            return {
-                index: 0,
-                async next() {
-                    // console.log('=========================== ' + this.index + ' index iterator =================================================');
-                    if (this.index < proxyLength) {
-                        //   // console.log(this.index, arr.length);
-                        return await awaitArray(arr[this.index++], --i);
-                    } else {
-                        return { done: true }
-                    }
+ 
+
+let header;
+let stackProxy = {};
+
+const arrayIterator = arr => ({
+    [Symbol.asyncIterator]() {
+        let i = arr.length;
+        return {
+            index: 0,
+            async next() {
+                // console.log('=========================== ' + this.index + ' index iterator =================================================');
+                if (this.index < proxyLength) {
+                    //   // console.log(this.index, arr.length);
+                    return await awaitArray(arr[this.index++], --i);
+                } else {
+                    return { done: true }
                 }
             }
         }
-    })
-    const awaitArray = (val, length) => {
-        stackProxy[val] = { status: 'init', integer: 0 };
-
-        return new Promise((resolve) => {
-            function recursion() {
-                return new Promise((resolve) => {
-                    if (proxy.length != proxyLength && length > 0) {
-                        // // console.log('leng != length MeysteryBox ' + proxy.length, proxyLength);
-
-
-                        helper.timeout(2000).then(() => {
-                            if (stackProxy[val].status == 'work') {
-                                stackProxy[val].integer++
-
-                            }
-
-                            if (stackProxy[val].integer > 10000) {
-                                emitter.emit('infinity_recursion', { status: true, integer: stackProxy[val].integer });
-                            }
-                            proxy.forEach((ele, i) => {
-                                let filter = proxy.filter(x => x == ele);
-                                if (filter.length > 1) {
-                                    // console.log(filter);
-                                    proxy.splice(i, 1);
-                                    // console.log('length ' + proxy.length, proxyLength);
-                                    // process.exit(0)
-
-                                }
-
-                            });
-
-                            recursion().then((res) => {
-                                stackProxy[val].integer = 0;
-
-                                resolve(res)
-                            })
-                        })
-                    } else if (length < 0) {
-                        stackProxy[val].integer = 0;
-
-                        resolve({ done: true })
-                    } else {
-                        stackProxy[val].integer = 0;
-
-                        resolve({ value: val, done: false })
-                    }
-                })
-            };
-            setTimeout(() => {
-                recursion().then((res) => {
-                    resolve(res)
-                })
-            }, 50);
-
-
-
-        })
     }
+})
+const awaitArray = (val, length) => {
+    stackProxy[val] = { status: 'init', integer: 0 };
+
+    return new Promise((resolve) => {
+        function recursion() {
+            return new Promise((resolve) => {
+                if (proxy.length != proxyLength && length > 0) {
+                    // // console.log('leng != length MeysteryBox ' + proxy.length, proxyLength);
+
+
+                    helper.timeout(2000).then(() => {
+                        if (stackProxy[val].status == 'work') {
+                            stackProxy[val].integer++
+
+                        }
+
+                        if (stackProxy[val].integer > 10000) {
+                            emitter.emit('infinity_recursion', { status: true, integer: stackProxy[val].integer });
+                        }
+                        proxy.forEach((ele, i) => {
+                            let filter = proxy.filter(x => x == ele);
+                            if (filter.length > 1) {
+                                // console.log(filter);
+                                proxy.splice(i, 1);
+                                // console.log('length ' + proxy.length, proxyLength);
+                                // process.exit(0)
+
+                            }
+
+                        });
+
+                        recursion().then((res) => {
+                            stackProxy[val].integer = 0;
+
+                            resolve(res)
+                        })
+                    })
+                } else if (length < 0) {
+                    stackProxy[val].integer = 0;
+
+                    resolve({ done: true })
+                } else {
+                    stackProxy[val].integer = 0;
+
+                    resolve({ value: val, done: false })
+                }
+            })
+        };
+        setTimeout(() => {
+            recursion().then((res) => {
+                resolve(res)
+            })
+        }, 50);
+
+
+
+    })
+}
+async function start(init_header) {
+    let i = 0;
+
 
     return new Promise(async (resolve, reject) => {
         emitter.on('infinity_recursion', (message) => {
@@ -137,6 +125,8 @@ async function start(init_header) {
 
 
 
+
+
         for (let indexLayer = 1; indexLayer < iteration; indexLayer++) {
 
             // // console.log(layer.name);
@@ -145,7 +135,7 @@ async function start(init_header) {
 
             let body = {
                 page: 1,
-                size: 100,
+                size: 16,
                 params: {
                     // keyword: "",
                     currency: "BUSD",
@@ -161,7 +151,6 @@ async function start(init_header) {
                 }
             };
             // body.params.serialNo.push(layer.serialsNo);
-            // let i = 0;
             let breakSwitch = false;
             for await (const proxyVar of arrayIterator(proxy)) {
 
@@ -171,11 +160,12 @@ async function start(init_header) {
                 let indexProxy = proxy.indexOf(proxyVar);
                 proxy.splice(indexProxy, 1);
 
-                // i++
+                i++
+        
 
-                await getInfoBinNFTMysteryBox(helper.proxyInit(proxyVar), indexLayer, body).then(res => {
+                await getInfoBinNFTMysteryBox(helper.proxyInit(proxyVar), i, body).then(res => {
                     breakSwitch = res;
-                    if (indexLayer >= iteration - 1) {
+                    if (indexLayer >= iteration - 1 || breakSwitch) {
                         resolve({ status: 'ok', name_worker: 'binance_mysteryLastOrder' })
                     }
                 }).catch(e => {
@@ -190,7 +180,8 @@ async function start(init_header) {
                         reject({ status: 'error', name_worker: 'binance_mysteryLastOrder' })
                     }
                     
-                    // break не прирываем цикл
+                   
+                    break
                 }
 
 
@@ -202,7 +193,6 @@ async function start(init_header) {
 
 
     })
-
 
 
     function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: proxyAuth }, i, body) {
@@ -238,12 +228,14 @@ async function start(init_header) {
             body.params.setStartTime = new Date().getTime();
             body.params.orderBy = 'list_time';
             // let data = new Date().getTime();
+        //    let num = 0;
 
             axios.post('https://www.binance.com/bapi/nft/v1/public/nft/market-mystery/mystery-list', JSON.stringify(body), { headers: header, httpsAgent: agent }).then(async res => {
-                // console.log(res.status + ' ' + i + ' total^ ' + res.data.data.total);
-                // console.log(body);
+                console.log('Worker 1 scan page - ' + body.page);
+                console.log(res.status + ' ' + i + ' total^ ' + res.data.data.total);
 
-                let num = Math.ceil(res.data.data.total / 100);
+
+                // num = Math.ceil(res.data.data.total / 16);
                 // console.log('i ' + i + ' num ' + num);
                 if (res.data.data.total == 0 || i >= num) {
 
