@@ -22,8 +22,9 @@ async function add_history_binance_db(ele, marketpalce) {
                 call.history.forEach(history => {
                     date.push(history.setStartTime)
                 });
-                let DateMax = Math.max(...date);
-                let newDataArray = [];
+                const DateMax = Math.max(...date);
+                const DateMin = Math.min(...date);
+                const newDataArray = [];
 
                 // total это количество данных по истории сделок, мы опиремся на него, как на один из индикаторов изменений call.total < ele.total || 
 
@@ -152,7 +153,11 @@ async function add_history_binance_db(ele, marketpalce) {
 
 
 
-                } else if (ele.amount != call?.history[call.history - 1]?.amount && ele.setStartTime == call?.history[call.history - 1]?.setStartTime) {
+                } else if (call.history.some(x => { ele.amount != x.amount && ele.setStartTime == x.setStartTime })) {
+                    // переписываем цену, если были изменения 
+                    console.log('=======\n переписываем цену \n=========');
+
+
                     await NFT.findOneAndUpdate({ productId: ele.productId, 'history.setStartTime': ele.setStartTime }, { $set: { 'history.$.amount': ele.amount, 'history.$.status': ele.status } }).then((callback) => {
 
                         if (callback) {
@@ -178,6 +183,39 @@ async function add_history_binance_db(ele, marketpalce) {
                         }
 
                     })
+
+
+                } else if (call.history.length > 1) {
+                    console.log('=======\n call.history.length > 1 \n=========');
+
+                    if (call.history.some(x => x.setStartTime < DateMax && x.status == 1)) {
+                    console.log('=======\n x.setStartTime < DateMax \n=========');
+
+                        call.history.forEach(async (x, i) => {
+                            if (x.setStartTime < DateMax && x.status == 1) {
+
+                                await NFT.findOneAndUpdate({ productId: ele.productId, 'history.setStartTime': x.setStartTime }, { $set: { 'history.$.amount': 0, 'history.$.status': 4 } }).then((callback) => {
+                                    resolve()
+
+
+                                }).catch(e => {
+                                    console.log(e);
+                                    reject(e)
+
+                                })
+                            } else if (i == call.history.length - 1) {
+                                resolve()
+
+                            }
+
+                        })
+
+
+                    } else {
+                        resolve()
+
+
+                    }
 
 
                 } else {
