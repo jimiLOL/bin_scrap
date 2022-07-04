@@ -350,7 +350,7 @@ async function start(init_header) {
                         });
 
                         body.page = index;
-                        console.log(body);
+                        // console.log(body);
                         header["user-agent"] = UA[index];
                         // let t = helper.uuid();
                         // header['x-ui-request-trace'] = t;
@@ -358,6 +358,7 @@ async function start(init_header) {
 
 
                         await axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/mgs/product-list', body, { headers: header, httpsAgent: agent }).then(async res => {
+                            console.log(res.data);
                             console.log(res.status + ' ' + index + ' total= ' + res.data.data.total);
 
                             // console.log('Send proxyVar ' + proxyVar);
