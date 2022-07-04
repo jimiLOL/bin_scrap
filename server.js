@@ -105,13 +105,13 @@ worker.binance_marketplace_lastorder = new Piscina({
 
 
 function init_workers() {
+  const ee = {};
 
 
 
 
 
   getHeaders().then(async (headers) => {
-    const ee = new EventEmitter();
 
     Object.keys(worker).forEach(e => {
       if (util.inspect(workers[e]).includes("Error")) {
@@ -120,9 +120,12 @@ function init_workers() {
 
 
       }
+     
     })
     Object.keys(worker).forEach(e => {
       if (util.inspect(workers[e]).includes("pending")) {
+         ee[e] = new EventEmitter();
+
         console.log('Worker ' + [e] + ' is work..');
       } else if (workers.hasOwnProperty(e) && !util.inspect(workers[e]).includes("pending")) {
         console.log('Reload worker ' + [e]);
@@ -134,7 +137,7 @@ function init_workers() {
 
         delete workers[e];
         promiseWorker.push({
-          [e]: workers[e] = worker[e].run({ headers: headers }, { name: 'init', signal: ee }).then(res => {
+          [e]: workers[e] = worker[e].run({ headers: headers }, { name: 'init', signal: ee[e] }).then(res => {
             console.log(res);
 
             clearSteck(res)
@@ -160,7 +163,7 @@ function init_workers() {
 
         // console.log(worker[e].threads);
         // console.log(worker[e].destroy());
-        workers[e] = worker[e].run({ headers: headers }, { name: 'init', signal: ee }).then(res => {
+        workers[e] = worker[e].run({ headers: headers }, { name: 'init', signal: ee[e] }).then(res => {
           console.log(res);
 
           clearSteck(res)
@@ -224,14 +227,31 @@ function init_workers() {
     console.log(res);
     let index = promiseWorker.findIndex(x => Object.keys(x) == res.name_worker);
 
+    if (res.status == 'error' && ee.hasOwnProperty(res.name_worker)) {
+      console.log('Worker ' + res.name_worker + ' will be destroy');
+      ee[res.name_worker].emit('abort');
+    }
+
     if (index != -1) {
       promiseWorker.splice(index, 1)
     }
     index = promiseWorker.findIndex(x => util.inspect(x).includes("Error"));
+    console.log(index);
     if (index != -1) {
+      // ee[res.name_worker].emit('abort');
+
       promiseWorker.splice(index, 1)
     };
-    console.log(promiseWorker);
+    index = promiseWorker.findIndex(x => util.inspect(x).includes("error"));
+    
+    if (index != -1) {
+      // ee[res.name_worker].emit('abort');
+
+      promiseWorker.splice(index, 1);
+    };
+    
+
+
 
 
 

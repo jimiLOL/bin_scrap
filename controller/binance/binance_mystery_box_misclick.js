@@ -126,6 +126,7 @@ async function start(init_header) {
         });
 
         const layerList = await axios.get('https://www.binance.com/bapi/nft/v1/public/nft/mystery-box/list?page=1&size=100', { headers: header, httpsAgent: agent }).then(res => {
+            console.log(res.data.data.length);
             return res.data.data
         }).catch(e => {
             console.log(e);
@@ -193,7 +194,8 @@ async function start(init_header) {
                 }
             })
         } else {
-            reject({ status: 'error', name_worker: 'binance_marketplace', info: 'layerList no Array' })
+            // console.log(layerList);
+            reject({ status: 'error', name_worker: 'binance_mystery', info: 'layerList no Array' })
         }
 
     })

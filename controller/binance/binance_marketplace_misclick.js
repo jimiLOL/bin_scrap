@@ -486,6 +486,7 @@ async function start(init_header) {
 
             });
         } else {
+            console.log(layerList);
             reject({ status: 'error', name_worker: 'binance_marketplace', info: 'layerList no Array' })
             // init(init_header)
 
