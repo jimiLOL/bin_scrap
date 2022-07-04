@@ -228,8 +228,10 @@ async function start(init_header) {
             axios.post('https://www.binance.com/bapi/nft/v1/public/nft/market-mystery/mystery-list', JSON.stringify(body), { headers: header, httpsAgent: agent }).then(async res => {
                 console.log('Worker 2 scan serialNo - ' + body.params.serialNo[0] + ' data length ' + res.data.data.data.length + ' Page # ' + res.data?.data?.page);
 
+          
+
                 num = Math.ceil(res.data.data.total / 16);
-                if (res.data.data.total == 0 || i >= num || res.data.data.data.length == 0) {
+                if (res.data.data.total == 0 || i >= num || res.data.data.data.length == 0 || res.data.code == '000002') {
                     console.log('Worker 2 end scan serialNo ' + body.params.serialNo[0]);
 
                     breakSwitch = true

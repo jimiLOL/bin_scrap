@@ -377,6 +377,10 @@ async function start(init_header) {
                             // console.log(res.data);
                             console.log(res.status + ' ' + index + ' total= ' + res.data.data.total);
 
+                            if (res.data.code == '000002') {
+                                resolve({ status: 'ok', name_worker: 'binance_marketplace' })       
+                            }
+
                             // console.log('Send proxyVar ' + proxyVar);
                             if (res.data.data?.rows) {
                                 stackProxy[proxyVar].status = 'work';

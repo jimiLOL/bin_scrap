@@ -228,6 +228,11 @@ async function start(init_header) {
                     console.log(res.status + ' ' + index + ' total= ' + res.data.data.total);
 
                     // console.log('Send proxyVar ' + proxyVar);
+                    if (res.data.code == '000002') {
+                        resolve({ status: 'ok', name_worker: 'binance_marketplace_lastorder' })
+
+
+                    }
                     if (res.data.data.rows != null) {
                         stackProxy[proxyVar].status = 'work';
                         arrayIteration(res.data.data.rows, proxyVar).then(() => {

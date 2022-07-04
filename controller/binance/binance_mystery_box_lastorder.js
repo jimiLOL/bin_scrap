@@ -237,7 +237,7 @@ async function start(init_header) {
 
                 // num = Math.ceil(res.data.data.total / 16);
                 // console.log('i ' + i + ' num ' + num);
-                if (res.data.data.total == 0 || i >= num) {
+                if (res.data.data.total == 0 || i >= num || res.data.code == '000002') {
 
                     breakSwitch = true
                     proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
