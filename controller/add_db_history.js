@@ -186,7 +186,6 @@ async function add_history_binance_db(ele, marketpalce) {
 
 
                 } else if (call.history.length > 1) {
-                    console.log('=======\n call.history.length > 1 \n=========');
 
                     if (call.history.some(x => x.setStartTime < DateMax && x.status == 1)) {
                     console.log('=======\n x.setStartTime < DateMax \n=========');
