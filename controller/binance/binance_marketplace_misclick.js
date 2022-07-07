@@ -431,6 +431,9 @@ async function start(init_header) {
 
 
                             n_break = res.data.data.total / 16;
+                            if (n_break > 100) {
+                                n_break = 100;
+                            }
                             if (index + 1 >= Math.ceil(n_break)) {
                                 var_break = true
                             } // останавливаем итерацию
