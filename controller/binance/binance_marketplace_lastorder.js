@@ -192,7 +192,6 @@ async function start(init_header) {
             for await (const proxyVar of arrayIterator(proxy)) {
 
                 // console.log('====================INIT parsing nft====================');
-                index++
                 if (proxyVar == undefined) {
                     break
                 }
@@ -226,6 +225,8 @@ async function start(init_header) {
 
                 axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/mgs/product-list', body, { headers: header, httpsAgent: agent }).then(res => {
                     console.log(res.status + ' ' + index + ' total= ' + res.data.data.total);
+                index++ // увеличиваем счетчик после прерывателя
+
 
                     // console.log('Send proxyVar ' + proxyVar);
                     if (res.data.code == '000002') {
