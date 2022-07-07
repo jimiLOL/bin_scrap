@@ -316,7 +316,7 @@ async function start(init_header) {
 
                 (async () => {
                     let index = 0;
-                    let n_break = 0;
+                    // let n_break = 0;
                     for await (const proxyVar of arrayIterator(proxy)) {
                         stackProxy[proxyVar].status = 'work';
 
@@ -430,10 +430,10 @@ async function start(init_header) {
 
 
 
-                            n_break = res.data.data.total / 16;
-                            if (n_break > 100) {
-                                n_break = 100;
-                            }
+                            // n_break = res.data.data.total / 16;
+                            // if (n_break > 100) {
+                            //     n_break = 100;
+                            // }
                             if (index + 1 >= Math.ceil(n_break)) {
                                 var_break = true
                             } // останавливаем итерацию
