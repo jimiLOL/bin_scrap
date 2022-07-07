@@ -188,7 +188,7 @@ async function start(init_header) {
 
 
         (async () => {
-            let index = 0;
+            let index = 1;
             for await (const proxyVar of arrayIterator(proxy)) {
 
                 // console.log('====================INIT parsing nft====================');
