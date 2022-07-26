@@ -18,6 +18,7 @@ function DynamicSchema(namecollection, db, db_key) {
             _id: mongoose.Types.ObjectId,
             marketpalce: String,
             productId: {type: String, index: true},
+            collectionId: String,
             title: String,
             history: Array,
             total: {
