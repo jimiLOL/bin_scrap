@@ -278,7 +278,9 @@ async function start(init_header) {
                     // console.log('Error');
                     // // console.log(`Global cycle ${i}`);
                     console.log('Ошибка');
-                    console.log(e);
+                    resolve({ status: 'ok', name_worker: 'binance_marketplace_lastorder' })
+
+                    // console.log(e);
 
                     proxy.push(proxyVar)
                     // console.log('Proxy lenght ' + proxy.length);
