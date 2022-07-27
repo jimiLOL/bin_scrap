@@ -203,6 +203,7 @@ async function updatePriceDB(tokenId, price, marketpalce, collectionAddress) {
 
 
 async function add_binance_db(ele, marketpalce) {
+  console.log(ele.productDetail.id);
 
   return new Promise(async (resolve, reject) => {
     const NFT = await getAddressModel(ele.nftInfo.contractAddress, marketpalce);
@@ -212,30 +213,30 @@ async function add_binance_db(ele, marketpalce) {
       buyers: ele?.records || [],
       collection_nft: ele.productDetail.collection || ele.collection,
       collectionAddress: ele.nftInfo.contractAddress, // будет участвовать в навигации 
-      collectionName: ele.collection?.collectionName || null,
+      collectionName: ele.productDetail.collection?.collectionName || null,
       tokenId: ele.nftInfo.tokenId, // соответственно тоже участвует в навгации
-      amount: ele.amount,
-      isActive: ele.status == 1 ? true : false,
+      amount: ele.productDetail.amount,
+      isActive: ele.productDetail.status == 1 ? true : false,
       description: ele.productDetail.description,
-      productId: ele.productId,
-      title: ele.title,
-      coverUrl: ele.coverUrl,
-      tradeType: ele.tradeType,
-      nftType: ele.nftType,
-      currency: ele.currency,
-      setStartTime: ele.setStartTime,
-      setEndTime: ele.setEndTime,
+      productId: ele.productDetail.id,
+      title: ele.productDetail.title,
+      coverUrl: ele.productDetail.coverUrl,
+      tradeType: ele.productDetail.tradeType,
+      nftType: ele.productDetail.nftType,
+      currency: ele.productDetail.currency,
+      setStartTime: ele.productDetail.setStartTime,
+      setEndTime: ele.productDetail.setEndTime,
       timestamp: ele.timestamp,
-      status: ele.status,
-      owner: ele.owner,
-      creator: ele.creator,
+      status: ele.productDetail.status,
+      owner: ele.nftInfo.owner,
+      creator: ele.nftInfo.creator,
       nftInfo: ele.nftInfo,
       mysteryBoxProductDetailVo: ele.mysteryBoxProductDetailVo,
       productDetail: ele.productDetail,
 
     })
 
-    NFT.findOneAndUpdate({ productId: ele.productId }, newNFT, (err, call) => {
+    NFT.findOneAndUpdate({ productId: ele.productDetail.id }, newNFT, (err, call) => {
       if (err) {
         console.log('Не удалось обновить данные ' + ele.productId + ' для биржи ' + marketpalce);
         console.log(err);
@@ -245,10 +246,11 @@ async function add_binance_db(ele, marketpalce) {
         reject()
       };
       if (call) {
-        call = 0;
         ele = null;
 
-        // console.log('Обновили данные ' + ele.productId + ' для биржи ' + marketpalce);
+        // console.log('Обновили данные ' + call.productId + ' status ' + call.status);
+        call = 0;
+
         resolve()
 
       } else {
@@ -256,25 +258,25 @@ async function add_binance_db(ele, marketpalce) {
           _id: new mongoose.Types.ObjectId(),
           marketpalce: marketpalce,
           buyers: ele?.records || [],
-          collection_nft: ele.collection,
+          collection_nft: ele.collection || ele.productDetail.collection,
           collectionAddress: ele.nftInfo.contractAddress, // будет участвовать в навигации 
           collectionName: ele.collection?.collectionName || null,
           tokenId: ele.nftInfo.tokenId, // соответственно тоже участвует в навгации
-          amount: ele.amount,
-          isActive: ele.status == 1 ? true : false,
+          amount: ele.productDetail.amount,
+          isActive: ele.productDetail.status == 1 ? true : false,
           description: ele.productDetail.description,
-          productId: ele.productId,
-          title: ele.title,
-          coverUrl: ele.coverUrl,
-          tradeType: ele.tradeType,
-          nftType: ele.nftType,
-          currency: ele.currency,
-          setStartTime: ele.setStartTime,
-          setEndTime: ele.setEndTime,
+          productId: ele.productDetail.id,
+          title: ele.productDetail.title,
+          coverUrl: ele.productDetail.coverUrl,
+          tradeType: ele.productDetail.tradeType,
+          nftType: ele.productDetail.nftType,
+          currency: ele.productDetail.currency,
+          setStartTime: ele.productDetail.setStartTime,
+          setEndTime: ele.productDetail.setEndTime,
           timestamp: ele.timestamp,
-          status: ele.status,
-          owner: ele.owner,
-          creator: ele.creator,
+          status: ele.productDetail.status,
+          owner: ele.nftInfo.owner,
+          creator: ele.nftInfo.creator,
           nftInfo: ele.nftInfo,
           mysteryBoxProductDetailVo: ele.mysteryBoxProductDetailVo,
           productDetail: ele.productDetail,

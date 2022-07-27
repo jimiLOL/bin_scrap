@@ -19,6 +19,7 @@ function getProductDetail(productBinance, agent, header) {
  
     axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/nft-trade/product-detail', body, { headers: header, httpsAgent: agent, timeout: 5000 }).then(async res => {
       let productDetail = res.data.data;
+   
 
       if (res.data.code != '000000') {
         // console.log(res.data?.message + ' для proxy: ' + agent?.proxyOptions.host + ' спим 1020 ms..');
@@ -137,7 +138,9 @@ function addDB(productBinance, responseProductDetail = null) {
   return new Promise((resolve, reject) => {
     if (responseProductDetail != null) {
       let newProduct = Object.assign({}, productBinance, responseProductDetail);
+ 
       add_binance_db(newProduct, 'binance').then(() => {
+   
         return add_history_binance_db(newProduct, 'binance')
       }).then(() => {
         productBinance = null;
