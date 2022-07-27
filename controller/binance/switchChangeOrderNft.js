@@ -104,20 +104,18 @@ function iterationCollection(arrayDocument, header) {
         if (arrayDocument.length == 0) {
             resolve()
         }
-        let i = 0;
+        
         let arrayPromise = [];
         helper.shuffle(UA);
         helper.shuffle(proxy);
+        arrayDocument.forEach((element, i) => {
+            let pIndex = helper.getRandomInt(1, proxy.length - 1);
+            const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = helper.proxyInit(proxy[pIndex]);
 
 
-        for await (const proxyVar of arrayIterator(proxy)) {
-            i++
-            console.log('Iteration ' + i);
+            
 
-            stackProxy[proxyVar].status = 'work';
-            const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = helper.proxyInit(proxyVar);
-            let indexProxy = proxy.indexOf(proxyVar);
-            proxy.splice(indexProxy, 1);
+
             let proxyOptions = {
                 host: proxyHost,
                 port: portHost,
@@ -131,38 +129,38 @@ function iterationCollection(arrayDocument, header) {
                 rejectUnauthorized: false,
             });
 
+            proxy.splice(pIndex, 1);
             header["user-agent"] = UA[i];
-            if (arrayDocument[i]?.productId != undefined) {
-            arrayPromise.push(getProductDetail(arrayDocument[i], agent, header).then((res)=> {
-                console.log('res ' + res);
-                proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-            }).catch((e)=> {
-                console.log('Error ' + e);
-                proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
-            }));
+
+            if (element?.productId != undefined) {
+                arrayPromise.push(getProductDetail(element, agent, header).then((res) => {
+                    console.log('res ' + res);
+                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+                }).catch((e) => {
+                    console.log('Error ' + e);
+                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+                }));
 
 
             } else {
                 console.log('(((');
-                console.log(arrayDocument[i]);
+                console.log(element);
                 proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
 
-                break
-                
+                 
+
 
             }
 
 
-            if (arrayDocument.length - 1 == i) {
-                break
-            }
-
-
-
-
-        }
-        console.log('arrayPromise');
+        });
+        setInterval(() => {
+            
         console.log(arrayPromise);
+        }, 2000);
+
+
+        
         await Promise.allSettled(arrayPromise).then((result) => {
             let newDate = new Date();
             console.log(newDate + ' Worker Change Order Status NFT -- Promisee array Fulfil = ' + arrayPromise.length);
@@ -184,31 +182,44 @@ function getlayerList(arrayCollections, header) {
         arrayCollections.forEach(async (collection) => {
             const NFT = await getAddressModel(collection, 'binance');
             await NFT.find({ status: 1 }, { productId: 1 }).then(async (call) => {
-                
+
                 if (call) {
                     let inw = Math.ceil(call.length / 100);
-                    for (let index = 0; index < inw; index++) {
+                    let index = 0;
+             
                         let newArray = 0;
-                        if (call.length > 100) {
-                            newArray = call.slice((100 * index)-100, 100 * index);
-                            // console.log('newArray length = ' + newArray.length);
+                        for await (const proxyVar of arrayIterator(proxy)) {
+                            index++
 
+                            stackProxy[proxyVar].status = 'work';
 
+                            if (call.length > 100) {
+                                newArray = call.slice((100 * index) - 100, 100 * index);
+                                // console.log('newArray length = ' + newArray.length);
+    
+    
+    
+                                await iterationCollection(newArray, header)
+    
+                            } else {
+                                newArray = call.slice(0, call.length - 1);
+                                // console.log('newArray length = ' + newArray.length);
+    
+                                await iterationCollection(newArray, header)
+    
+                            }
+                            if (newArray.length == 0 || index > inw) {
+                                    stackProxy[proxyVar].status = 'off';
 
-                            await iterationCollection(newArray, header)
+                                break
+                            }
 
-                        } else {
-                            newArray = call.slice(0, call.length - 1);
-                            // console.log('newArray length = ' + newArray.length);
-
-                            await iterationCollection(newArray, header)
 
                         }
-                        if (newArray.length == 0) {
-                            break
-                        }
 
-                    }
+                       
+
+              
 
 
 
@@ -220,7 +231,7 @@ function getlayerList(arrayCollections, header) {
                     console.log('Fulfuit');
                     resolve(layerList)
                 }
-            }).catch(e=> {
+            }).catch(e => {
                 console.log(e);
             });
 
