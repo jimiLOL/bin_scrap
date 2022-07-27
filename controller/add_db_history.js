@@ -17,6 +17,10 @@ async function add_history_binance_db(ele, marketpalce) {
         //     productId: ele.productId
         // })
         // process.exit(0)
+        let newWeek = new Date().getTime();
+        newWeek = newWeek - 4*24*60*60*1000;
+         
+
 
         await NFT.findOne({ productId: ele.productDetail.id }).then(async (call) => {
             if (call) {
@@ -49,7 +53,7 @@ async function add_history_binance_db(ele, marketpalce) {
                             }
 
                         }
-                        if (!ele.records.some(x=> x.createTime == oldHistory.setStartTime)) {
+                        if (!ele.records.some(x=> x.createTime == oldHistory.setStartTime && oldHistory.setStartTime < newWeek)) {
                             console.log('Пытаемся удалить по времени');
                             console.log(oldHistory.setStartTime);
                            await NFT.findOneAndUpdate({productId: ele.productDetail.id}, {$pull: {history: {setStartTime: oldHistory.setStartTime}}}).then(deleteForTime=> {
