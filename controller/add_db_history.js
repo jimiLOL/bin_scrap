@@ -57,7 +57,7 @@ async function add_history_binance_db(ele, marketpalce) {
                             console.log('Пытаемся удалить по времени');
                             console.log(oldHistory.setStartTime);
                            await NFT.findOneAndUpdate({productId: ele.productDetail.id}, {$pull: {history: {setStartTime: oldHistory.setStartTime}}}).then(deleteForTime=> {
-                                console.log(deleteForTime.history);
+                                // console.log(deleteForTime.history);
                                 console.log('Удалили по времени');
                             }).catch(e=> {
                                 console.log(e);
