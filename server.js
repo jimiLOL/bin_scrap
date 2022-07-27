@@ -87,26 +87,26 @@ worker.switchChangeOrderNft = new Piscina({
   maxThreads: 1
 });
 
-// worker.binance_marketplace = new Piscina({
-//   filename: path.resolve('./controller/binance', 'binance_marketplace_misclick.js'),
-//   maxQueue: 1,
-//   maxThreads: 1
-// });
-// worker.binance_mystery = new Piscina({
-//   filename: path.resolve('./controller/binance', 'binance_mystery_box_misclick.js'),
-//   maxQueue: 1,
-//   maxThreads: 1
-// });
-// worker.binance_mysteryLastOrder = new Piscina({
-//   filename: path.resolve('./controller/binance', 'binance_mystery_box_lastorder.js'),
-//   maxQueue: 1,
-//   maxThreads: 1
-// });
-// worker.binance_marketplace_lastorder = new Piscina({
-//   filename: path.resolve('./controller/binance', 'binance_marketplace_lastorder.js'),
-//   maxQueue: 1,
-//   maxThreads: 1
-// });
+worker.binance_marketplace = new Piscina({
+  filename: path.resolve('./controller/binance', 'binance_marketplace_misclick.js'),
+  maxQueue: 1,
+  maxThreads: 1
+});
+worker.binance_mystery = new Piscina({
+  filename: path.resolve('./controller/binance', 'binance_mystery_box_misclick.js'),
+  maxQueue: 1,
+  maxThreads: 1
+});
+worker.binance_mysteryLastOrder = new Piscina({
+  filename: path.resolve('./controller/binance', 'binance_mystery_box_lastorder.js'),
+  maxQueue: 1,
+  maxThreads: 1
+});
+worker.binance_marketplace_lastorder = new Piscina({
+  filename: path.resolve('./controller/binance', 'binance_marketplace_lastorder.js'),
+  maxQueue: 1,
+  maxThreads: 1
+});
 
 
 function init_workers() {

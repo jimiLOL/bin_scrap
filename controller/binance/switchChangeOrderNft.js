@@ -100,6 +100,7 @@ const awaitArray = (val, length) => {
 }
 
 function iterationCollection(arrayDocument, header) {
+    console.log('Worker cycle Change Order NFT');
     return new Promise(async (resolve) => {
         if (arrayDocument.length == 0) {
             resolve()
@@ -154,10 +155,7 @@ function iterationCollection(arrayDocument, header) {
 
 
         });
-        setInterval(() => {
-            
-        console.log(arrayPromise);
-        }, 2000);
+ 
 
 
         
