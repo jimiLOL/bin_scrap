@@ -57,7 +57,7 @@ async function add_history_binance_db(ele, marketpalce) {
               
                            await NFT.findOneAndUpdate({productId: ele.productDetail.id}, {$pull: {history: {setStartTime: oldHistory.setStartTime}}}).then(deleteForTime=> {
                                 // console.log(deleteForTime.history);
-                                console.log('Удалили по времени ' + oldHistory.setStartTime + ' Из контрактка ' + ele.nftInfo.contractAddress + ' ProductID ' + ele.productDetail.id + '\n' + 'Было ордеров ' + call.history.length + ' Стало ' + deleteForTime.history.length);
+                                console.log('Удалили по времени ' + oldHistory.setStartTime + ' Из контрактка ' + ele?.nftInfo?.contractAddress + ' ProductID ' + ele.productDetail.id + '\n' + 'Было ордеров ' + call.history.length + ' Стало ' + deleteForTime.history.length);
                             }).catch(e=> {
                                 console.log(e);
                                 console.log('Ошибка удаления по вермени');
