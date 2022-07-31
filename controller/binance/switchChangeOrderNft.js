@@ -5,7 +5,7 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
 const { default: axios } = require("axios");
 const tunnel = require("tunnel");
 const { getProductDetail } = require('./get_productDetali');
-const { proxy } = require("../../proxy_list_four");
+const { proxy } = require("../../proxy_list_five");
 const { UA } = require("../../ua");
 const helper = require('../helper/helper');
 
