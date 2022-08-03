@@ -268,6 +268,7 @@ async function add_history_binance_db(ele, marketpalce) {
                     productId: ele.productId,
                     collectionId: ele.productDetail.collection.collectionId,
                     title: ele.title,
+                    collectionName: ele.productDetail.collection.collectionName,
                     total: ele.total || newArrayRecords.length
 
                 });

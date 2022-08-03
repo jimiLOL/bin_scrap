@@ -20,6 +20,7 @@ function DynamicSchema(namecollection, db, db_key) {
             productId: {type: String, index: true},
             collectionId: String,
             title: String,
+            collectionName: String,
             history: Array,
             total: {
                 required: true,
