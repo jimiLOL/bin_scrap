@@ -9,14 +9,7 @@ async function add_history_binance_db(ele, marketpalce) {
     return new Promise(async (resolve, reject) => {
         const NFT = await getHistoryModelNFT(ele.nftInfo.contractAddress, marketpalce);
         console.log('Add DB history');
-        // console.log(ele);
-
-        // const newNFT = new NFT({
-        //     marketpalce: marketpalce,
-        //     history: ele?.records || [],
-        //     productId: ele.productId
-        // })
-        // process.exit(0)
+       
         let newWeek = new Date().getTime();
         newWeek = newWeek - 10 * 24 * 60 * 60 * 1000;
 
@@ -29,7 +22,7 @@ async function add_history_binance_db(ele, marketpalce) {
                     date.push(history.setStartTime)
                 });
                 const DateMax = Math.max(...date);
-                const DateMin = Math.min(...date);
+                // const DateMin = Math.min(...date);
                 const newDataArray = [];
 
                 // total это количество данных по истории сделок, мы опиремся на него, как на один из индикаторов изменений call.total < ele.total || 
@@ -81,40 +74,7 @@ async function add_history_binance_db(ele, marketpalce) {
 
 
                 if (ele.setStartTime > DateMax) {
-                    //
-
-
-                    // let filter = ele.records.filter(x => x.setStartTime > DateMax);
-                    // if (filter.length > 0) {
-                    //     console.log(call.history);
-                    //     console.log(filter);
-                    //     // process.exit(0)
-                    // }
-                    // push array db
-                    // if (Array.isArray(filter)) {
-                    //     let arrayPromise = [];
-                    //     filter.forEach(element => {
-                    //        const req = NFT.findOneAndUpdate({productId: ele.productId}, {$addToSet: {history: element}}, (err, call) => {
-                    //             if (err) {
-                    //                 console.log(err);
-                    //                 reject(err)
-                    //             }
-                    //             if (call) {
-                    //                 console.log('Добавили данные в историю ' + ele.productId);
-                    //                 resolve()
-
-                    //             } else {
-                    //                 resolve()
-                    //             }
-                    //         });
-                    //         arrayPromise.push(req);
-                    //     });
-                    //  await Promise.allSettled(arrayPromise).then(()=> resolve())
-
-                    // } else {
-                    //     resolve()
-
-                    // }
+                   
 
                     let newData = { setStartTime: ele.productDetail.setStartTime, amount: ele.productDetail.amount, status: ele.productDetail.status, userNickName: ele.owner?.nickName || ele.nftInfo.owner.nickName, userId: ele.owner?.userId || null, avatarUrl: ele.owner?.avatarUrl || ele.nftInfo.owner.avatarUrl, asset: ele.productDetail.currency, title: ele.productDetail.title };
                     newDataArray.push(newData);
@@ -122,23 +82,9 @@ async function add_history_binance_db(ele, marketpalce) {
                     // { $push: { "achieve": {$each : [77,49,83 ]} } }
                     // { $addToSet: { history: elementHistory } }
 
-                    // newDataArray.forEach(elementHistory => {
                     await NFT.findOneAndUpdate({ productId: ele.productDetail.id, 'history.setStartTime': DateMax }, { $set: { 'history.$.status': 4, collectionId: ele.productDetail.collection.collectionId } }).then(async (resCallback) => {
-                        // console.log(resCallback);
-                        let validation
-                        try {
-                            validation = resCallback.history.filter(x => x.setStartTime == newData.setStartTime);
-
-                        } catch {
-                            validation = [];
-                        }
-                        // console.log('validation ');
-                        // console.log(validation.length == 0 && resCallback?.history.length != 0);
-                        // console.log(resCallback?.history.length);
-
-                        // console.log(validation);
-                        if (validation.length == 0 && resCallback?.history.length != 0) {
-                            const req = await NFT.findOneAndUpdate({ productId: ele.productDetail.id }, { $push: { "history": { $each: newDataArray } } }).then((callback) => {
+                      
+                           await NFT.findOneAndUpdate({ productId: ele.productDetail.id }, { $push: { "history": { $each: newDataArray } } }).then((callback) => {
 
                                 if (callback) {
                                     console.log('Добавили данные в историю ' + ele.productId);
@@ -163,10 +109,7 @@ async function add_history_binance_db(ele, marketpalce) {
                                     reject(e)
                                 }
                             })
-                        } else {
-                            resolve(0)
-
-                        }
+                       
 
 
 
@@ -177,25 +120,7 @@ async function add_history_binance_db(ele, marketpalce) {
                         reject(e)
                     })
 
-                    // });
-
-                    // status 4 -- закрытая сделка
-
-
-                    //    await NFT.findOneAndUpdate({productId: ele.productId, 'history.setStartTime': DateMax}, {$set:{'history.$.status':4}}, async (err, call) => {
-                    //         if (err) {
-                    //             console.log(err);
-                    //             reject(err)
-                    //         }
-                    //         if (call) {
-
-                    //             console.log('Обновили данные в историю ' + ele.productId);
-                    //             // resolve()
-
-                    //         } else {
-                    //             resolve()
-                    //         }
-                    //     });
+                    
 
 
 
