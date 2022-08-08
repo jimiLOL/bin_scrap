@@ -18,7 +18,7 @@ async function add_history_binance_db(ele, marketpalce) {
         // })
         // process.exit(0)
         let newWeek = new Date().getTime();
-        newWeek = newWeek - 7 * 24 * 60 * 60 * 1000;
+        newWeek = newWeek - 10 * 24 * 60 * 60 * 1000;
 
 
 
