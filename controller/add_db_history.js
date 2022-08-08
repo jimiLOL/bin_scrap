@@ -38,9 +38,10 @@ async function add_history_binance_db(ele, marketpalce) {
 
                     if (Array.isArray(ele.records)) {
                         call.history.forEach(async oldHistory => {
-                            if (!ele.records.some(x => x.setStartTime == oldHistory.setStartTime)) {
+                            if (!ele.records.some(x => x.createTime == oldHistory.setStartTime)) {
                                 
-                                let newArray = ele.records.filter(xx => !call.history.some(x => xx.setStartTime == x.setStartTime) && xx.eventType == 5);
+                                let newArray = ele.records.filter(xx => !call.history.some(x => xx.createTime == x.setStartTime) && xx.eventType == 5);
+                                console.log(newArray);
                                 if (newArray.length != 0) {
                                     newArray.forEach(element => {
                                         if (!newDataArray.some(x => x.setStartTime == element.createTime)) {
