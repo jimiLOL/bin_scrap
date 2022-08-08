@@ -18,7 +18,7 @@ async function add_history_binance_db(ele, marketpalce) {
         // })
         // process.exit(0)
         let newWeek = new Date().getTime();
-        newWeek = newWeek - 4 * 24 * 60 * 60 * 1000;
+        newWeek = newWeek - 7 * 24 * 60 * 60 * 1000;
 
 
 
@@ -53,15 +53,21 @@ async function add_history_binance_db(ele, marketpalce) {
                             }
 
                         }
-                        if (!ele.records.some(x => x.createTime == oldHistory.setStartTime && oldHistory.setStartTime < newWeek)) {
+                        if (!ele.records.some(x => x.createTime == oldHistory.setStartTime && newWeek > oldHistory.setStartTime)) {
 
-                            await NFT.findOneAndUpdate({ productId: ele.productDetail.id || ele.productId }, { $pull: { history: { setStartTime: oldHistory.setStartTime } } }).then(deleteForTime => {
-                                // console.log(deleteForTime.history);
-                                // console.log('Удалили по времени ' + oldHistory.setStartTime + ' Из контрактка ' + ele?.nftInfo?.contractAddress + ' ProductID ' + ele.productDetail.id + '\n' + 'Было ордеров ' + call.history.length + ' Стало ' + deleteForTime.history.length);
-                            }).catch(e => {
-                                console.log(e);
-                                console.log('Ошибка удаления по вермени');
-                            })
+                            if (ele.setStartTime != oldHistory.createTime && oldHistory.status == 1) {
+                                // логика этого выражения,  чтобы удалить муссор из истории сделок
+                              
+
+                                await NFT.findOneAndUpdate({ productId: ele.productDetail.id || ele.productId }, { $pull: { history: { setStartTime: oldHistory.setStartTime } } }).then(deleteForTime => {
+                                    // console.log(deleteForTime.history);
+                                    // console.log('Удалили по времени ' + oldHistory.setStartTime + ' Из контрактка ' + ele?.nftInfo?.contractAddress + ' ProductID ' + ele.productDetail.id + '\n' + 'Было ордеров ' + call.history.length + ' Стало ' + deleteForTime.history.length);
+                                }).catch(e => {
+                                    console.log(e);
+                                    console.log('Ошибка удаления по вермени');
+                                })
+                            }
+
 
 
                         }
@@ -110,39 +116,59 @@ async function add_history_binance_db(ele, marketpalce) {
 
                     // }
 
-                    let newData = { setStartTime: ele.productDetail.setStartTime, amount: ele.productDetail.amount, status: ele.productDetail.status, userNickName: ele.owner?.nickName || ele.nftInfo.owner.nickName, userId: ele.owner?.userId || null, avatarUrl: ele.owner?.avatarUrl || ele.nftInfo.owner.avatarUrl, asset: ele.currency, title: ele.title };
+                    let newData = { setStartTime: ele.productDetail.setStartTime, amount: ele.productDetail.amount, status: ele.productDetail.status, userNickName: ele.owner?.nickName || ele.nftInfo.owner.nickName, userId: ele.owner?.userId || null, avatarUrl: ele.owner?.avatarUrl || ele.nftInfo.owner.avatarUrl, asset: ele.productDetail.currency, title: ele.productDetail.title };
                     newDataArray.push(newData);
                     // console.log(newDataArray);
                     // { $push: { "achieve": {$each : [77,49,83 ]} } }
                     // { $addToSet: { history: elementHistory } }
 
                     // newDataArray.forEach(elementHistory => {
-                    await NFT.findOneAndUpdate({ productId: ele.productDetail.id, 'history.setStartTime': DateMax }, { $set: { 'history.$.status': 4, collectionId: ele.productDetail.collection.collectionId } }).then(async () => {
-                        const req = await NFT.findOneAndUpdate({ productId: ele.productDetail.id }, { $push: { "history": { $each: newDataArray } } }).then((callback) => {
-                        
-                            if (callback) {
-                                console.log('Добавили данные в историю ' + ele.productId);
-                                // process.exit(0)
-                                call = 0;
-                                callback = 0;
-                                ele = null;
-                                resolve(callback)
+                    await NFT.findOneAndUpdate({ productId: ele.productDetail.id, 'history.setStartTime': DateMax }, { $set: { 'history.$.status': ele.productDetail.status, collectionId: ele.productDetail.collection.collectionId } }).then(async (resCallback) => {
+                        // console.log(resCallback);
+                        let validation
+                        try {
+                            validation = resCallback.history.filter(x => x.setStartTime == newData.setStartTime);
 
-                            } else {
-                                call = 0;
-                                ele = null;
+                        } catch {
+                            validation = [];
+                        }
+                        // console.log('validation ');
+                        // console.log(validation.length == 0 && resCallback?.history.length != 0);
+                        // console.log(resCallback?.history.length);
 
-                                resolve(0)
-                            }
+                        // console.log(validation);
+                        if (validation.length == 0 && resCallback?.history.length != 0) {
+                            const req = await NFT.findOneAndUpdate({ productId: ele.productDetail.id }, { $push: { "history": { $each: newDataArray } } }).then((callback) => {
 
-                        }).catch(e => {
-                            if (e) {
-                                console.log(e);
-                                ele = null;
+                                if (callback) {
+                                    console.log('Добавили данные в историю ' + ele.productId);
+                                    // process.exit(0)
+                                    call = 0;
+                                    callback = 0;
+                                    ele = null;
+                                    resolve(callback)
 
-                                reject(e)
-                            }
-                        })
+                                } else {
+                                    call = 0;
+                                    ele = null;
+
+                                    resolve(0)
+                                }
+
+                            }).catch(e => {
+                                if (e) {
+                                    console.log(e);
+                                    ele = null;
+
+                                    reject(e)
+                                }
+                            })
+                        } else {
+                            resolve(0)
+
+                        }
+
+
 
                     }).catch(e => {
                         console.log(e);
@@ -246,14 +272,14 @@ async function add_history_binance_db(ele, marketpalce) {
                     resolve(0)
                 }
             } else {
-                let newArrayRecords = [];
+                const newArrayRecords = [];
                 // console.log(ele);
 
                 if (Array.isArray(ele.records)) {
                     let recordsArray = ele.records.filter(x => x.eventType == 5);
 
                     recordsArray.forEach(record => {
-                        let newData = { setStartTime: record.createTime, amount: record.amount, status: 4, userNickName: record.userNickName, asset: record.asset, title: ele.title };
+                        const newData = { setStartTime: record.createTime, amount: record.amount, status: 4, userNickName: record.userNickName, asset: record.asset, title: ele.productDetail.title };
                         newArrayRecords.push(newData)
 
 
@@ -261,7 +287,7 @@ async function add_history_binance_db(ele, marketpalce) {
 
 
                 };
-                newArrayRecords.push({ setStartTime: ele.setStartTime, amount: ele.amount, status: ele.status, userNickName: ele.owner?.nickName || ele.nftInfo.owner.nickName, userId: ele.owner?.userId || null, avatarUrl: ele.owner?.avatarUrl || ele.nftInfo.owner.avatarUrl, asset: ele.currency, title: ele.title })
+                newArrayRecords.push({ setStartTime: ele.setStartTime, amount: ele.amount, status: ele.productDetail.status, userNickName: ele.owner?.nickName || ele.nftInfo.owner.nickName, userId: ele.owner?.userId || null, avatarUrl: ele.owner?.avatarUrl || ele.nftInfo.owner.avatarUrl, asset: ele.currency, title: ele.productDetail.title })
 
                 const binNFT = new NFT({
                     _id: new mongoose.Types.ObjectId(),
@@ -269,7 +295,7 @@ async function add_history_binance_db(ele, marketpalce) {
                     history: newArrayRecords,
                     productId: ele.productDetail.id,
                     collectionId: ele.productDetail.collection.collectionId,
-                    title: ele.title,
+                    title: ele.productDetail.title,
                     collectionName: ele.productDetail.collection.collectionName,
                     total: ele.total || newArrayRecords.length
 
@@ -313,7 +339,7 @@ async function add_history_binance_db(ele, marketpalce) {
 
         })
 
-         
+
 
     })
 
