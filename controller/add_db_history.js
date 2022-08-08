@@ -123,7 +123,7 @@ async function add_history_binance_db(ele, marketpalce) {
                     // { $addToSet: { history: elementHistory } }
 
                     // newDataArray.forEach(elementHistory => {
-                    await NFT.findOneAndUpdate({ productId: ele.productDetail.id, 'history.setStartTime': DateMax }, { $set: { 'history.$.status': ele.productDetail.status, collectionId: ele.productDetail.collection.collectionId } }).then(async (resCallback) => {
+                    await NFT.findOneAndUpdate({ productId: ele.productDetail.id, 'history.setStartTime': DateMax }, { $set: { 'history.$.status': 4, collectionId: ele.productDetail.collection.collectionId } }).then(async (resCallback) => {
                         // console.log(resCallback);
                         let validation
                         try {
