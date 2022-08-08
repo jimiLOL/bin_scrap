@@ -72,7 +72,7 @@ async function add_history_binance_db(ele, marketpalce) {
                 // console.log(ele.setStartTime + ' > ' + DateMax + ' ? ');
                 // console.log(ele.setStartTime > DateMax);
                 const startTime = ele.productDetail.setStartTime | ele.setStartTime;
-                console.log(`startTime - ${startTime, DateMax} ${startTime > DateMax}`);
+                console.log(`startTime - ${startTime} > ${DateMax} ? ${startTime > DateMax}`);
 
 
                 if (startTime > DateMax) {
