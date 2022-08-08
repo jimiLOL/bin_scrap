@@ -9,6 +9,10 @@ const { proxy } = require("../../proxy_list_five");
 const { UA } = require("../../ua");
 const helper = require('../helper/helper');
 
+const Emitter = require("events");
+const emitter = new Emitter();
+let emitFunction;
+
 const proxyLength = proxy.length;
 
 let stackProxy = {};
@@ -36,6 +40,14 @@ const arrayIterator = arr => ({
     }
 })
 const awaitArray = (val, length) => {
+    emitFunction = emitter.on('infinity_recursion', (message) => {
+        let magicVal = 0; // что бы не долбитть в емитор по 100 раз
+        if (message.status && magicVal < 2) {
+            reject({ status: 'error', name_worker: 'binance_marketplace_lastorder', integer: message.integer })
+
+        }
+
+    });
     stackProxy[val] = { status: 'init', integer: 0 };
     // let integer = 0; //  
     return new Promise((resolve) => {
