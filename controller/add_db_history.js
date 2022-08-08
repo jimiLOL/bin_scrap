@@ -71,9 +71,11 @@ async function add_history_binance_db(ele, marketpalce) {
                 };
                 // console.log(ele.setStartTime + ' > ' + DateMax + ' ? ');
                 // console.log(ele.setStartTime > DateMax);
+                const startTime = ele.productDetail.setStartTime | ele.setStartTime;
+                console.log(startTime);
 
 
-                if (ele.productDetail.setStartTime > DateMax) {
+                if (startTime > DateMax) {
                    
 
                     let newData = { setStartTime: ele.productDetail.setStartTime, amount: ele.productDetail.amount, status: ele.productDetail.status, userNickName: ele.owner?.nickName || ele.nftInfo.owner.nickName, userId: ele.owner?.userId || null, avatarUrl: ele.owner?.avatarUrl || ele.nftInfo.owner.avatarUrl, asset: ele.productDetail.currency, title: ele.productDetail.title };
