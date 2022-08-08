@@ -46,6 +46,19 @@ async function add_history_binance_db(ele, marketpalce) {
                             }
 
                         }
+                        let newArray = ele.records.filter(x => x.setStartTime == oldHistory.setStartTime);
+                        if (newArray.length > 1) {
+                            // удаляем если есть дубли
+                            await NFT.findOneAndUpdate({ productId: ele.productDetail.id || ele.productId }, { $pull: { history: { setStartTime: oldHistory.setStartTime } } }).then(deleteForTime => {
+                                // console.log(deleteForTime.history);
+                                // console.log('Удалили по времени ' + oldHistory.setStartTime + ' Из контрактка ' + ele?.nftInfo?.contractAddress + ' ProductID ' + ele.productDetail.id + '\n' + 'Было ордеров ' + call.history.length + ' Стало ' + deleteForTime.history.length);
+                            }).catch(e => {
+                                console.log(e);
+                                console.log('Ошибка удаления по вермени');
+                            })
+                        }
+
+                     
                         if (!ele.records.some(x => x.createTime == oldHistory.setStartTime && newWeek > oldHistory.setStartTime)) {
 
                             if (ele.setStartTime != oldHistory.createTime && oldHistory.status == 1) {
@@ -85,6 +98,16 @@ async function add_history_binance_db(ele, marketpalce) {
                     // { $addToSet: { history: elementHistory } }
 
                     await NFT.findOneAndUpdate({ productId: ele.productDetail.id, 'history.setStartTime': DateMax }, { $set: { 'history.$.status': 4, collectionId: ele.productDetail.collection.collectionId } }).then(async (resCallback) => {
+                        
+                        let validation
+                        try {
+                            validation = resCallback.history.filter(x => x.setStartTime == newData.setStartTime);
+
+                        } catch {
+                            validation = [];
+                        };
+                        
+                        
                       
                            await NFT.findOneAndUpdate({ productId: ele.productDetail.id }, { $push: { "history": { $each: newDataArray } } }).then((callback) => {
 
