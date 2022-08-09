@@ -11,6 +11,25 @@ function DynamicSchema(namecollection, db, db_key) {
         // process.exit(1)
     };
     let ShemaNFT;
+
+    const history = new Schema({
+        amount: {
+            type: String,
+           required: true
+        },
+        status: Number,
+        userId: String,
+        userNickName: {
+            type: String,
+           required: true
+        },
+        title: String,
+        asset: String,
+        setStartTime: {
+            type: Number,
+            required: true
+        }
+    });
  
 
     if (db_key == 'binance') {
@@ -21,7 +40,7 @@ function DynamicSchema(namecollection, db, db_key) {
             collectionId: String,
             title: String,
             collectionName: String,
-            history: Array,
+            history: [history],
             total: {
                 required: true,
                 type: Number

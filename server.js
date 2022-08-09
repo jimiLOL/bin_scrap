@@ -87,6 +87,11 @@ worker.switchChangeOrderNft = new Piscina({
   maxThreads: 1
 });
 
+worker.get_status_for = new Piscina({
+  filename: path.resolve('./controller/binance', 'get_status_for.js'),
+  maxQueue: 1,
+  maxThreads: 1
+});
 worker.binance_marketplace = new Piscina({
   filename: path.resolve('./controller/binance', 'binance_marketplace_misclick.js'),
   maxQueue: 1,

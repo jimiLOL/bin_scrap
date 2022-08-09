@@ -160,6 +160,8 @@ function getlayerList() {
 
         arrayCollections.forEach(async (collection) => {
             const NFT = await getAddressModel(collection, 'binance');
+            // const distinct = await NFT.distinct('productDetail.collection.collectionId', { status: 1 });
+            // console.log(distinct); // надо эту функцию переписать с использованием этого метода. будет быстрее!
             NFT.find({}, { productDetail: { collection: 1 } }, (err, call) => {
                 if (err) {
                     console.log(err);
