@@ -40,14 +40,7 @@ const arrayIterator = arr => ({
     }
 })
 const awaitArray = (val, length) => {
-    emitFunction = emitter.on('infinity_recursion', (message) => {
-        let magicVal = 0; // что бы не долбитть в емитор по 100 раз
-        if (message.status && magicVal < 2) {
-            reject({ status: 'error', name_worker: 'binance_marketplace_lastorder', integer: message.integer })
-
-        }
-
-    });
+  
     stackProxy[val] = { status: 'init', integer: 0 };
     // let integer = 0; //  
     return new Promise((resolve) => {
@@ -256,6 +249,14 @@ function getlayerList(arrayCollections, header) {
 
 function start(header) {
     return new Promise(async (resolve, reject) => {
+        emitFunction = emitter.on('infinity_recursion', (message) => {
+            let magicVal = 0; // что бы не долбитть в емитор по 100 раз
+            if (message.status && magicVal < 2) {
+                reject({ status: 'error', name_worker: 'binance_marketplace_lastorder', integer: message.integer })
+    
+            }
+    
+        });
 
 
 
@@ -275,7 +276,7 @@ function init(init_header) {
     return new Promise((resolve, reject) => {
         start(init_header).then((res) => {
             console.log('Worker switchChangeOrderNft');
-            process.exit(0)
+      
 
             emitter.removeAllListeners('infinity_recursion');
 
@@ -284,7 +285,7 @@ function init(init_header) {
             // init(init_header)
         }).catch(e => {
             console.log('Worker switchChangeOrderNft');
-            process.exit(0)
+ 
             emitter.removeAllListeners('infinity_recursion');
 
             reject(e);
