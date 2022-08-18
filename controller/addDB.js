@@ -203,7 +203,7 @@ async function updatePriceDB(tokenId, price, marketpalce, collectionAddress) {
 
 
 async function add_binance_db(ele, marketpalce) {
-  console.log(ele.productDetail.id);
+  // console.log(ele.productDetail.id);
 
   return new Promise(async (resolve, reject) => {
     const NFT = await getAddressModel(ele.nftInfo.contractAddress, marketpalce);

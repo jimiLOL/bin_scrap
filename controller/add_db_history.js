@@ -8,7 +8,7 @@ async function add_history_binance_db(ele, marketpalce) {
 
     return new Promise(async (resolve, reject) => {
         const NFT = await getHistoryModelNFT(ele.nftInfo.contractAddress, marketpalce);
-        console.log('Add DB history');
+        // console.log('Add DB history');
 
         let newWeek = new Date().getTime();
         newWeek = newWeek - 10 * 24 * 60 * 60 * 1000;
@@ -31,7 +31,7 @@ async function add_history_binance_db(ele, marketpalce) {
                 // console.log(ele.setStartTime + ' > ' + DateMax + ' ? ');
                 // console.log(ele.setStartTime > DateMax);
                 const startTime = ele.productDetail.setStartTime || ele.setStartTime;
-                console.log(`startTime - ${startTime} > ${DateMax} ? ${startTime > DateMax}`);
+                // console.log(`startTime - ${startTime} > ${DateMax} ? ${startTime > DateMax}`);
 
 
                 if (startTime > DateMax) {
@@ -97,8 +97,8 @@ async function add_history_binance_db(ele, marketpalce) {
 
                     let newData = { setStartTime: ele.productDetail.setStartTime, amount: ele.productDetail.amount, status: ele.productDetail.status, userNickName: ele.owner?.nickName || ele.nftInfo.owner.nickName, userId: ele.owner?.userId || null, avatarUrl: ele.owner?.avatarUrl || ele.nftInfo.owner.avatarUrl, asset: ele.productDetail.currency, title: ele.productDetail.title };
                     newDataArray.push(newData);
-                    console.log(newDataArray);
-                    console.log(ele.productDetail.id);
+                    // console.log(newDataArray);
+                    // console.log(ele.productDetail.id);
                     // { $push: { "achieve": {$each : [77,49,83 ]} } }
                     // { $addToSet: { history: elementHistory } }
 
@@ -117,7 +117,7 @@ async function add_history_binance_db(ele, marketpalce) {
                            await NFT.findOneAndUpdate({ productId: ele.productDetail.id }, { $push: { "history": { $each: newDataArray } } }).then((callback) => {
 
                             if (callback) {
-                                console.log('Добавили данные в историю ' + ele.productId);
+                                // console.log('Добавили данные в историю ' + ele.productId);
                                 // process.exit(0)
                                 call = 0;
                                 callback = 0;
@@ -189,7 +189,7 @@ async function add_history_binance_db(ele, marketpalce) {
                 } else if (call.history.length > 1) {
 
                     if (call.history.some(x => x.setStartTime < DateMax && x.status == 1)) {
-                        console.log('=======\n x.setStartTime < DateMax \n=========');
+                        // console.log('=======\n x.setStartTime < DateMax \n=========');
 
                         call.history.forEach(async (x, i) => {
                             if (x.setStartTime < DateMax && x.status == 1) {
