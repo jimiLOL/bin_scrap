@@ -94,6 +94,7 @@ const awaitArray = (val, length) => {
                         }
 
                         if (stackProxy[val].integer > 10000) {
+                            stackProxy[val].integer = 0;
                             emitter.emit('infinity_recursion', { status: true, integer: stackProxy[val].integer, val: val });
                         }
 
