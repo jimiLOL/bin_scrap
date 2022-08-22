@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 // const Schema = mongoose.Schema;
 
 const { getHistoryModelNFT } = require("../model/nft_history.cjs");
+const fs = require("fs");
 
 
 async function add_history_binance_db(ele, marketpalce) {
@@ -27,7 +28,7 @@ async function add_history_binance_db(ele, marketpalce) {
 
                 // total это количество данных по истории сделок, мы опиремся на него, как на один из индикаторов изменений call.total < ele.total || 
 
-           
+
                 // console.log(ele.setStartTime + ' > ' + DateMax + ' ? ');
                 // console.log(ele.setStartTime > DateMax);
                 const startTime = ele.productDetail.setStartTime || ele.setStartTime;
@@ -39,7 +40,7 @@ async function add_history_binance_db(ele, marketpalce) {
                     if (Array.isArray(ele.records)) {
                         call.history.forEach(async oldHistory => {
                             if (!ele.records.some(x => x.createTime == oldHistory.setStartTime)) {
-                                
+
                                 let newArray = ele.records.filter(xx => !call.history.some(x => xx.createTime == x.setStartTime) && xx.eventType == 5);
                                 console.log(newArray);
                                 if (newArray.length != 0) {
@@ -47,18 +48,19 @@ async function add_history_binance_db(ele, marketpalce) {
                                         if (!newDataArray.some(x => x.setStartTime == element.createTime)) {
                                             let newData = { setStartTime: element.createTime, amount: element.amount, status: 4, userNickName: element.userNickName, asset: element.asset, title: ele.title };
                                             newDataArray.push(newData)
-    
+
                                         }
-    
-    
+
+
                                     });
-    
-    
+
+
                                 }
-    
+
                             }
-                            let newArray = call.history.filter(x => x.setStartTime == oldHistory.setStartTime);
+                            let newArray = call.history.filter(x => x.setStartTime == oldHistory.setStartTime && x.amount == oldHistory.amount);
                             if (newArray.length > 1) {
+
                                 // удаляем если есть дубли
                                 await NFT.findOneAndUpdate({ productId: ele.productDetail.id || ele.productId }, { $pull: { history: { setStartTime: oldHistory.setStartTime } } }).then(deleteForTime => {
                                     // console.log(deleteForTime.history);
@@ -68,14 +70,14 @@ async function add_history_binance_db(ele, marketpalce) {
                                     console.log('Ошибка удаления по вермени');
                                 })
                             }
-    
-    
+
+
                             if (!ele.records.some(x => x.createTime == oldHistory.setStartTime && newWeek > oldHistory.setStartTime)) {
-    
+
                                 if (ele.setStartTime != oldHistory.createTime && oldHistory.status == 1) {
                                     // логика этого выражения,  чтобы удалить муссор из истории сделок
-    
-    
+
+
                                     await NFT.findOneAndUpdate({ productId: ele.productDetail.id || ele.productId }, { $pull: { history: { setStartTime: oldHistory.setStartTime } } }).then(deleteForTime => {
                                         // console.log(deleteForTime.history);
                                         // console.log('Удалили по времени ' + oldHistory.setStartTime + ' Из контрактка ' + ele?.nftInfo?.contractAddress + ' ProductID ' + ele.productDetail.id + '\n' + 'Было ордеров ' + call.history.length + ' Стало ' + deleteForTime.history.length);
@@ -84,14 +86,14 @@ async function add_history_binance_db(ele, marketpalce) {
                                         console.log('Ошибка удаления по вермени');
                                     })
                                 }
-    
-    
-    
+
+
+
                             }
-    
-    
+
+
                         })
-    
+
                     };
 
 
@@ -114,7 +116,7 @@ async function add_history_binance_db(ele, marketpalce) {
 
 
 
-                           await NFT.findOneAndUpdate({ productId: ele.productDetail.id }, { $push: { "history": { $each: newDataArray } } }).then((callback) => {
+                        await NFT.findOneAndUpdate({ productId: ele.productDetail.id }, { $push: { "history": { $each: newDataArray } } }).then((callback) => {
 
                             if (callback) {
                                 // console.log('Добавили данные в историю ' + ele.productId);
@@ -198,8 +200,8 @@ async function add_history_binance_db(ele, marketpalce) {
                                 newDataArray.push(newData);
 
                                 await NFT.findOneAndUpdate({ productId: ele.productDetail.id, 'history.setStartTime': x.setStartTime }, { $set: { 'history.$.amount': 0, 'history.$.status': 4, collectionId: ele.productDetail.collection.collectionId } }).then(async (callback) => {
-                                    await NFT.findOneAndUpdate({ productId: ele.productDetail.id }, { $push: { "history": { $each: newDataArray } } }).then(()=> {
-                                        resolve(callback)  
+                                    await NFT.findOneAndUpdate({ productId: ele.productDetail.id }, { $push: { "history": { $each: newDataArray } } }).then(() => {
+                                        resolve(callback)
 
                                     });
 
@@ -218,19 +220,29 @@ async function add_history_binance_db(ele, marketpalce) {
 
 
                     } else {
-                        resolve(0)
+                        fs.appendFile(`./errorProxy.txt`, `\n${new Date()}\n${JSON.stringify(ele)}`, function (error) {
+                            if (error) throw error;
+                            resolve(0)
+                        });
 
 
                     }
 
 
                 } else {
-
                     call = 0;
                     ele = null;
-
-
                     resolve(0)
+
+               
+                    // fs.appendFile(`./errorProxy.txt`, `\n${new Date()}\n${JSON.stringify(ele)}`, function (error) {
+                    //     if (error) throw error;
+                    //     call = 0;
+                    //     ele = null;
+                    //     resolve(0)
+                    // });
+
+
                 }
             } else {
                 const newArrayRecords = [];
