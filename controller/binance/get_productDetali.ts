@@ -3,7 +3,7 @@ import { default as axios } from "axios";
 import {add_binance_db} from "./../addDB";
 // const { add_binance_db } = require("./../addDB");
 import { add_history_binance_db } from "./../add_db_history";
-import helper from "./../helper/helper";
+import {helper} from "./../helper/helper";
 import { AxiosResponse } from "axios";
  
 
@@ -667,7 +667,7 @@ function addDB<
       // }).catch(e=> {
       //   resolve()
       // })
-      console.log('else');
+      console.log('else get_productDetali');
       // process.exit(0)
     }
   });

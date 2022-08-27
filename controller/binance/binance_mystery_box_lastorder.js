@@ -10,7 +10,7 @@ const proxy = getProxy('binance_mysteryLastOrder');
 const { UA } = require("../../ua");
 const util = require("util");
 
-const helper = require('./../helper/helper');
+const {helper} = require('./../helper/helper');
 const { getNaemListNFT } = require("./getNftStat");
 const { arrayNFTCollectionName } = require("./nftArrayData");
 const { getProductDetail } = require("./get_productDetali");

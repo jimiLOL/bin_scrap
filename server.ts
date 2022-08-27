@@ -86,7 +86,7 @@ mongoose
   .connect(process.env.MONGODB_URI as string)
   .catch((error: any) => console.log(error));
 
-import helper from "./controller/helper/helper";
+import {helper} from "./controller/helper/helper";
 
 // app.get('/heapdump', (req: Request, res: Response) => {
 //   heapdump.writeSnapshot(`heapDump-${Date.now()}.heapsnapshot`, (err: any, filename) => {
@@ -97,7 +97,7 @@ import helper from "./controller/helper/helper";
 // });
 
 type workerType = {
-  [key: string]: Piscina;
+  [key: string]: any;
 };
 type channelType = {
   [key: string]: MessageChannel;

@@ -1,8 +1,8 @@
-const { default: axios } = require("axios");
-const tunnel = require("tunnel");
-const fs = require('fs')
+import { default as axios } from "axios";
+import tunnel from "tunnel";
+import fs from 'fs';
 
-function shuffle(array) {
+function shuffle(array: Array<string>) {
     for (let i = array.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1)); // случайный индекс от 0 до i
 
@@ -15,7 +15,7 @@ function shuffle(array) {
     }
 };
 
-function proxyInit(proxy) {
+function proxyInit(proxy: string) {
     try {
         let proxyArray = proxy.split(":", 4);
 
@@ -29,7 +29,7 @@ function proxyInit(proxy) {
 
 
 };
-async function getIP(agent) {
+async function getIP(agent: tunnel.HttpsOverHttpsOptions) {
     await axios.get('https://api.ipify.org', { httpsAgent: agent }).then(res => {
         console.log('PROXY IP^ ' + res.data);
     }).catch(e => {
@@ -43,24 +43,22 @@ function uuid() {
         return v.toString(16);
     });
 };
-function getRandomInt(min, max) {
+function getRandomInt(min: number, max:number) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min; //Максимум не включается, минимум включается
 }
 
-function initAgent(proxyOptions) {
+function initAgent(proxyOptions: tunnel.ProxyOptions) {
     let agent = tunnel.httpsOverHttp({
         proxy: proxyOptions,
-        rejectUnauthorized: false,
     });
     return agent
 }
 
-const removeDuplicateItems = arr => [new Set(arr)];
 
-function delDublicateProxy(proxy) {
-    const newProxyArray = [];
+function delDublicateProxy(proxy: Array<string>): Array<string> {
+    const newProxyArray: string[] = [];
     proxy.forEach((ele, i) => {
         let filter = proxy.filter(x => x == ele);
 
@@ -75,12 +73,12 @@ function delDublicateProxy(proxy) {
 
  
 
-function filterProxy(arrayProxy) {
+function filterProxy(arrayProxy: Array<string>): Array<string> {
     const proxyFile = fs.readFileSync('./errorProxy.txt', { encoding: 'utf8', flag: 'r' });
     const proxy = proxyFile.split('\n', 100200);
     // console.log(proxy);
     let proxyF = delDublicateProxy(arrayProxy);
-    const newProxy = [];
+    const newProxy: string[] = [];
     proxyF.forEach(element => {
         let filter = proxy.filter(x => x == element);
         if (filter.length == 0) {
@@ -93,11 +91,9 @@ function filterProxy(arrayProxy) {
 
 }
 
-function timeout(ms) {
+function timeout(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-const helper = { shuffle, proxyInit, getIP, uuid, getRandomInt, initAgent, removeDuplicateItems, timeout, delDublicateProxy, filterProxy }
+export const helper = { shuffle, proxyInit, getIP, uuid, getRandomInt, initAgent, timeout, delDublicateProxy, filterProxy };
 
-
-module.exports = helper

@@ -10,7 +10,7 @@ const proxy = getProxy('get_status_for');
 const { UA } = require("../../ua");
 const util = require("util");
 
-const helper = require('../helper/helper');
+const {helper} = require('../helper/helper');
 const { arrayNFTCollectionName } = require("./nftArrayData");
 
 const { getProductDetail } = require("./get_ProductDetali_orderSuccessAnnounces");

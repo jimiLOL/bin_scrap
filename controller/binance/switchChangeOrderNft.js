@@ -8,7 +8,7 @@ const { getProductDetail } = require('./get_productDetali');
 const { getProxy } = require("../../get_proxyInit");
 const proxy = getProxy('switchChangeOrderNft');
 const { UA } = require("../../ua");
-const helper = require('../helper/helper');
+const {helper} = require('../helper/helper');
 
 const Emitter = require("events");
 const emitter = new Emitter();

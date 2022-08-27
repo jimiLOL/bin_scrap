@@ -14,7 +14,7 @@ const { getProductDetail } = require('./get_productDetali');
 const { getProxy } = require("../../get_proxyInit");
 const proxy = getProxy('binance_marketplace_lastorder');
 const { UA } = require("../../ua");
-const helper = require('./../helper/helper');
+const {helper} = require('./../helper/helper');
 
 let proxyLength = proxy.length;
 // const {arrayIterator, setConstant} = require('./arrayiterator.js') // надо перенести итератор в отдельный модуль
