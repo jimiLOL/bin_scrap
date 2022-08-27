@@ -1,7 +1,7 @@
 const { MongoClient } = require('mongodb');
 const mongoose = require("mongoose");
 
-const objectTrain = require('./db_train');
+// const objectTrain = require('./db_train');
 require("dotenv/config");
 let obJectClient = {};
 obJectClient['binance'] = new MongoClient(process.env.BINANCE_DB);
