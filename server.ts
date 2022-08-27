@@ -179,6 +179,9 @@ function init_workers() {
           if (channel[e] != undefined) {
             delete channel[e];
             channel[e] = new MessageChannel();
+          } else {
+            channel[e] = new MessageChannel();
+
           }
 
           // ee.emit('abort');
