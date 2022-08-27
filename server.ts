@@ -35,7 +35,7 @@ import util from "util";
 import path from "path";
 
 // const path = require('path');
-import Piscina from "Piscina";
+import Piscina from "piscina";
 // const Piscina = require('piscina');
 import EventEmitter from "events";
 // const EventEmitter = require('events');
