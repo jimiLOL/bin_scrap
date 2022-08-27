@@ -98,7 +98,6 @@ async function add_binance_db<T extends (productBinanceAll | orderSuccessAnnounc
     }
 
 
-   console.log('eee');
    
 
     NFT.findOneAndUpdate({ productId: newNFT.productId }, newNFT, (err: any, call: any): any => {

@@ -590,7 +590,6 @@ function mysteryBoxProductDetail<
   header: any
 ): Promise<resolve> {
   return new Promise((resolve, reject) => {
-    console.log(productBinance);
     
     console.log('getProductDetail ' + productBinance.nftType);
     // productBinance.nftType = 1;
@@ -626,7 +625,6 @@ function addDB<
   return new Promise((resolve, reject) => {
     if (responseProductDetail != null) {
       const newProduct: (productBinanceAll) & (productDetailAll | MysteryBox) = Object.assign({}, productBinance, responseProductDetail);
-      console.log('!!!');
       
 
       add_binance_db(newProduct, "binance")

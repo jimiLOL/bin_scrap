@@ -132,7 +132,6 @@ async function add_history_binance_db<T extends (productBinanceAll | orderSucces
         let newWeek = new Date().getTime();
         newWeek = newWeek - 10 * 24 * 60 * 60 * 1000;
 
-        console.log('=S');
         
 
 
