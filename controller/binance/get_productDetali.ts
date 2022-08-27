@@ -532,15 +532,18 @@ function mysteryBoxProductDetail<
               reject({ status: "error", proxy: agent.proxyOptions.host });
             });
         } else {
-          addDB(productBinance, null, agent, header)
-            .then(() => {
-              // productBinance = null;
-              resolve({ status: "ok", proxy: agent.proxyOptions.host });
-            })
-            .catch((e) => {
-              // productBinance = null;
-              reject({ status: "error", proxy: agent.proxyOptions.host });
-            });
+          marketProductDetail(productBinance, agent, header)
+          .then((res: resolve) => resolve({ status: "ok", proxy: agent.proxyOptions.host }))
+          .catch((e) => reject({ status: "error", proxy: agent.proxyOptions.host }));
+          // addDB(productBinance, null, agent, header)
+          //   .then(() => {
+          //     // productBinance = null;
+          //     resolve({ status: "ok", proxy: agent.proxyOptions.host });
+          //   })
+          //   .catch((e) => {
+          //     // productBinance = null;
+          //     reject({ status: "error", proxy: agent.proxyOptions.host });
+          //   });
         }
       })
       .catch((e: any) => {
@@ -668,6 +671,8 @@ function addDB<
       //   resolve()
       // })
       console.log('else get_productDetali');
+      console.log(productBinance);
+      
       // process.exit(0)
     }
   });
