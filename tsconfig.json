@@ -9,7 +9,7 @@
     "esModuleInterop": true,
     "allowJs": true,
     "checkJs": false,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "sourceMap": true,
     "strict": true,
     "noEmit": true,

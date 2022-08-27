@@ -5,7 +5,7 @@
   "main": "server.ts",
   "scripts": {
     "server": "nodemon server",
-    "start": "node -r tsconfig-paths/register -r ts-node/register --max-old-space-size=4192 --experimental-modules server.ts"
+    "start": "node --max-old-space-size=4192 --experimental-modules server.ts"
   },
   "exports": {
     ".": {
