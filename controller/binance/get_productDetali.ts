@@ -547,7 +547,7 @@ function mysteryBoxProductDetail<
         }
       })
       .catch((e: any) => {
-        console.log(`${agent.proxyOptions.host}:${agent.proxyOptions.port}`);
+        console.log(`${agent.proxyOptions}`);
         
         if (process.env.PROD == "dev") {
           fs.appendFile(

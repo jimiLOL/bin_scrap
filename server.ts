@@ -89,7 +89,7 @@ mongoose
 import {helper} from "./controller/helper/helper";
 
 app.get('/heapdump', (req: Request, res: Response) => {
-  heapdump.writeSnapshot(`heapDump-${Date.now()}.heapsnapshot`, (err: any, filename) => {
+  heapdump.writeSnapshot(`heapDump-${Date.now()}.heapsnapshot`, (err: any, filename:any) => {
     console.log("Heap dump of a bloated server written to", filename);
 
     res.status(200).send({ msg: "successfully took a heap dump" })

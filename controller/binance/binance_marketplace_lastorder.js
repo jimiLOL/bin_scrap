@@ -142,8 +142,8 @@ async function start(init_header, port) {
         port.on('message', async (message) => {
             if (Array.isArray(message)) {
                 console.log(message.length);
-                proxy = message;
-                proxyLength = message.length;
+                // proxy = message;
+                // proxyLength = message.length;
 
             } else { 
                 console.log('message');
@@ -490,8 +490,8 @@ module.exports = ({init_header, port, proxyArray}) => {
     return new Promise((resolve, reject) => {
         console.log('Worker 4 init');
         // console.log(proxyArray);
-        proxy = proxyArray;
-        proxyLength = proxy.length;
+        // proxy = proxyArray;
+        // proxyLength = proxy.length;
         // console.log(init_header);
        
 
