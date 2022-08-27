@@ -6,7 +6,7 @@ const emitter = new Emitter();
  
 const util = require("util");
 const { getListCollectionName } = require('./../getCollectionList');
-const { getAddressModel } = require("../../model/nft_detalii.cjs");
+const { getAddressModel } = require("../../model/nft_detalii");
 
 
 const { default: axios } = require("axios");

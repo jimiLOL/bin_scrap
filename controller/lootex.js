@@ -1,4 +1,4 @@
-const NftPokemon = require("../model/nft_detalii.cjs");
+const NftPokemon = require("../model/nft_detalii");
 const { senDataTelegram, techbicaleventTelegram, sendInfoTelegram } = require("../controller/sendTelegram");
 const { default: axios } = require("axios");
 const tunnel = require("tunnel");

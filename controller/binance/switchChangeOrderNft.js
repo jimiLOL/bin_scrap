@@ -1,6 +1,6 @@
 
 const { getListCollectionName } = require('../getCollectionList');
-const { getAddressModel } = require("../../model/nft_detalii.cjs");
+const { getAddressModel } = require("../../model/nft_detalii");
 
 const { default: axios } = require("axios");
 const tunnel = require("tunnel");

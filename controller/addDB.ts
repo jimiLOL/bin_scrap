@@ -2,7 +2,8 @@
 import mongoose from 'mongoose';
 
 // const Schema = mongoose.Schema;
-import { getAddressModel } from "../model/nft_detalii.cjs";
+const {getAddressModel} = require("../model/nft_detalii")
+// import { getAddressModel } from "../model/nft_detalii";
 import coverModelBinance from "../model/nft_cover_binance.js";
 
 import {productBinanceAll, orderSuccessAnnounces, productDetailAll, MysteryBox, collection} from "./../controller/binance/get_productDetali";
