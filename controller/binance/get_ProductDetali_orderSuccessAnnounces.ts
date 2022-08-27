@@ -114,8 +114,8 @@ function mysteryBoxProductDetail<
     let t = helper.uuid();
     header["x-ui-request-trace"] = t;
     header["x-trace-id"] = t;
-    console.log('mysteryBoxProductDetail');
-    console.log(`https://www.binance.com/bapi/nft/v1/friendly/nft/nft-asset/asset-detail?nftInfoId=${productBinance.productId}`);
+    // console.log('mysteryBoxProductDetail');
+    // console.log(`https://www.binance.com/bapi/nft/v1/friendly/nft/nft-asset/asset-detail?nftInfoId=${productBinance.productId}`);
     
     
     try {
@@ -258,7 +258,7 @@ function mysteryBoxProductDetail<
 function addDB<
   T extends productBinanceAll,
   P extends productDetailAll | MysteryBox
->(productBinance: T, responseProductDetail: P | null = null, agent: any, header: any): Promise<void> {
+>(productBinance: T | null, responseProductDetail: P | null = null, agent: any, header: any): Promise<void> {
   return new Promise((resolve, reject) => {
     if (responseProductDetail != null) {
       const newProduct: (productBinanceAll | orderSuccessAnnounces) & (productDetailAll | MysteryBox) = Object.assign({}, productBinance, responseProductDetail);
@@ -271,14 +271,14 @@ function addDB<
           return add_history_binance_db(newProduct, "binance");
         })
         .then(() => {
-          // productBinance = null;
-          // responseProductDetail = null;
+          productBinance = null;
+          responseProductDetail = null;
           // newProduct = null;
           resolve();
         })
         .catch((e: ErrorConstructor) => {
-          // productBinance = null;
-          // responseProductDetail = null;
+          productBinance = null;
+          responseProductDetail = null;
           // newProduct = null;
 
           console.log(e);
@@ -287,14 +287,14 @@ function addDB<
       // process.exit(0)
     } else {
     //   productBinance = null;
-      if (productBinance.nftType == 1) {
-        productBinance.nftType = 2
+      if ((productBinance as T).nftType == 1) {
+        (productBinance as T).nftType = 2
       } else {
-        productBinance.nftType = 1
+        (productBinance as T).nftType = 1
 
       }
       console.log('!-!');
-      resolve();
+      // resolve();
 
 
       getProductDetail(productBinance as productBinanceAll, agent, header).then(()=> {

@@ -29,7 +29,7 @@ import axios from "axios";
 // const { default: axios } = require("axios");
 import util from "util";
 // const util = require("util");
-// const heapdump = require("heapdump");
+const heapdump = require("heapdump");
 // import heapdump from "heapdump";
 
 import path from "path";
@@ -88,13 +88,13 @@ mongoose
 
 import {helper} from "./controller/helper/helper";
 
-// app.get('/heapdump', (req: Request, res: Response) => {
-//   heapdump.writeSnapshot(`heapDump-${Date.now()}.heapsnapshot`, (err: any, filename) => {
-//     console.log("Heap dump of a bloated server written to", filename);
+app.get('/heapdump', (req: Request, res: Response) => {
+  heapdump.writeSnapshot(`heapDump-${Date.now()}.heapsnapshot`, (err: any, filename) => {
+    console.log("Heap dump of a bloated server written to", filename);
 
-//     res.status(200).send({ msg: "successfully took a heap dump" })
-//   });
-// });
+    res.status(200).send({ msg: "successfully took a heap dump" })
+  });
+});
 
 type workerType = {
   [key: string]: any;
