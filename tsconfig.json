@@ -19,12 +19,19 @@
       ],
       "@/*": [
         "./*"
-      ]
+      ],
+      "./*": [
+        "./*"
+      ],
     },
     "types": [
       "@types/node",
     ]
   },
+  "include": [
+    "/**/*.ts",
+    "./controller"
+  ],
   "exclude": [
     "node_modules",
   ]

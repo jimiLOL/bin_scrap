@@ -5,21 +5,21 @@ const emitter = new Emitter();
 //header - мы прокидываем при инциализации потока
 const { default: axios } = require("axios");
 const tunnel = require("tunnel");
-const { proxy } = require("../../proxy_list_two");
+const { getProxy } = require("../../get_proxyInit");
+const proxy = getProxy('get_status_for');
 const { UA } = require("../../ua");
 const util = require("util");
 
 const helper = require('../helper/helper');
-const { getNaemListNFT } = require("./getNftStat");
 const { arrayNFTCollectionName } = require("./nftArrayData");
 
-const { getProductDetail } = require('./get_productDetali');
+const { getProductDetail } = require("./get_ProductDetali_orderSuccessAnnounces");
 
-const proxyLength = proxy.length;
+
+let proxyLength = proxy.length;
 
 const iteration = 5;
 const num = 5; // через сколько прервать итерацию из функции getInfoBinNFTMysteryBox
-
 
 
 
@@ -104,7 +104,7 @@ const awaitArray = (val, length) => {
 
     })
 }
-async function start(init_header) {
+async function start(init_header, port) {
     let i = 0;
 
 
@@ -120,9 +120,19 @@ async function start(init_header) {
             }
 
         });
+        port.on('message', async (message) => {
+            if (Array.isArray(message)) {
+                console.log(message.length);
+
+            } else { 
+                console.log('message');
+
+            }
+            // resolve(message)
+          }); // получаем сообщение из основного потока
 
         // header = getNewHeaders(headers); // поток не имеет доступа к результату этой функции;
-        header = init_header.headers; // делаем header глобальным
+        header = init_header; // делаем header глобальным
 
 
 
@@ -202,13 +212,13 @@ async function start(init_header) {
 
 
 
-            header["user-agent"] = UA[i];
+            header["user-agent"] = UA[helper.getRandomInt(1, UA.length - 1)];
             let proxyOptions = {
                 host: proxyHost,
                 port: portHost,
-                proxyAuth: proxyAuth,
+                // proxyAuth: proxyAuth,
                 headers: {
-                    'User-Agent': UA[i]
+                    'User-Agent': UA[helper.getRandomInt(1, UA.length - 1)]
                 },
             };
             let agent = tunnel.httpsOverHttp({
@@ -228,7 +238,7 @@ async function start(init_header) {
 
             axios.get('https://www.binance.com/bapi/nft/v1/public/nft/homepage/announce?cursor=300', { headers: header, httpsAgent: agent }).then(async res => {
                 // console.log('Worker 1 scan page - ' + body.page);
-                console.log(res.status + ' ' + i + ' total^ ' + res.data.data.total);
+                console.log(res.status + ' ' + i + ' total^ ' + res.data.data.totalSize);
 
 
                 // num = Math.ceil(res.data.data.total / 16);
@@ -236,7 +246,7 @@ async function start(init_header) {
                 if (res.data.data.total == 0 || i >= num || res.data.code == '000002') {
 
                     breakSwitch = true
-                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}`);
                     // console.log('End cycle "getInfoBinNFTMysteryBox" Proxy length ' + proxy.length);
 
                     resolve(breakSwitch);
@@ -247,10 +257,10 @@ async function start(init_header) {
 
 
 
-                    stackProxy[`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`].status = 'work';
+                    stackProxy[`${proxyOptions.host}:${proxyOptions.port}`].status = 'work';
 
-                    await arrayIteration(res.data.data.orderSuccessAnnounces, `${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`).then(() => {
-                        stackProxy[`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`].status = 'off';
+                    await arrayIteration(res.data.data.orderSuccessAnnounces, `${proxyOptions.host}:${proxyOptions.port}`).then(() => {
+                        stackProxy[`${proxyOptions.host}:${proxyOptions.port}`].status = 'off';
                         res.data.data.rows = null;
 
                         // res = null;
@@ -280,8 +290,10 @@ async function start(init_header) {
 
             }).catch(e => {
                 console.log('Error');
-                console.log(e);
-                proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+                console.log(e.message);
+                breakSwitch = true
+
+                proxy.push(`${proxyOptions.host}:${proxyOptions.port}`);
                 reject(breakSwitch)
 
 
@@ -322,7 +334,7 @@ async function start(init_header) {
                     let proxyOptions = {
                         host: proxyHost,
                         port: portHost,
-                        proxyAuth: proxyAuth,
+                        // proxyAuth: proxyAuth,
                         headers: {
                             'User-Agent': UA[randomIndex]
                         },
@@ -337,7 +349,7 @@ async function start(init_header) {
 
 
 
-                        proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
+                        proxy.push(`${proxyOptions.host}:${proxyOptions.port}`); // возвращаем прокси в обойму на дочернем цикле
 
                         // // console.log('Function arrayIteration  Mystery Box last order  END\nProxy length ' + proxy.length);
                         
@@ -351,7 +363,7 @@ async function start(init_header) {
                     }).catch((e) => {
 
 
-                        proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+                        proxy.push(`${proxyOptions.host}:${proxyOptions.port}`);
 
                         // // console.log('Error: Function arrayIteration Mystery Box last order END\nProxy length ' + proxy.length);
                         
@@ -425,25 +437,52 @@ function random() {
 
 var cloneProxySet;
 
-function init(init_header) {
-    return new Promise((resolve, reject) => {
-        start(init_header).then((res) => {
-          console.log('Worker 1');
-          emitter.removeAllListeners('infinity_recursion');
+// function init(init_header) {
+//     return new Promise((resolve, reject) => {
+//         start(init_header).then((res) => {
+//           console.log('Worker 1');
+//           emitter.removeAllListeners('infinity_recursion');
 
-          resolve(res);
-            // init(init_header)
-        }).catch(e => {
-            console.log('Worker 1');
+//           resolve(res);
+//             // init(init_header)
+//         }).catch(e => {
+//             console.log('Worker 1');
+//             emitter.removeAllListeners('infinity_recursion');
+
+
+//             reject(e);
+//             // init(init_header)
+//         })
+//     })
+
+// }
+
+
+// module.exports = { init };
+
+
+module.exports = ({init_header, port, proxyArray}) => {
+    return new Promise((resolve, reject) => {
+        console.log('Worker get_status_for init');
+        // console.log(proxyArray);
+ 
+        // console.log(init_header);
+       
+
+        start(init_header, port).then((res) => {
+            console.log('Worker get_status_for');
             emitter.removeAllListeners('infinity_recursion');
 
+            resolve(res);
+            // init(init_header)
+        }).catch(e => {
+
+            console.log('Worker get_status_for');
+            console.log(e);
+            emitter.removeAllListeners('infinity_recursion');
 
             reject(e);
             // init(init_header)
         })
     })
-
-}
-
-
-module.exports = { init };
+  };

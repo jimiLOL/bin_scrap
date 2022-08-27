@@ -67,7 +67,7 @@ function getListCollectionName(db_key) {
     return new Promise(async (resolve, reject) => {
         if (!obJectClient.hasOwnProperty(db_key)) {
             setTimeout(() => {
-                console.log('await connect to ' + db_key + ' ....');
+                console.log('await connect to ' + db_key + ' in getCollection list....');
                 getListCollectionName(db_key).then(res => {
                     resolve(res)
                 })

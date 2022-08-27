@@ -1,16 +1,19 @@
 
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+// const Schema = mongoose.Schema;
 require("dotenv/config");
 
 // Подключения добавить в массив, в фукнуции DynamicSchema производить поиск по ключу. Для каждого выхова из функции прокидывать ключ подключения 2 аргументом.
+export type connectionMongoose = {
+[key: string]: mongoose.Connection;
+}
+export const objectTrain: connectionMongoose = {};
 
-
-var objectTrain = {};
 (async () => {
  
-    objectTrain['binance'] = await mongoose.createConnection(process.env.BINANCE_DB);
-    objectTrain['mochi'] = await mongoose.createConnection(process.env.MOCHI_DB);
-    objectTrain['nftrade'] = await mongoose.createConnection(process.env.NFTRADE_DB);
+    objectTrain['binance'] = await mongoose.createConnection(process.env.BINANCE_DB as string);
+    objectTrain['mochi'] = await mongoose.createConnection(process.env.MOCHI_DB as string);
+    objectTrain['nftrade'] = await mongoose.createConnection(process.env.NFTRADE_DB as string);
 
   //   objectTrain['binance'].db.listCollections().then((names) => {
   //     console.log(names);
@@ -34,4 +37,5 @@ mongoose.connection.on('error', err => {
 })()
 
 
-module.exports = objectTrain
+// module.exports = objectTrain
+// export default objectTrain

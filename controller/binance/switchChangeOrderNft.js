@@ -4,8 +4,9 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
 
 const { default: axios } = require("axios");
 const tunnel = require("tunnel");
-const { getProductDetail } = require('./get_productDetali');
-const { proxy } = require("../../proxy_list_five");
+const { getProductDetail } = require('./get_productDetali'); 
+const { getProxy } = require("../../get_proxyInit");
+const proxy = getProxy('switchChangeOrderNft');
 const { UA } = require("../../ua");
 const helper = require('../helper/helper');
 
@@ -13,7 +14,7 @@ const Emitter = require("events");
 const emitter = new Emitter();
 let emitFunction;
 
-const proxyLength = proxy.length;
+let proxyLength = proxy.length;
 
 let stackProxy = {};
 
@@ -126,9 +127,9 @@ function iterationCollection(arrayDocument, header) {
             let proxyOptions = {
                 host: proxyHost,
                 port: portHost,
-                proxyAuth: proxyAuth,
+                // proxyAuth: proxyAuth,
                 headers: {
-                    'User-Agent': UA[i]
+                    'User-Agent': UA[helper.getRandomInt(1, UA.length - 1)]
                 },
             };
             let agent = tunnel.httpsOverHttp({
@@ -137,22 +138,22 @@ function iterationCollection(arrayDocument, header) {
             });
 
             proxy.splice(pIndex, 1);
-            header["user-agent"] = UA[i];
+            header["user-agent"] = UA[helper.getRandomInt(1, UA.length - 1)];
 
             if (element?.productId != undefined) {
                 arrayPromise.push(getProductDetail(element, agent, header).then((res) => {
                     console.log('res ' + res);
-                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}`);
                 }).catch((e) => {
                     console.log('Error ' + e);
-                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}`);
                 }));
 
 
             } else {
                 console.log('(((');
                 console.log(element);
-                proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+                proxy.push(`${proxyOptions.host}:${proxyOptions.port}`);
 
                  
 
@@ -248,7 +249,7 @@ function getlayerList(arrayCollections, header) {
     })
 }
 
-function start(header) {
+function start(header, port) {
     return new Promise(async (resolve, reject) => {
         emitFunction = emitter.on('infinity_recursion', (message) => {
             let magicVal = 0; // что бы не долбитть в емитор по 100 раз
@@ -258,6 +259,16 @@ function start(header) {
             }
     
         });
+        port.on('message', async (message) => {
+            if (Array.isArray(message)) {
+                console.log(message.length);
+       
+
+            } else { 
+                console.log('message');
+
+            }
+          }); // получаем сообщение из основного потока
 
 
 
@@ -273,28 +284,58 @@ function start(header) {
     })
 }
 
-function init(init_header) {
-    return new Promise((resolve, reject) => {
-        start(init_header).then((res) => {
-            console.log('Worker switchChangeOrderNft');
+// function init(init_header) {
+//     return new Promise((resolve, reject) => {
+//         start(init_header).then((res) => {
+//             console.log('Worker switchChangeOrderNft');
+//             console.log(res);
       
 
+//             emitter.removeAllListeners('infinity_recursion');
+
+//             resolve(res);
+
+//             // init(init_header)
+//         }).catch(e => {
+//             console.log('Error Worker switchChangeOrderNft');
+ 
+//             emitter.removeAllListeners('infinity_recursion');
+
+//             reject(e);
+//             // init(init_header)
+//         })
+//     })
+
+// }
+
+
+// module.exports = { init }
+
+
+
+module.exports = ({init_header, port, proxyArray}) => {
+    return new Promise((resolve, reject) => {
+        console.log('Worker switchChangeOrderNft init');
+  
+    
+ 
+       
+
+        start(init_header, port).then((res) => {
+            console.log('Worker switchChangeOrderNft finish');
             emitter.removeAllListeners('infinity_recursion');
 
             resolve(res);
-
             // init(init_header)
         }).catch(e => {
+
             console.log('Worker switchChangeOrderNft');
- 
+            console.log(e);
             emitter.removeAllListeners('infinity_recursion');
 
             reject(e);
             // init(init_header)
         })
     })
+  };
 
-}
-
-
-module.exports = { init }

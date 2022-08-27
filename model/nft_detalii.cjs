@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const objectTrain = require('../controller/db_train');
+const {objectTrain} = require('../controller/db_train');
 const Addresses = {}
 
 
@@ -133,7 +133,7 @@ function getAddressModel(prefix, db_key) {
         if (!Addresses[prefix]) {
             if (objectTrain[db_key] == undefined) {
                 setTimeout(() => {
-                    console.log('await connect to ' +  db_key +' ....');
+                    console.log('await connect to ' +  db_key +' in nft_detalii....');
                     getAddressModel(prefix, db_key).then(res=> {
                        resolve(res)
                    })

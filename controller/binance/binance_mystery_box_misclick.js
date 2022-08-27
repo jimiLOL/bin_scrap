@@ -5,17 +5,19 @@ const Emitter = require("events");
 const emitter = new Emitter();
 const { default: axios } = require("axios");
 const tunnel = require("tunnel");
-const { proxy } = require("../../proxy_list");
+const { getProxy } = require("../../get_proxyInit");
+const proxy = getProxy('binance_mystery');
 const { UA } = require("../../ua");
 const util = require("util");
 
 const helper = require('./../helper/helper');
 const { getNaemListNFT } = require("./getNftStat");
-const { arrayNFTCollectionName } = require("./nftArrayData");
+// const { arrayNFTCollectionName } = require("./nftArrayData");
+const { getProductDetail } = require("./get_productDetali");
 
-const { getProductDetail } = require('./get_productDetali');
 
-const proxyLength = proxy.length;
+
+let proxyLength = proxy.length;
 
 
 
@@ -44,7 +46,10 @@ const awaitArray = (val, length) => {
         function recursion() {
             return new Promise((resolve) => {
                 if (proxy.length != proxyLength && length > 0) {
+                    // console.log('leng != length MeysteryBox ' + proxy.length, proxyLength);
+
                     helper.timeout(2000).then(() => {
+                        // console.log(val);
                         if (stackProxy[val].status == 'work') {
                             stackProxy[val].integer++
                         }
@@ -92,11 +97,22 @@ const awaitArray = (val, length) => {
 
     })
 }
-async function start(init_header) {
+async function start(init_header, port) {
 
     //header - мы прокидываем при инциализации потока
 
     return new Promise(async (resolve, reject) => {
+        port.on('message', async (message) => {
+            if (Array.isArray(message)) {
+                console.log(message.length);
+             
+
+            } else {
+                console.log('message');
+
+            }
+            // resolve(message)
+        }); // получаем сообщение из основного потока
         emitter.on('infinity_recursion', (message) => {
             let magicVal = 0; // что бы не долбитть в емитор по 100 раз
             if (message.status && magicVal < 2) {
@@ -109,14 +125,14 @@ async function start(init_header) {
 
         });
         // header = getNewHeaders(headers); // поток не имеет доступа к результату этой функции;
-        header = init_header.headers; // делаем header глобальным
+        header = init_header; // делаем header глобальным
 
         const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = helper.proxyInit(proxy[helper.getRandomInt(1, proxy.length - 1)]);
 
         let proxyOptions = {
             host: proxyHost,
             port: portHost,
-            proxyAuth: proxyAuth,
+            // proxyAuth: proxyAuth,
             headers: {
                 'User-Agent': UA[helper.getRandomInt(1, UA.length - 1)]
             },
@@ -131,6 +147,7 @@ async function start(init_header) {
             return res.data.data
         }).catch(e => {
             console.log(e);
+            
         });
         // console.log(layerList.length);
 
@@ -166,6 +183,7 @@ async function start(init_header) {
                 helper.shuffle(proxy);
 
                 for await (const proxyVar of arrayIterator(proxy)) {
+                    console.log('Iteration start');
 
                     let indexProxy = proxy.indexOf(proxyVar);
                     proxy.splice(indexProxy, 1);
@@ -205,13 +223,13 @@ async function start(init_header) {
     function getInfoBinNFTMysteryBox({ host: proxyHost, port: portHost, proxyAuth: proxyAuth }, i, body) {
         return new Promise(async (resolve, reject) => {
             let num = 0;
-            header["user-agent"] = UA[i];
+            header["user-agent"] = UA[helper.getRandomInt(1, UA.length - 1)];
             let proxyOptions = {
                 host: proxyHost,
                 port: portHost,
-                proxyAuth: proxyAuth,
+                // proxyAuth: proxyAuth,
                 headers: {
-                    'User-Agent': UA[i]
+                    'User-Agent': UA[helper.getRandomInt(1, UA.length - 1)]
                 },
             };
             let agent = tunnel.httpsOverHttp({
@@ -229,21 +247,21 @@ async function start(init_header) {
             axios.post('https://www.binance.com/bapi/nft/v1/public/nft/market-mystery/mystery-list', JSON.stringify(body), { headers: header, httpsAgent: agent }).then(async res => {
                 console.log('Worker 2 scan serialNo - ' + body.params.serialNo[0] + ' data length ' + res.data.data.data.length + ' Page # ' + res.data?.data?.page);
 
-          
+
 
                 num = Math.ceil(res.data.data.total / 16);
                 if (res.data.data.total == 0 || i >= num || res.data.data.data.length == 0 || res.data.code == '000002') {
                     console.log('Worker 2 end scan serialNo ' + body.params.serialNo[0]);
 
                     breakSwitch = true
-                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}`);
                     resolve(breakSwitch);
                 } else {
 
-                    stackProxy[`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`].status = 'work';
+                    stackProxy[`${proxyOptions.host}:${proxyOptions.port}`].status = 'work';
 
-                    await arrayIteration(res.data.data.data, `${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`).then(() => {
-                        stackProxy[`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`].status = 'off';
+                    await arrayIteration(res.data.data.data, `${proxyOptions.host}:${proxyOptions.port}`).then(() => {
+                        stackProxy[`${proxyOptions.host}:${proxyOptions.port}`].status = 'off';
                         res = null;
 
 
@@ -262,7 +280,8 @@ async function start(init_header) {
 
 
             }).catch(e => {
-                proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+                proxy.push(`${proxyOptions.host}:${proxyOptions.port}`);
+                breakSwitch = true
                 reject(breakSwitch)
 
 
@@ -302,7 +321,7 @@ async function start(init_header) {
                     let proxyOptions = {
                         host: proxyHost,
                         port: portHost,
-                        proxyAuth: proxyAuth,
+                        // proxyAuth: proxyAuth,
                         headers: {
                             'User-Agent': UA[randomIndex]
                         },
@@ -314,18 +333,8 @@ async function start(init_header) {
 
                     arrayPromise.push(getProductDetail(ele, agent, header).then(() => {
 
-
-
-                        proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
-
-
-
-
-
-
-
-
-
+                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}`); // возвращаем прокси в обойму на дочернем цикле
+ 
                     }).catch((e) => {
 
                         // let index = proxy.indexOf(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
@@ -334,7 +343,7 @@ async function start(init_header) {
 
 
                         // }
-                        proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+                        proxy.push(`${proxyOptions.host}:${proxyOptions.port}`);
 
                         // proxy.forEach((ele, i) => {
                         //     let filter = proxy.filter(x => x == ele);
@@ -377,7 +386,7 @@ async function start(init_header) {
                         })
                     }
 
-                }, 20 * i + 1);
+                }, 202 * i);
 
 
 
@@ -397,25 +406,27 @@ async function start(init_header) {
 var cloneProxySet;
 
 
-function init(init_header) {
-    return new Promise((resolve, reject) => {
-        start(init_header).then((res) => {
-            console.log('Worker 2');
-            emitter.removeAllListeners('infinity_recursion');
+// function init(init_header) {
+//     return new Promise((resolve, reject) => {
+//         proxy = proxyArray;
+//         proxyLength = proxy.length;
+//         start(init_header).then((res) => {
+//             console.log('Worker 2');
+//             emitter.removeAllListeners('infinity_recursion');
 
-            resolve(res);
+//             resolve(res);
 
-            // init(init_header)
-        }).catch(e => {
-            console.log('Worker 2');
-            emitter.removeAllListeners('infinity_recursion');
+//             // init(init_header)
+//         }).catch(e => {
+//             console.log('Worker 2');
+//             emitter.removeAllListeners('infinity_recursion');
 
-            reject(e);
-            // init(init_header)
-        })
-    })
+//             reject(e);
+//             // init(init_header)
+//         })
+//     })
 
-}
+// }
 
 function random() {
     let min = Math.ceil(1);
@@ -434,4 +445,29 @@ function random() {
 
 
 
-module.exports = { init };
+// module.exports = { init };
+
+
+module.exports = ({ init_header, port, proxyArray }) => {
+    return new Promise((resolve, reject) => {
+        console.log('Worker 2 init');
+        console.log(proxyArray.length);
+ 
+
+        start(init_header, port).then((res) => {
+            console.log('Worker 2 finish');
+            emitter.removeAllListeners('infinity_recursion');
+
+            resolve(res);
+            // init(init_header)
+        }).catch(e => {
+
+            console.log('Worker 2');
+            console.log(e);
+            emitter.removeAllListeners('infinity_recursion');
+
+            reject(e);
+            // init(init_header)
+        })
+    })
+};

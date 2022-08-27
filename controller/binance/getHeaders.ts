@@ -11,7 +11,7 @@ const binanceAdminCookies = require("./../../model/binanceAdminCookies");
 
 //   }
 // });
-let headers = {
+let headers: any = {
   Host: "www.binance.com",
   Accept: "*/*",
   "Accept-Encoding": "gzip",
@@ -25,14 +25,14 @@ let headers = {
   "Sec-Fetch-Mode": "cors",
   "Sec-Fetch-Site": "same-origin",
 };
-var header = {};
-function getNewHeaders(headers) {
+var header: any = {};
+function getNewHeaders(headers: any) {
   try {
     let full = "";
 
 
     let json = JSON.parse(header.Cookie);
-    json.cookies.forEach((element) => {
+    json.cookies.forEach((element: any) => {
       full = full + element.name + "=" + element.value + "; ";
     });
     headers["x-nft-checkbot-token"] = header.xnftcheckbottoken;
@@ -61,13 +61,13 @@ function getNewHeaders(headers) {
 }
 function getHeaders() {
   return new Promise((resolve, reject) => {
-    binanceAdminCookies.find({ enable: true }, (err, call) => {
+    binanceAdminCookies.find({ enable: true }, (err: any, call: any) => {
       if (err) console.log(err);
 
       if (call) {
         console.log('getHeaders');
 
-        call.forEach((cookies) => {
+        call.forEach((cookies: any) => {
           header = cookies;
           // let json = JSON.parse(cookies.Cookie);
 
@@ -92,4 +92,5 @@ function getHeaders() {
 
 }
 
-module.exports = { getHeaders, getNewHeaders }
+// module.exports = { getHeaders, getNewHeaders }
+export {getHeaders, getNewHeaders}

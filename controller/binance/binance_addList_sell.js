@@ -5,7 +5,6 @@ const {
   sendInfoTelegram,
 } = require("../sendTelegram");
 const { default: axios } = require("axios");
-const { addDB, updatePriceDB } = require("../addDB");
 const binanceIdProduct = require("../../model/binanceIdProduct");
 const tunnel = require("tunnel");
 const mongoose = require('mongoose');

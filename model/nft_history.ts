@@ -1,18 +1,43 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import {Schema, Types, Connection, Model} from 'mongoose';
+// const Schema = mongoose;
 
-const objectTrain = require('../controller/db_train');
-const Addresses = {}
+import {objectTrain} from '../controller/db_train';
+const Addresses: addressesModel = {};
 
+type addressesModel = {
+    [key: string]: modelHistory;
 
-function DynamicSchema(namecollection, db, db_key) {
+}
+
+export type historyNFT = {
+    amount: string;
+    status: number;
+    userId: string;
+    userNickName: string;
+    title: string;
+    asset: string;
+    setStartTime: number;
+};
+export type TypeHistoryModel = {
+    _id: Types.ObjectId;
+    marketpalce: string;
+    productId: string;
+    collectionId: string;
+    title: string;
+    collectionName: string;
+    history: historyNFT[];
+    total: number;
+};
+type modelHistory = Model<TypeHistoryModel>
+
+function DynamicSchema(nameCollection: string, db: Connection, db_key: string): modelHistory {
     // console.log(db);
     if (db == undefined) {
         // process.exit(1)
     };
-    let ShemaNFT;
+    let SchemaNFT;
 
-    const history = new Schema({
+    const history = new Schema<historyNFT, Model<historyNFT>>({
         amount: {
             type: String,
            required: true
@@ -33,8 +58,8 @@ function DynamicSchema(namecollection, db, db_key) {
  
 
     if (db_key == 'binance') {
-        ShemaNFT = new Schema({
-            _id: mongoose.Types.ObjectId,
+        SchemaNFT = new Schema<TypeHistoryModel, modelHistory>({
+            _id: Schema.Types.ObjectId,
             marketpalce: String,
             productId: {type: String, index: true},
             collectionId: String,
@@ -47,20 +72,21 @@ function DynamicSchema(namecollection, db, db_key) {
             }
         })
 
-    } else {
-        ShemaNFT = new Schema({
-            _id: mongoose.Types.ObjectId,
-            marketpalce: String,
-            productId: {type: String, index: true},
-            title: String,
-            history: Array,
-            total: Number
+    } 
+    // else {
+    //     SchemaNFT = new Schema({
+    //         _id: Schema.Types.ObjectId,
+    //         marketpalce: String,
+    //         productId: {type: String, index: true},
+    //         title: String,
+    //         history: Array,
+    //         total: Number
 
     
-        })
+    //     })
 
-    };
-    return db.model(namecollection, ShemaNFT);
+    // };
+    return db.model(nameCollection, SchemaNFT);
 
 
 
@@ -68,7 +94,7 @@ function DynamicSchema(namecollection, db, db_key) {
 }
 
 
-function getHistoryModelNFT(prefix, db_key) {
+function getHistoryModelNFT(prefix: string, db_key:string): Promise<modelHistory> {
 
     // console.log('db_key');
     // console.log(db_key);
@@ -82,14 +108,14 @@ function getHistoryModelNFT(prefix, db_key) {
         if (!Addresses[`history_${prefix}`]) {
             if (objectTrain[db_key] == undefined) {
                 setTimeout(() => {
-                    console.log('await connect to ' +  db_key +' ....');
+                    console.log('await connect to ' +  db_key +' in nft_history ....');
                     getHistoryModelNFT(prefix, db_key).then(res=> {
                        resolve(res)
                    })
                 }, 1000);
     
             } else {
-                Addresses[`history_${prefix}`] = new DynamicSchema(`history_${prefix}`, objectTrain[db_key], db_key);
+                Addresses[`history_${prefix}`] =  DynamicSchema(`history_${prefix}`, objectTrain[db_key], db_key);
 
             resolve(Addresses[`history_${prefix}`])
 
@@ -112,5 +138,6 @@ function getHistoryModelNFT(prefix, db_key) {
 
 
 // const NftPokemon = mongoose.model('nfts', ShemaNftPokemon);
-module.exports = {getHistoryModelNFT};
+// module.exports = {getHistoryModelNFT};
+export {getHistoryModelNFT}
 

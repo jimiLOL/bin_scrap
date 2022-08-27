@@ -3,16 +3,7 @@
 
 const Emitter = require("events");
 const emitter = new Emitter();
-
-// function delDublicateProxy() {
-//     proxy.forEach((ele, i) => {
-//         let filter = proxy.filter(x => x == ele);
-//         if (filter.length > 1) {
-//             proxy.splice(i, 1);
-//         }
-
-//     });
-// }
+ 
 const util = require("util");
 const { getListCollectionName } = require('./../getCollectionList');
 const { getAddressModel } = require("../../model/nft_detalii.cjs");
@@ -20,12 +11,14 @@ const { getAddressModel } = require("../../model/nft_detalii.cjs");
 
 const { default: axios } = require("axios");
 const tunnel = require("tunnel");
-const { getProductDetail } = require('./get_productDetali');
-const { proxy } = require("../../proxy_list_tree");
+const { getProductDetail } = require("./get_productDetali");
+
+const { getProxy } = require("../../get_proxyInit");
+const proxy = getProxy('binance_marketplace');
 const { UA } = require("../../ua");
 const helper = require('./../helper/helper');
 
-const proxyLength = proxy.length;
+let proxyLength = proxy.length;
 // const {arrayIterator, setConstant} = require('./arrayiterator.js') // надо перенести итератор в отдельный модуль
 
 // setConstant(proxy)
@@ -204,7 +197,7 @@ function getlayerList() {
 
     })
 }
-async function start(init_header) {
+async function start(init_header, port) {
 
     return new Promise(async (resolve, reject) => {
         let layerList;
@@ -220,8 +213,18 @@ async function start(init_header) {
             }
 
         });
+        port.on('message', async (message) => {
+            if (Array.isArray(message)) {
+                console.log(message.length);
+             
 
-        header = init_header.headers; // делаем header глобальным
+            } else { 
+                console.log('message');
+
+            }
+          }); // получаем сообщение из основного потока
+
+        header = init_header; // делаем header глобальным
 
 
         if (helper.getRandomInt(1, 3) == 2) {
@@ -249,7 +252,7 @@ async function start(init_header) {
             let proxyOptions = {
                 host: proxyHost,
                 port: portHost,
-                proxyAuth: proxyAuth,
+                // proxyAuth: proxyAuth,
                 headers: {
                     'User-Agent': UA[helper.getRandomInt(1, UA.length - 1)]
                 },
@@ -261,7 +264,7 @@ async function start(init_header) {
             layerList = await axios.get('https://www.binance.com/bapi/nft/v1/public/nft/layer-search?keyword=', { headers: header, httpsAgent: agent}).then(res => {
                 return res.data.data
             }).catch(e => {
-                console.log(e);
+                console.log(e.message);
                 reject({ status: 'error', name_worker: 'binance_marketplace', info: 'layerList no Array' })
 
             });
@@ -356,7 +359,7 @@ async function start(init_header) {
                         let proxyOptions = {
                             host: proxyHost,
                             port: portHost,
-                            proxyAuth: proxyAuth,
+                            // proxyAuth: proxyAuth,
                             headers: {
                                 'User-Agent': UA[index]
                             },
@@ -451,7 +454,7 @@ async function start(init_header) {
                                 var_break = true
                             } // останавливаем итерацию
                             console.log('Error');
-                            console.log(e);
+                            console.log(e.message);
 
                             proxy.push(proxyVar)
 
@@ -550,7 +553,7 @@ function arrayIteration(array, proxySet) {
                 let proxyOptions = {
                     host: proxyHost,
                     port: portHost,
-                    proxyAuth: proxyAuth,
+                    // proxyAuth: proxyAuth,
                     headers: {
                         'User-Agent': UA[randomIndex]
                     },
@@ -562,11 +565,11 @@ function arrayIteration(array, proxySet) {
 
 
                 arrayPromise.push(getProductDetail(ele, agent, header).then(() => {
-                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`); // возвращаем прокси в обойму на дочернем цикле
+                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}`); // возвращаем прокси в обойму на дочернем цикле
                     // 
                 }).catch((e) => {
 
-                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`);
+                    proxy.push(`${proxyOptions.host}:${proxyOptions.port}`);
 
 
                     // // console.log('Error: Function arrayIteration MarketPlace\nProxy length ' + proxy.length);
@@ -623,27 +626,53 @@ var cloneProxySet;
 
 
 
-function init(init_header) {
+// function init(init_header) {
+//     return new Promise((resolve, reject) => {
+//         start(init_header).then((res) => {
+//             console.log('Worker 3');
+//             emitter.removeAllListeners('infinity_recursion');
+
+//             resolve(res);
+//             // init(init_header)
+//         }).catch(e => {
+//             emitter.removeAllListeners('infinity_recursion');
+
+
+//             console.log('Worker 3 error');
+//             // console.log(e);
+//             reject(e);
+
+
+//             // init(init_header)
+//         })
+//     })
+
+// }
+
+// module.exports = { init }
+
+module.exports = ({init_header, port, proxyArray}) => {
     return new Promise((resolve, reject) => {
-        start(init_header).then((res) => {
-            console.log('Worker 3');
+        console.log('Worker 3 init');
+  
+      
+ 
+       
+
+        start(init_header, port).then((res) => {
+            console.log('Worker 3 finish');
             emitter.removeAllListeners('infinity_recursion');
 
             resolve(res);
             // init(init_header)
         }).catch(e => {
+
+            console.log('Worker 3');
+            console.log(e.message);
             emitter.removeAllListeners('infinity_recursion');
 
-
-            console.log('Worker 3 error');
-            // console.log(e);
             reject(e);
-
-
             // init(init_header)
         })
     })
-
-}
-
-module.exports = { init }
+  };

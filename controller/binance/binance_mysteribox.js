@@ -7,7 +7,6 @@ const {
   sendInfoTelegram,
 } = require("../sendTelegram");
 const { default: axios } = require("axios");
-const { addDB, updatePriceDB } = require("../addDB");
 const binanceIdProduct = require("../../model/binanceIdProduct");
 const tunnel = require("tunnel");
 const binanceAdminCookies = require("../../model/binanceAdminCookies");
@@ -253,10 +252,10 @@ async function buyNFT(nftInfo, diffMS, cookies) {
                   buy(res);
                 })
                 .catch((e) => {
-                  console.log(e);
+                  console.log(e.message);
                 });
               } else {
-                console.log(e);
+                console.log(e.message);
                 function getRandomInt(min, max) {
                   min = Math.ceil(min);
                   max = Math.floor(max);
@@ -299,7 +298,7 @@ async function buyNFT(nftInfo, diffMS, cookies) {
       buy(res);
     })
     .catch((e) => {
-      console.log(e);
+      console.log(e.message);
     });
 }
 
@@ -346,7 +345,7 @@ function get_captcha(_url, cb) {
         
       })
       .catch((e) => {
-        console.log(e);
+        console.log(e.message);
         reject(e);
       });
   });
