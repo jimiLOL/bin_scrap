@@ -406,7 +406,7 @@ const getNewProxy = new CronJob("* 11 * * * *", () => {
   getProxy().then((res: any) => {
     // console.log(res.data);
     console.log(typeof res.data);
-    let newArray = (res.data as string).split("\n", 4000);
+    let newArray = (res.data as string).split("\r\n", 4000);
     newArray = helper.filterProxy(newArray);
 
     console.log(newArray.length);
