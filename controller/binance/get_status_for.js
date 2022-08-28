@@ -119,7 +119,7 @@ const awaitArray = (val, length) => {
             if (message.status && magicVal < 2) {
                 magicVal++
 
-                reject({ status: 'error', name_worker: 'get_status_for', integer: message.integer })
+                reject({ status: 'error', name_worker: name, integer: message.integer })
 
             }
 
@@ -181,18 +181,18 @@ const awaitArray = (val, length) => {
                 await getInfoBinNFTMysteryBox(helper.proxyInit(proxyVar), i).then(res => {
                     breakSwitch = res;
                     if (indexLayer >= iteration - 1 || breakSwitch) {
-                        resolve({ status: 'ok', name_worker: 'get_status_for' })
+                        resolve({ status: 'ok', name_worker: name })
                     }
                 }).catch(e => {
 
                     if (indexLayer >= iteration - 1) {
-                        reject({ status: 'error', name_worker: 'get_status_for' })
+                        reject({ status: 'error', name_worker: name })
                     }
                     // process.exit(1)
                 });
                 if (breakSwitch) {
                     if (indexLayer >= iteration - 1) {
-                        reject({ status: 'error', name_worker: 'get_status_for' })
+                        reject({ status: 'error', name_worker: name })
                     }
                     
                    
