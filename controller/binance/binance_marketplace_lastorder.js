@@ -359,7 +359,7 @@ async function start(init_header, port) {
 
             array.forEach((ele, i) => {
                 setTimeout(async () => {
-                    let randomIndex = helper.getRandomInt(0, proxy.length);
+                    let randomIndex = helper.getRandomInt(0, proxy.length-1);
 
 
                     const { host: proxyHost, port: portHost, proxyAuth: proxyAuth } = proxy[randomIndex] == undefined ? helper.proxyInit(cloneProxySet) : helper.proxyInit(proxy[randomIndex]);

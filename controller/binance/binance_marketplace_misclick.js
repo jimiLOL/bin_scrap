@@ -538,7 +538,7 @@ function arrayIteration(array, proxySet) {
 
         array.forEach((ele, i) => {
             setTimeout(async () => {
-                let randomIndex = helper.getRandomInt(0, proxy.length);
+                let randomIndex = helper.getRandomInt(0, proxy.length-1);
                 // // console.log('Proxy length ' + proxy.length + ' randomIndex ' + randomIndex + ' ' + proxy[randomIndex] + ' ' + cloneProxySet);
 
 
