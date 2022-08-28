@@ -592,6 +592,16 @@ function mysteryBoxProductDetail<
   return new Promise((resolve, reject) => {
     
     console.log('getProductDetail ' + productBinance.nftType);
+    if (!productBinance?.nftType) {
+      console.log('====\n');
+      
+      console.log(productBinance);
+      console.log('====\n');
+
+      process.exit(0)
+      
+
+    }
     // productBinance.nftType = 1;
     
   

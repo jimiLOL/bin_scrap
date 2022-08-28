@@ -605,7 +605,7 @@ function arrayIteration(array, proxySet) {
 
                 }
 
-            }, 20 * i + 1);
+            }, 100 * i + 1);
 
 
 

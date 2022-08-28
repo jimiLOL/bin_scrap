@@ -413,7 +413,7 @@ async function start(init_header, port) {
                         })
                     }
 
-                }, 20 * i+1);
+                }, 100 * i+1);
 
 
             });

@@ -1,17 +1,21 @@
 // Получаем данные из фильтра бинанса, отстование api 1-2 минуты - не подходит для мисклика, но может подходить для парсинга.
 'use strict';
+
 const Emitter = require("events");
 const emitter = new Emitter();
+
+async function start(init_header, port, name) {
+
 //header - мы прокидываем при инциализации потока
 const { default: axios } = require("axios");
 const tunnel = require("tunnel");
 const { getProxy } = require("../../get_proxyInit");
-const proxy = getProxy('get_status_for');
+const proxy = getProxy(name);
 const { UA } = require("../../ua");
 const util = require("util");
 
 const {helper} = require('../helper/helper');
-const { arrayNFTCollectionName } = require("./nftArrayData");
+// const { arrayNFTCollectionName } = require("./nftArrayData");
 
 const { getProductDetail } = require("./get_ProductDetali_orderSuccessAnnounces");
 
@@ -104,7 +108,7 @@ const awaitArray = (val, length) => {
 
     })
 }
-async function start(init_header, port) {
+
     let i = 0;
 
 
@@ -278,9 +282,7 @@ async function start(init_header, port) {
 
                     });
 
-
-                    // let newData = new Date().getTime();
-                    // console.log(`Date cycle^ ${newData - data} ms`);
+ 
 
                 }
 
@@ -311,7 +313,6 @@ async function start(init_header, port) {
 
             };
             let arrayPromise = [];
-            // console.log(array);
 
 
 
@@ -404,7 +405,7 @@ async function start(init_header, port) {
                         })
                     }
 
-                }, 20 * i+1);
+                }, 100 * i+1);
 
 
             });
@@ -436,48 +437,24 @@ function random() {
 
 
 var cloneProxySet;
+ 
 
-// function init(init_header) {
-//     return new Promise((resolve, reject) => {
-//         start(init_header).then((res) => {
-//           console.log('Worker 1');
-//           emitter.removeAllListeners('infinity_recursion');
-
-//           resolve(res);
-//             // init(init_header)
-//         }).catch(e => {
-//             console.log('Worker 1');
-//             emitter.removeAllListeners('infinity_recursion');
-
-
-//             reject(e);
-//             // init(init_header)
-//         })
-//     })
-
-// }
-
-
-// module.exports = { init };
-
-
-module.exports = ({init_header, port, proxyArray}) => {
+module.exports = ({init_header, port, name}) => {
     return new Promise((resolve, reject) => {
-        console.log('Worker get_status_for init');
+        console.log(`Worker ${name} init`);
         // console.log(proxyArray);
  
         // console.log(init_header);
        
 
-        start(init_header, port).then((res) => {
-            console.log('Worker get_status_for');
+        start(init_header, port, name).then((res) => {
             emitter.removeAllListeners('infinity_recursion');
 
             resolve(res);
             // init(init_header)
         }).catch(e => {
 
-            console.log('Worker get_status_for');
+            console.log(`Error Worker ${name}`);
             console.log(e);
             emitter.removeAllListeners('infinity_recursion');
 

@@ -121,7 +121,17 @@ worker.switchChangeOrderNft = new Piscina({
   maxThreads: 1
 });
 
-worker.get_status_for = new Piscina({
+worker.get_status_for_one = new Piscina({
+  filename: path.resolve('./controller/binance', 'get_status_for.js'),
+  maxQueue: 1,
+  maxThreads: 1
+});
+worker.get_status_for_two = new Piscina({
+  filename: path.resolve('./controller/binance', 'get_status_for.js'),
+  maxQueue: 1,
+  maxThreads: 1
+});
+worker.get_status_for_tree = new Piscina({
   filename: path.resolve('./controller/binance', 'get_status_for.js'),
   maxQueue: 1,
   maxThreads: 1
@@ -199,6 +209,7 @@ function init_workers() {
                   port: channel[e].port1,
                   init_header: headers,
                   proxyArray: proxy[e],
+                  name: e
                 },
                 { signal: ee[e], transferList: [channel[e].port1] }
               )
@@ -236,6 +247,7 @@ function init_workers() {
                 port: channel[e].port1,
                 init_header: headers,
                 proxyArray: proxy[e],
+                name: e
               },
               { signal: ee[e], transferList: [channel[e].port1] }
               // [channel[e].port1],
