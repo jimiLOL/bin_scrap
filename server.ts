@@ -339,8 +339,9 @@ function init_workers() {
 
 getProxy().then((res: any) => {
   console.log(typeof res.data);
+  // console.log(res.data);
 
-  let newArray = (res.data as string).split("\r\n", 4000);
+  let newArray = (res.data as string).split("\n", 24000);
   helper.shuffle(newArray);
   newArray = helper.filterProxy(newArray);
 
@@ -387,7 +388,7 @@ getProxy().then((res: any) => {
 function getProxy() {
   return new Promise((resolve, reject) => {
     axios
-      .get("http://proxy-bunker.com/api2.php")
+      .get("https://buy.fineproxy.org/api/getproxy/?format=txt&type=http_ip&login=mix117PNQ8EL6&password=f69VJ3OM")
       .then((res) => {
         console.log("Get proxy");
 
@@ -406,7 +407,7 @@ const getNewProxy = new CronJob("* 11 * * * *", () => {
   getProxy().then((res: any) => {
     // console.log(res.data);
     console.log(typeof res.data);
-    let newArray = (res.data as string).split("\r\n", 4000);
+    let newArray = (res.data as string).split("\n", 4000);
     newArray = helper.filterProxy(newArray);
 
     console.log(newArray.length);
@@ -447,6 +448,7 @@ const getNewProxy = new CronJob("* 11 * * * *", () => {
 
 const destroyWorker = new CronJob("00 00 00 * * *", async function () {
   console.log("Init destroyWorker");
+  fs.unlinkSync(`./errorProxy.txt`);
   Object.keys(worker).forEach((e) => {
     // console.log(e);
     worker[e].destroy();
