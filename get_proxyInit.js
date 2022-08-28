@@ -7,7 +7,7 @@ const getProxy = (name_worker) => {
     const proxy = list.split('\n', 100200);
     const filterProxy = [];
     proxy.forEach(e=> {
-      if (e != undefined && typeof e == 'string') {
+      if (e != undefined && typeof e == 'string' && e.length > 3) {
         filterProxy.push(e)
       } 
     })
