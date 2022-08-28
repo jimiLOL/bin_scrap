@@ -164,6 +164,8 @@ function init_workers() {
         if (util.inspect(workers[e]).includes("Error")) {
           console.log("Deleting problem worker");
           delete workers[e];
+          delete channel[e];
+
         }
       });
       Object.keys(worker).forEach((e) => {
@@ -218,6 +220,9 @@ function init_workers() {
         } else {
           console.log("Start new worker " + [e]);
           if (channel[e] == undefined) {
+            channel[e] = new MessageChannel();
+          } else {
+            delete channel[e];
             channel[e] = new MessageChannel();
           }
 
