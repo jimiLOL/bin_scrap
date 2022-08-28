@@ -3,6 +3,8 @@
 
 const Emitter = require("events");
 const emitter = new Emitter();
+const {helper} = require('../helper/helper');
+
 
 async function start(init_header, port, name) {
 
@@ -14,7 +16,6 @@ const proxy = getProxy(name);
 const { UA } = require("../../ua");
 const util = require("util");
 
-const {helper} = require('../helper/helper');
 // const { arrayNFTCollectionName } = require("./nftArrayData");
 
 const { getProductDetail } = require("./get_ProductDetali_orderSuccessAnnounces");
@@ -445,21 +446,25 @@ module.exports = ({init_header, port, name}) => {
         // console.log(proxyArray);
  
         // console.log(init_header);
+
+        helper.timeout(helper.getRandomInt(500, 3000)).then(()=> {
+            start(init_header, port, name).then((res) => {
+                emitter.removeAllListeners('infinity_recursion');
+    
+                resolve(res);
+                // init(init_header)
+            }).catch(e => {
+    
+                console.log(`Error Worker ${name}`);
+                console.log(e);
+                emitter.removeAllListeners('infinity_recursion');
+    
+                reject(e);
+                // init(init_header)
+            })
+        })
        
 
-        start(init_header, port, name).then((res) => {
-            emitter.removeAllListeners('infinity_recursion');
-
-            resolve(res);
-            // init(init_header)
-        }).catch(e => {
-
-            console.log(`Error Worker ${name}`);
-            console.log(e);
-            emitter.removeAllListeners('infinity_recursion');
-
-            reject(e);
-            // init(init_header)
-        })
+       
     })
   };
