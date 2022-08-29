@@ -186,18 +186,7 @@ function mysteryBoxProductDetail<T extends productBinanceMystery>(
                 // console.log(header);
                 console.log("catch");
                 // process.exit(1)
-                addDB(productBinance, productDetail, agent, header)
-                    .then(() => {
-                      // productBinance = null;
-                      return resolve({ status: "ok", proxy: agent.proxyOptions.host });
-                    })
-                    .catch((e) => {
-                      // productBinance = null;
-                      return reject({
-                        status: "error",
-                        proxy: agent.proxyOptions.host,
-                      });
-                    });
+                return reject({ status: "error", proxy: agent.proxyOptions.host });
               });
           } else {
             addDB(productBinance, null, agent, header)
