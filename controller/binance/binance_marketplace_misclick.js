@@ -116,7 +116,7 @@ const awaitArray = (val, length) => {
                         recursion().then((res) => {
                             stackProxy[val].integer = 0;
 
-                            resolve(res)
+                            return resolve(res)
                         })
                     })
 
@@ -139,7 +139,7 @@ const awaitArray = (val, length) => {
         };
         setTimeout(() => {
             recursion().then((res) => {
-                resolve(res)
+                return resolve(res)
             })
         }, 502);
 
@@ -384,7 +384,7 @@ async function start(init_header, port) {
                             console.log(res.status + ' ' + index + ' total= ' + res.data.data.total);
 
                             if (res.data.code == '000002') {
-                                resolve({ status: 'ok', name_worker: 'binance_marketplace' })       
+                                return resolve({ status: 'ok', name_worker: 'binance_marketplace' })       
                             }
 
                             // console.log('Send proxyVar ' + proxyVar);
@@ -399,7 +399,7 @@ async function start(init_header, port) {
                                     if (i >= layerList.length - 2) {
                                         console.log('i >= layerList.length - 2 ' + i >= layerList.length - 2);
 
-                                        resolve({ status: 'ok', name_worker: 'binance_marketplace' })
+                                        return resolve({ status: 'ok', name_worker: 'binance_marketplace' })
                                         // init(init_header)
                                     }
                                 }).catch(e => {
@@ -410,7 +410,7 @@ async function start(init_header, port) {
                                     if (i >= layerList.length - 2) {
                                         console.log('i >= layerList.length - 2 ' + i >= layerList.length - 2);
 
-                                        resolve({ status: 'ok', name_worker: 'binance_marketplace' })
+                                        return resolve({ status: 'ok', name_worker: 'binance_marketplace' })
                                         // init(init_header)
                                     }
 
@@ -427,7 +427,7 @@ async function start(init_header, port) {
                                 if (i >= layerList.length - 2) {
                                     console.log('i >= layerList.length - 2 ' + i >= layerList.length - 2);
 
-                                    resolve({ status: 'ok', name_worker: 'binance_marketplace' })
+                                    return resolve({ status: 'ok', name_worker: 'binance_marketplace' })
                                     // init(init_header)
                                 }
 
@@ -461,7 +461,7 @@ async function start(init_header, port) {
 
                             if (i == layerList.length - 2) {
 
-                                reject({ status: 'error', name_worker: 'binance_marketplace' })
+                                return reject({ status: 'error', name_worker: 'binance_marketplace' })
                             }
                         })
 
@@ -478,7 +478,7 @@ async function start(init_header, port) {
 
                             if (i >= layerList.length - 2) {
 
-                                reject({ status: 'error', name_worker: 'binance_marketplace' })
+                                return reject({ status: 'error', name_worker: 'binance_marketplace' })
                             }
 
 
@@ -500,7 +500,7 @@ async function start(init_header, port) {
             });
         } else {
             console.log(layerList);
-            reject({ status: 'error', name_worker: 'binance_marketplace', info: 'layerList no Array' })
+            return reject({ status: 'error', name_worker: 'binance_marketplace', info: 'layerList no Array' })
             // init(init_header)
 
 

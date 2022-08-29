@@ -76,7 +76,7 @@ const awaitArray = (val, length) => {
                         recursion().then((res) => {
                             stackProxy[val].integer = 0;
 
-                            resolve(res)
+                            return resolve(res)
                         })
                     })
 
@@ -97,7 +97,7 @@ const awaitArray = (val, length) => {
         };
         setTimeout(() => {
             recursion().then((res) => {
-                resolve(res)
+                return resolve(res)
             })
         }, 502);
 

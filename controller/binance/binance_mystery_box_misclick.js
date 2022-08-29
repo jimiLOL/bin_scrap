@@ -71,7 +71,7 @@ const awaitArray = (val, length) => {
                         recursion().then((res) => {
                             stackProxy[val].integer = 0;
 
-                            resolve(res)
+                            return resolve(res)
                         })
                     })
                 } else if (length < 0) {
@@ -88,7 +88,7 @@ const awaitArray = (val, length) => {
         };
         setTimeout(() => {
             recursion().then((res) => {
-                resolve(res)
+                return  resolve(res)
             })
         }, 502);
 
@@ -255,7 +255,7 @@ async function start(init_header, port) {
 
                     breakSwitch = true
                     proxy.push(`${proxyOptions.host}:${proxyOptions.port}`);
-                    resolve(breakSwitch);
+                    return resolve(breakSwitch);
                 } else {
 
                     stackProxy[`${proxyOptions.host}:${proxyOptions.port}`].status = 'work';
@@ -282,7 +282,7 @@ async function start(init_header, port) {
             }).catch(e => {
                 proxy.push(`${proxyOptions.host}:${proxyOptions.port}`);
                 breakSwitch = true
-                reject(breakSwitch)
+                return reject(breakSwitch)
 
 
             })

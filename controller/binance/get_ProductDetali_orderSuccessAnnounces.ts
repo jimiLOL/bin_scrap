@@ -314,7 +314,7 @@ function addDB<
           productBinance = null;
           responseProductDetail = null;
           // newProduct = null;
-          resolve();
+          return resolve();
         })
         .catch((e: ErrorConstructor) => {
           productBinance = null;
@@ -322,7 +322,7 @@ function addDB<
           // newProduct = null;
 
           console.log(e);
-          reject();
+          return reject();
         });
       // process.exit(0)
     } else {

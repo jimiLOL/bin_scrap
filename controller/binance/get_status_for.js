@@ -101,7 +101,7 @@ const awaitArray = (val, length) => {
         };
         setTimeout(() => {
             recursion().then((res) => {
-                resolve(res)
+                return resolve(res)
             })
         }, 50);
 
@@ -120,7 +120,7 @@ const awaitArray = (val, length) => {
             if (message.status && magicVal < 2) {
                 magicVal++
 
-                reject({ status: 'error', name_worker: name, integer: message.integer })
+                return reject({ status: 'error', name_worker: name, integer: message.integer })
 
             }
 
@@ -182,18 +182,18 @@ const awaitArray = (val, length) => {
                 await getInfoBinNFTMysteryBox(helper.proxyInit(proxyVar), i).then(res => {
                     breakSwitch = res;
                     if (indexLayer >= iteration - 1 || breakSwitch) {
-                        resolve({ status: 'ok', name_worker: name })
+                        return resolve({ status: 'ok', name_worker: name })
                     }
                 }).catch(e => {
 
                     if (indexLayer >= iteration - 1) {
-                        reject({ status: 'error', name_worker: name })
+                        return reject({ status: 'error', name_worker: name })
                     }
                     // process.exit(1)
                 });
                 if (breakSwitch) {
                     if (indexLayer >= iteration - 1) {
-                        reject({ status: 'error', name_worker: name })
+                        return reject({ status: 'error', name_worker: name })
                     }
                     
                    
@@ -254,7 +254,7 @@ const awaitArray = (val, length) => {
                     proxy.push(`${proxyOptions.host}:${proxyOptions.port}`);
                     // console.log('End cycle "getInfoBinNFTMysteryBox" Proxy length ' + proxy.length);
 
-                    resolve(breakSwitch);
+                    return resolve(breakSwitch);
 
 
                 } else {
@@ -273,12 +273,12 @@ const awaitArray = (val, length) => {
                         // console.log('end');
                         // process.exit(0)
 
-                        resolve(breakSwitch);
+                        return resolve(breakSwitch);
 
                     }).catch(()=> {
                         // stackProxy[`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`].status = 'off';
 
-                        resolve(breakSwitch);
+                        return resolve(breakSwitch);
 
 
                     });
@@ -297,7 +297,7 @@ const awaitArray = (val, length) => {
                 breakSwitch = true
 
                 proxy.push(`${proxyOptions.host}:${proxyOptions.port}`);
-                reject(breakSwitch)
+                return reject(breakSwitch)
 
 
             })
@@ -452,7 +452,7 @@ module.exports = ({init_header, port, name}) => {
             start(init_header, port, name).then((res) => {
                 emitter.removeAllListeners('infinity_recursion');
     
-                resolve(res);
+                return resolve(res);
                 // init(init_header)
             }).catch(e => {
     
@@ -460,7 +460,7 @@ module.exports = ({init_header, port, name}) => {
                 console.log(e);
                 emitter.removeAllListeners('infinity_recursion');
     
-                reject(e);
+                return reject(e);
                 // init(init_header)
             })
         })

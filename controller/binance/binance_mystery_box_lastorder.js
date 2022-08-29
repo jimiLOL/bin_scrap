@@ -83,7 +83,7 @@ const awaitArray = (val, length) => {
                         recursion().then((res) => {
                             stackProxy[val].integer = 0;
 
-                            resolve(res)
+                            return resolve(res)
                         })
                     })
                 } else if (length < 0) {
@@ -99,7 +99,7 @@ const awaitArray = (val, length) => {
         };
         setTimeout(() => {
             recursion().then((res) => {
-                resolve(res)
+                return  resolve(res)
             })
         }, 502);
 
@@ -275,12 +275,12 @@ const awaitArray = (val, length) => {
                         // console.log('end');
                         // process.exit(0)
 
-                        resolve(breakSwitch);
+                        return resolve(breakSwitch);
 
                     }).catch(()=> {
                         // stackProxy[`${proxyOptions.host}:${proxyOptions.port}:${proxyOptions.proxyAuth}`].status = 'off';
 
-                        resolve(breakSwitch);
+                        return resolve(breakSwitch);
 
 
                     });
@@ -298,7 +298,7 @@ const awaitArray = (val, length) => {
             }).catch(e => {
                 // console.log('Error');
                 proxy.push(`${proxyOptions.host}:${proxyOptions.port}`);
-                reject(breakSwitch)
+                return reject(breakSwitch)
 
 
             })

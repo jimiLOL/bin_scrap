@@ -68,7 +68,7 @@ const awaitArray = (val, length) => {
 
 
                         recursion().then((res) => {
-                            resolve(res)
+                            return resolve(res)
                         })
                     })
 
@@ -91,7 +91,7 @@ const awaitArray = (val, length) => {
         };
         setTimeout(() => {
             recursion().then((res) => {
-                resolve(res)
+                return resolve(res)
             })
         }, 502);
 
