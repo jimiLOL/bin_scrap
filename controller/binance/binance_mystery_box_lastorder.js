@@ -354,6 +354,7 @@ const awaitArray = (val, length) => {
 
 
                         proxy.push(`${proxyOptions.host}:${proxyOptions.port}`); // возвращаем прокси в обойму на дочернем цикле
+                        return resolve();
 
                         // // console.log('Function arrayIteration  Mystery Box last order  END\nProxy length ' + proxy.length);
                         
@@ -368,6 +369,7 @@ const awaitArray = (val, length) => {
 
 
                         proxy.push(`${proxyOptions.host}:${proxyOptions.port}`);
+                        return reject();
 
                         // // console.log('Error: Function arrayIteration Mystery Box last order END\nProxy length ' + proxy.length);
                         
@@ -402,9 +404,9 @@ const awaitArray = (val, length) => {
 
 
 
-                            resolve()
+                            return resolve();
                         }).catch(() => {
-                            resolve()
+                            return resolve();
                         })
                     }
 

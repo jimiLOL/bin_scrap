@@ -393,6 +393,7 @@ const awaitArray = (val, length) => {
                         proxy.push(`${proxyOptions.host}:${proxyOptions.port}`); // возвращаем прокси в обойму на дочернем цикле
 
                         console.log('Function arrayIteration END MarketPlace lastOrder\nProxy length ' + proxy.length);
+                        return resolve();
 
 
 
@@ -403,6 +404,7 @@ const awaitArray = (val, length) => {
 
                     }).catch((e) => {
                         proxy.push(`${proxyOptions.host}:${proxyOptions.port}`);
+                        return reject()
 
 
 
@@ -434,7 +436,7 @@ const awaitArray = (val, length) => {
 
                             console.log(newDate + ' Worker 4 -- Promisee array Fulfil = ' + arrayPromise.length);
 
-                            resolve()
+                            return resolve()
                         }).catch(e => resolve())
 
                     }

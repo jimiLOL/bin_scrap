@@ -265,10 +265,10 @@ async function start(init_header, port) {
                         res = null;
 
 
-                        resolve(breakSwitch);
+                        return resolve(breakSwitch);
 
                     }).catch(e => {
-                        resolve(breakSwitch);
+                        return resolve(breakSwitch);
 
                     });
 
@@ -334,6 +334,7 @@ async function start(init_header, port) {
                     arrayPromise.push(getProductDetail(ele, agent, header).then(() => {
 
                     proxy.push(`${proxyOptions.host}:${proxyOptions.port}`); // возвращаем прокси в обойму на дочернем цикле
+                    return resolve();
  
                     }).catch((e) => {
 
@@ -344,6 +345,7 @@ async function start(init_header, port) {
 
                         // }
                         proxy.push(`${proxyOptions.host}:${proxyOptions.port}`);
+                        return reject();
 
                         // proxy.forEach((ele, i) => {
                         //     let filter = proxy.filter(x => x == ele);
@@ -380,9 +382,9 @@ async function start(init_header, port) {
 
 
 
-                            resolve()
+                            return resolve();
                         }).catch(() => {
-                            resolve()
+                            return resolve();
                         })
                     }
 

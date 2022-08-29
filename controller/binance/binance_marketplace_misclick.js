@@ -566,10 +566,12 @@ function arrayIteration(array, proxySet) {
 
                 arrayPromise.push(getProductDetail(ele, agent, header).then(() => {
                     proxy.push(`${proxyOptions.host}:${proxyOptions.port}`); // возвращаем прокси в обойму на дочернем цикле
+                    return resolve();
                     // 
                 }).catch((e) => {
 
                     proxy.push(`${proxyOptions.host}:${proxyOptions.port}`);
+                    return reject();
 
 
                     // // console.log('Error: Function arrayIteration MarketPlace\nProxy length ' + proxy.length);
@@ -598,9 +600,9 @@ function arrayIteration(array, proxySet) {
                         let newDate = new Date();
                         console.log(newDate + ' Worker 3 -- Promisee array Fulfil = ' + arrayPromise.length);
 
-                        resolve()
+                        return resolve();
                     }).catch(() => {
-                        resolve()
+                        return resolve();
                     })
 
                 }
