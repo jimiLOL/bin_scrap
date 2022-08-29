@@ -523,18 +523,7 @@ function mysteryBoxProductDetail<T extends productBinanceMystery>(
                 // console.log(header);
                 console.log("catch");
                 // process.exit(1)
-                addDB(productBinance, productDetail, agent, header)
-                .then(() => {
-                  // productBinance = null;
-                  return resolve({ status: "ok", proxy: agent.proxyOptions.host });
-                })
-                .catch((e) => {
-                  // productBinance = null;
-                  return reject({
-                    status: "error",
-                    proxy: agent.proxyOptions.host,
-                  });
-                });
+                return reject({ status: "error", proxy: agent.proxyOptions.host });
               });
           } else {
             return marketProductDetail(productBinance, agent, header)
@@ -568,11 +557,11 @@ function mysteryBoxProductDetail<T extends productBinanceMystery>(
                 let start = new Date().getTime();
                 let end = new Date().getTime();
                 // console.log(`Запись: ${end - start}ms`);
-                reject([e?.code, agent?.proxyOptions.host]);
+               return reject([e?.code, agent?.proxyOptions.host]);
               }
             );
           } else {
-            reject([e?.code || e, agent?.proxyOptions.host]);
+           return reject([e?.code || e, agent?.proxyOptions.host]);
           }
 
           // console.log(e);
