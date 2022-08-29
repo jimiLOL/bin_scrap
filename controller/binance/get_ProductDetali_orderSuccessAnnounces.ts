@@ -64,10 +64,10 @@ function marketProductDetail<T extends productBinanceProduct>(
 
                   addDB(productBinance, productDetail, agent, header)
                     .then(() => {
-                      resolve({ status: "ok", proxy: agent.proxyOptions.host });
+                      return resolve({ status: "ok", proxy: agent.proxyOptions.host });
                     })
                     .catch((e) => {
-                      reject({
+                      return reject({
                         status: "error",
                         proxy: agent.proxyOptions.host,
                       });
@@ -78,10 +78,10 @@ function marketProductDetail<T extends productBinanceProduct>(
                 console.log("catch");
                 addDB(productBinance, productDetail, agent, header)
                   .then(() => {
-                    resolve({ status: "ok", proxy: agent.proxyOptions.host });
+                    return resolve({ status: "ok", proxy: agent.proxyOptions.host });
                   })
                   .catch((e) => {
-                    reject({
+                    return reject({
                       status: "error",
                       proxy: agent.proxyOptions.host,
                     });
@@ -91,10 +91,10 @@ function marketProductDetail<T extends productBinanceProduct>(
           } else {
             addDB(productBinance, null, agent, header)
               .then(() => {
-                resolve({ status: "ok", proxy: agent.proxyOptions.host });
+                return resolve({ status: "ok", proxy: agent.proxyOptions.host });
               })
               .catch((e) => {
-                reject({ status: "error", proxy: agent.proxyOptions.host });
+                return reject({ status: "error", proxy: agent.proxyOptions.host });
               });
           }
         }
@@ -113,11 +113,11 @@ function marketProductDetail<T extends productBinanceProduct>(
               let start = new Date().getTime();
               let end = new Date().getTime();
               // console.log(`Запись: ${end - start}ms`);
-              reject([e?.code, agent?.proxyOptions.host]);
+              return reject([e?.code, agent?.proxyOptions.host]);
             }
           );
         } else {
-          reject([e?.code || e, agent?.proxyOptions.host]);
+          return reject([e?.code || e, agent?.proxyOptions.host]);
         }
       });
   });
@@ -170,11 +170,11 @@ function mysteryBoxProductDetail<T extends productBinanceMystery>(
                   addDB(productBinance, productDetail, agent, header)
                     .then(() => {
                       // productBinance = null;
-                      resolve({ status: "ok", proxy: agent.proxyOptions.host });
+                      return resolve({ status: "ok", proxy: agent.proxyOptions.host });
                     })
                     .catch((e) => {
                       // productBinance = null;
-                      reject({
+                      return reject({
                         status: "error",
                         proxy: agent.proxyOptions.host,
                       });
@@ -186,18 +186,28 @@ function mysteryBoxProductDetail<T extends productBinanceMystery>(
                 // console.log(header);
                 console.log("catch");
                 // process.exit(1)
-                addDB(productBinance, productDetail, agent, header);
-                reject({ status: "error", proxy: agent.proxyOptions.host });
+                addDB(productBinance, productDetail, agent, header)
+                    .then(() => {
+                      // productBinance = null;
+                      return resolve({ status: "ok", proxy: agent.proxyOptions.host });
+                    })
+                    .catch((e) => {
+                      // productBinance = null;
+                      return reject({
+                        status: "error",
+                        proxy: agent.proxyOptions.host,
+                      });
+                    });
               });
           } else {
             addDB(productBinance, null, agent, header)
               .then(() => {
                 // productBinance = null;
-                resolve({ status: "ok", proxy: agent.proxyOptions.host });
+                return resolve({ status: "ok", proxy: agent.proxyOptions.host });
               })
               .catch((e) => {
                 // productBinance = null;
-                reject({ status: "error", proxy: agent.proxyOptions.host });
+                return reject({ status: "error", proxy: agent.proxyOptions.host });
               });
           }
         })
@@ -214,11 +224,11 @@ function mysteryBoxProductDetail<T extends productBinanceMystery>(
                 let start = new Date().getTime();
                 let end = new Date().getTime();
                 // console.log(`Запись: ${end - start}ms`);
-                reject([e?.code, agent?.proxyOptions.host]);
+                return reject([e?.code, agent?.proxyOptions.host]);
               }
             );
           } else {
-            reject([e?.code || e, agent?.proxyOptions.host]);
+            return reject([e?.code || e, agent?.proxyOptions.host]);
           }
 
           // console.log(e);
@@ -330,11 +340,11 @@ function addDB<
           console.log("!");
           productBinance = null;
 
-          resolve();
+          return resolve();
         })
         .catch((e) => {
           productBinance = null;
-          resolve();
+          return resolve();
         });
       console.log("else");
       // process.exit(0)
