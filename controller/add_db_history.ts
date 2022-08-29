@@ -53,7 +53,7 @@ async function add_history_binance_db<T extends (productBinanceAll | orderSucces
             if (ele.hasOwnProperty('productDetail')) {
                 return { setStartTime: (ele as productDetailAll).productDetail.setStartTime, amount: (ele as productDetailAll).productDetail.amount, status: (ele as productDetailAll).productDetail.status, userNickName: (ele as productDetailAll).nftInfo.owner?.nickName || 'user not found', userId: userId(ele), avatarUrl: (ele as productDetailAll).nftInfo.owner?.avatarUrl || '', asset: (ele as productDetailAll).productDetail.currency, title: (ele as productDetailAll).productDetail.title };
                } else {
-                return { setStartTime: (ele as MysteryBox).productDetailMgsVo.setStartTime, amount: (ele as MysteryBox).productDetailMgsVo.amount, status: (ele as MysteryBox).productDetailMgsVo.status, userNickName: (ele as MysteryBox).nftInfoDetailMgsVo.owner.nickName, userId: userId(ele), avatarUrl: (ele as MysteryBox).nftInfoDetailMgsVo.owner.avatarUrl, asset: (ele as MysteryBox).productDetailMgsVo.currency, title: (ele as MysteryBox).productDetailMgsVo.title };
+                return { setStartTime: (ele as MysteryBox).productDetailMgsVo.setStartTime, amount: (ele as MysteryBox).productDetailMgsVo.amount, status: (ele as MysteryBox).productDetailMgsVo.status, userNickName: (ele as MysteryBox).nftInfoDetailMgsVo.owner?.nickName || 'user not found', userId: userId(ele), avatarUrl: (ele as MysteryBox).nftInfoDetailMgsVo.owner.avatarUrl, asset: (ele as MysteryBox).productDetailMgsVo.currency, title: (ele as MysteryBox).productDetailMgsVo.title };
 
            
            
@@ -339,10 +339,12 @@ async function add_history_binance_db<T extends (productBinanceAll | orderSucces
 
 
                     } else {
-                        fs.appendFile(`./errorAddDBv3.txt`, `\n${new Date()}\n${JSON.stringify(ele)}`, function (error) {
-                            if (error) throw error;
-                            resolve(0)
-                        });
+                        // fs.appendFile(`./errorAddDBv3.txt`, `\n${new Date()}\n${JSON.stringify(ele)}`, function (error) {
+                        //     if (error) throw error;
+                        //     resolve(0)
+                        // });
+                        resolve(0)
+
 
 
                     }

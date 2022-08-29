@@ -52,7 +52,6 @@ const {
   getBinanceProductList,
   getDataTest,
 } = require("./controller/binance/binance_req.js");
-const nftArray = require("./nft/nftalldb");
 const { nfttradeParseContract } = require("./controller/nfttradeParseContract");
 const { opensea } = require("./controller/opensea.js");
 const { cat } = require("./controller/cybercatController");

@@ -68,8 +68,17 @@ function marketProductDetail<
               )
               .catch((e: any) => {
                 console.log("catch");
-                addDB(productBinance, productDetail, agent, header);
-                reject({ status: "error", proxy: agent.proxyOptions.host });
+                addDB(productBinance, productDetail, agent, header)
+                    .then(() => {
+                      resolve({ status: "ok", proxy: agent.proxyOptions.host });
+                    })
+                    .catch((e) => {
+                      reject({
+                        status: "error",
+                        proxy: agent.proxyOptions.host,
+                      });
+                    });
+                // reject({ status: "error", proxy: agent.proxyOptions.host });
               });
           } else {
             addDB(productBinance, null, agent, header)
@@ -126,7 +135,6 @@ function mysteryBoxProductDetail<
       )
       .then(async <T extends resData<MysteryBox>>(res:AxiosResponse<T>) => {
         let productDetail: MysteryBox = res.data.data;
-        console.log('Response');
         
         
 
@@ -226,9 +234,22 @@ function mysteryBoxProductDetail<
   header: any
 ): Promise<resolve> {
   return new Promise((resolve, reject) => {
-    console.log(productBinance);
+    // console.log(productBinance);
     
-    console.log('getProductDetail ' + productBinance.nftType);
+    // console.log('getProductDetail ' + productBinance.nftType);
+    if (!productBinance?.nftType) {
+      console.log("====\n");
+
+      console.log(productBinance);
+      console.log("====\n");
+      fs.appendFile(
+        `./ErrorGet_ProductDetali_orderSuccessAnnounces.txt`,
+        JSON.stringify(productBinance),
+        function (error) {
+          if (error) throw error;
+        }
+      );
+    }
    
     
   
@@ -262,7 +283,6 @@ function addDB<
   return new Promise((resolve, reject) => {
     if (responseProductDetail != null) {
       const newProduct: (productBinanceAll | orderSuccessAnnounces) & (productDetailAll | MysteryBox) = Object.assign({}, productBinance, responseProductDetail);
-      console.log('!!!');
       
 
       add_binance_db(newProduct, "binance")
@@ -299,11 +319,13 @@ function addDB<
 
       getProductDetail(productBinance as productBinanceAll, agent, header).then(()=> {
         console.log('!');
+        productBinance = null;
         
       resolve();
 
 
       }).catch(e=> {
+        productBinance = null;
         resolve()
       })
       console.log('else');
