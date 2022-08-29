@@ -226,8 +226,8 @@ async function start(init_header, port) {
 
         header = init_header; // делаем header глобальным
 
-
-        if (helper.getRandomInt(1, 3) == 2) {
+        // helper.getRandomInt(1, 3) == 2
+        if (1 == 2) {
             arrayCollections = await getListCollectionName('binance');
 
             layerList = await Promise.all([getlayerList()]);
