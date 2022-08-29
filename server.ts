@@ -1,83 +1,36 @@
 import { AxiosResponse } from "axios";
-// const bodyParser = require("body-parser");
 import bodyParser from "body-parser";
-// const mongoose = require("mongoose");
+
 import mongoose from "mongoose";
 import express, { Express, Request, Response } from "express";
-// const express = require("express");
-// const cors = require("cors");
-import cors from "cors";
+ 
 import fs from 'fs';
-
-// const Price = require("./model/price");
-// const jwt = require("jsonwebtoken");
-import jwt from "jsonwebtoken";
-const bcrypt = require("bcrypt");
+ 
 const app = express();
 import http from "http";
-// const http = require("http");
-import { stringify } from "query-string";
-// const { stringify } = require("query-string");
-const { json } = bodyParser;
+ 
 const server = http.createServer(app);
-// const fs = require("fs");
-// const moment = require("moment");
 import { CronJob, CronTime } from "cron";
-// const CronJob = require("cron").CronJob;
-// const CronTime = require("cron").CronTime;
+ 
 import axios from "axios";
-// const { default: axios } = require("axios");
 import util from "util";
-// const util = require("util");
 const heapdump = require("heapdump");
-// import heapdump from "heapdump";
 
 import path from "path";
 
-// const path = require('path');
 import Piscina from "piscina";
-// const Piscina = require('piscina');
 import EventEmitter from "events";
-// const EventEmitter = require('events');
-const {
-  senDataTelegram,
-  techbicaleventTelegram,
-} = require("./controller/sendTelegram");
-const { nftTradeGet } = require("./controller/nftrade");
-const { addDB } = require("./controller/addDB");
-const { getinfoLootex } = require("./controller/lootex");
-const { getInfotofunft } = require("./controller/tofunft.js");
-const {
-  binTest,
-  getBinanceProductList,
-  getDataTest,
-} = require("./controller/binance/binance_req.js");
-const { nfttradeParseContract } = require("./controller/nfttradeParseContract");
-const { opensea } = require("./controller/opensea.js");
-const { cat } = require("./controller/cybercatController");
-const { filterCat } = require("./controller/faindeCate");
-// const { buyNFT } = require("./controller/binance/binance_mysteribox"); // покупка мистерибокс
-const {
-  getListMysterSell,
-} = require("./controller/binance/binance_addList_sell");
-// const { getInfoBinNFT } = require("./controller/binance/binance_marketplace_misclick");
-// const { init } = require("./controller/binance/binance_mystery_box_misclick");
-// const { buyInit } = require('./controller/binance/buyNFT');
+  
 import { MessageChannel } from "worker_threads";
 
-// const { init_lastOrder } = require('./controller/binance/binance_mystery_box_lastorder');
 
 import { getHeaders } from "./controller/binance/getHeaders";
 
-// const { getHeaders } = require('./controller/binance/getHeaders')
-
-// const binanceMysterBoxAnons = require("./model/binanceMysterBoxAnons");
-// const cookie = require("cookie");
-// const binanceAdminCookies = require("./model/binanceAdminCookies");
+ 
 
 require("dotenv/config");
 
-app.use(cors());
+// app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
