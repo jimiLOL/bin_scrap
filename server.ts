@@ -443,8 +443,10 @@ const destroyWorker = new CronJob("00 00 00 * * *", async function () {
     worker[e].destroy();
   });
   init_workers();
+  startCron(destroyWorker, 4*60*60)
 });
-destroyWorker.start();
+startCron(destroyWorker, 4*60*60)
+// destroyWorker.start();
 
 // binanceAdminCookies.find({ enable: true }, (err: any, call: any) => {
 //   if (err) console.log(err);
