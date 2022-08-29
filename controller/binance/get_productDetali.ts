@@ -411,10 +411,10 @@ function marketProductDetail<T extends productBinanceProduct>(
 
                   addDB(productBinance, productDetail, agent, header)
                     .then(() => {
-                      resolve({ status: "ok", proxy: agent.proxyOptions.host });
+                      return resolve({ status: "ok", proxy: agent.proxyOptions.host });
                     })
                     .catch((e) => {
-                      reject({
+                      return reject({
                         status: "error",
                         proxy: agent.proxyOptions.host,
                       });
@@ -425,10 +425,10 @@ function marketProductDetail<T extends productBinanceProduct>(
                 console.log("catch");
                 addDB(productBinance, productDetail, agent, header)
                 .then(() => {
-                  resolve({ status: "ok", proxy: agent.proxyOptions.host });
+                  return resolve({ status: "ok", proxy: agent.proxyOptions.host });
                 })
                 .catch((e) => {
-                  reject({
+                  return reject({
                     status: "error",
                     proxy: agent.proxyOptions.host,
                   });
@@ -437,10 +437,10 @@ function marketProductDetail<T extends productBinanceProduct>(
           } else {
             addDB(productBinance, null, agent, header)
               .then(() => {
-                resolve({ status: "ok", proxy: agent.proxyOptions.host });
+                return resolve({ status: "ok", proxy: agent.proxyOptions.host });
               })
               .catch((e) => {
-                reject({ status: "error", proxy: agent.proxyOptions.host });
+                return reject({ status: "error", proxy: agent.proxyOptions.host });
               });
           }
         }
@@ -459,11 +459,11 @@ function marketProductDetail<T extends productBinanceProduct>(
               let start = new Date().getTime();
               let end = new Date().getTime();
               // console.log(`Запись: ${end - start}ms`);
-              reject([e?.code, agent?.proxyOptions.host]);
+              return reject([e?.code, agent?.proxyOptions.host]);
             }
           );
         } else {
-          reject([e?.code || e, agent?.proxyOptions.host]);
+          return reject([e?.code || e, agent?.proxyOptions.host]);
         }
       });
   });
@@ -516,11 +516,11 @@ function mysteryBoxProductDetail<T extends productBinanceMystery>(
                   addDB(productBinance, productDetail, agent, header)
                     .then(() => {
                       // productBinance = null;
-                      resolve({ status: "ok", proxy: agent.proxyOptions.host });
+                      return resolve({ status: "ok", proxy: agent.proxyOptions.host });
                     })
                     .catch((e) => {
                       // productBinance = null;
-                      reject({
+                      return reject({
                         status: "error",
                         proxy: agent.proxyOptions.host,
                       });
@@ -535,11 +535,11 @@ function mysteryBoxProductDetail<T extends productBinanceMystery>(
                 addDB(productBinance, productDetail, agent, header)
                 .then(() => {
                   // productBinance = null;
-                  resolve({ status: "ok", proxy: agent.proxyOptions.host });
+                  return resolve({ status: "ok", proxy: agent.proxyOptions.host });
                 })
                 .catch((e) => {
                   // productBinance = null;
-                  reject({
+                  return reject({
                     status: "error",
                     proxy: agent.proxyOptions.host,
                   });
@@ -671,7 +671,7 @@ function addDB<
           productBinance = null;
           responseProductDetail = null;
           // newProduct = null;
-          resolve();
+          return resolve();
         })
         .catch((e: ErrorConstructor) => {
           productBinance = null;
@@ -679,7 +679,7 @@ function addDB<
           // newProduct = null;
 
           console.log(e);
-          reject();
+          return reject();
         });
     } else {
     
@@ -689,7 +689,7 @@ function addDB<
       console.log(productBinance);
       productBinance = null;
 
-      resolve();
+      return resolve();
 
 
     }

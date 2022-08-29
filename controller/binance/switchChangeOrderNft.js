@@ -144,9 +144,12 @@ function iterationCollection(arrayDocument, header) {
                 arrayPromise.push(getProductDetail(element, agent, header).then((res) => {
                     console.log('res ' + res);
                     proxy.push(`${proxyOptions.host}:${proxyOptions.port}`);
+                    return resolve()
                 }).catch((e) => {
                     console.log('Error ' + e);
                     proxy.push(`${proxyOptions.host}:${proxyOptions.port}`);
+                    return reject()
+
                 }));
 
 
