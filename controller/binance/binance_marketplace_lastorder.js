@@ -7,12 +7,14 @@ const Emitter = require("events");
 const emitter = new Emitter();
 let emitFunction;
 
-const { default: axios } = require("axios");
+
+async function start(init_header, port, name) {
+    const { default: axios } = require("axios");
 const tunnel = require("tunnel");
  
 const { getProductDetail } = require('./get_productDetali');
 const { getProxy } = require("../../get_proxyInit");
-const proxy = getProxy('binance_marketplace_lastorder');
+const proxy = getProxy(name);
 const { UA } = require("../../ua");
 const {helper} = require('./../helper/helper');
 
@@ -130,13 +132,12 @@ const awaitArray = (val, length) => {
             recursion().then((res) => {
                 resolve(res)
             })
-        }, 50);
+        }, 502);
 
 
 
     })
 }
-async function start(init_header, port) {
  
     return new Promise(async (resolve, reject) => {
         port.on('message', async (message) => {
@@ -154,7 +155,7 @@ async function start(init_header, port) {
         emitFunction = emitter.on('infinity_recursion', (message) => {
             let magicVal = 0; // что бы не долбитть в емитор по 100 раз
             if (message.status && magicVal < 2) {
-                reject({ status: 'error', name_worker: 'binance_marketplace_lastorder', integer: message.integer })
+                reject({ status: 'error', name_worker: name, integer: message.integer })
 
             }
 
@@ -246,7 +247,7 @@ async function start(init_header, port) {
 
                     // console.log('Send proxyVar ' + proxyVar);
                     if (res.data.code == '000002') {
-                        resolve({ status: 'ok', name_worker: 'binance_marketplace_lastorder' })
+                        resolve({ status: 'ok', name_worker: name })
 
 
                     }
@@ -259,7 +260,7 @@ async function start(init_header, port) {
                             if (index >= 15) {
                                 // stackProxy = 0;
                                 // init(init_header)
-                                resolve({ status: 'ok', name_worker: 'binance_marketplace_lastorder', date: new Date() })
+                                resolve({ status: 'ok', name_worker: name, date: new Date() })
                             }
                         });
 
@@ -268,7 +269,7 @@ async function start(init_header, port) {
                             console.log(res.data.data);
                             // stackProxy = 0;
                             // init(init_header)
-                            resolve({ status: 'ok', name_worker: 'binance_marketplace_lastorder' })
+                            resolve({ status: 'ok', name_worker: name })
                         }
 
 
@@ -295,7 +296,7 @@ async function start(init_header, port) {
                     // // console.log(`Global cycle ${i}`);
                     console.log(e.message);
                     console.log('Ошибка');
-                    resolve({ status: 'ok', name_worker: 'binance_marketplace_lastorder' })
+                    resolve({ status: 'ok', name_worker: name })
 
                     // console.log(e);
 
@@ -314,7 +315,7 @@ async function start(init_header, port) {
                     if (index >= n || var_break) {
                     var_break = false;
 
-                        reject({ status: 'error', name_worker: 'binance_marketplace_lastorder' })
+                        reject({ status: 'error', name_worker: name })
                     }
                     
                 // if (index >= n || var_break) {
@@ -458,44 +459,23 @@ async function start(init_header, port) {
 }
 
 
-// function init(init_header) {
-//     return new Promise((resolve, reject) => {
-//         start(init_header).then((res) => {
-//             console.log('Worker 4');
-//             emitter.removeAllListeners('infinity_recursion');
-
-//             resolve(res);
-//             // init(init_header)
-//         }).catch(e => {
-//             console.log('Worker 4');
-//             emitter.removeAllListeners('infinity_recursion');
-
-//             reject(e);
-//             // init(init_header)
-//         })
-//     })
-
-// }
+ 
 
 
 
 var cloneProxySet;
 
-
-// module.exports = { init }
-
+ 
 
 
-module.exports = ({init_header, port, proxyArray}) => {
+
+module.exports = ({init_header, port, proxyArray, name}) => {
     return new Promise((resolve, reject) => {
         console.log('Worker 4 init');
-        // console.log(proxyArray);
-        // proxy = proxyArray;
-        // proxyLength = proxy.length;
-        // console.log(init_header);
+   
        
 
-        start(init_header, port).then((res) => {
+        start(init_header, port, name).then((res) => {
             console.log('Worker 4');
             emitter.removeAllListeners('infinity_recursion');
 

@@ -99,7 +99,7 @@ const awaitArray = (val, length) => {
             recursion().then((res) => {
                 resolve(res)
             })
-        }, 50);
+        }, 502);
 
 
 

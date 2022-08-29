@@ -2,26 +2,22 @@
 'use strict';
 const Emitter = require("events");
 const emitter = new Emitter();
-//header - мы прокидываем при инциализации потока
+
+async function start(init_header, port, name) {
+    //header - мы прокидываем при инциализации потока
 const { default: axios } = require("axios");
 const tunnel = require("tunnel");
 const { getProxy } = require("../../get_proxyInit");
-const proxy = getProxy('binance_mysteryLastOrder');
+const proxy = getProxy(name);
 const { UA } = require("../../ua");
 const util = require("util");
 
 const {helper} = require('./../helper/helper');
 const { getNaemListNFT } = require("./getNftStat");
-const { arrayNFTCollectionName } = require("./nftArrayData");
+// const { arrayNFTCollectionName } = require("./nftArrayData");
 const { getProductDetail } = require("./get_productDetali");
 
-// const getProductDetail = async () => {
-//     const {getProductDetail} = await import("./get_productDetali");
-// // console.log(getProductDetail);
-    
-//     return getProductDetail;
-// };
-
+ 
 let proxyLength = proxy.length;
 
 const iteration = 4;
@@ -105,13 +101,12 @@ const awaitArray = (val, length) => {
             recursion().then((res) => {
                 resolve(res)
             })
-        }, 50);
+        }, 502);
 
 
 
     })
 }
-async function start(init_header, port) {
     let i = 0;
 
 
@@ -122,7 +117,7 @@ async function start(init_header, port) {
             if (message.status && magicVal < 2) {
                 magicVal++
 
-                reject({ status: 'error', name_worker: 'binance_mysteryLastOrder', integer: message.integer })
+                reject({ status: 'error', name_worker: name, integer: message.integer })
 
             }
 
@@ -184,18 +179,18 @@ async function start(init_header, port) {
                 await getInfoBinNFTMysteryBox(helper.proxyInit(proxyVar), i, body).then(res => {
                     breakSwitch = res;
                     if (indexLayer >= iteration - 1 || breakSwitch) {
-                        resolve({ status: 'ok', name_worker: 'binance_mysteryLastOrder' })
+                        resolve({ status: 'ok', name_worker: name })
                     }
                 }).catch(e => {
 
                     if (indexLayer >= iteration - 1) {
-                        reject({ status: 'error', name_worker: 'binance_mysteryLastOrder' })
+                        reject({ status: 'error', name_worker: name })
                     }
                     // process.exit(1)
                 });
                 if (breakSwitch) {
                     if (indexLayer >= iteration - 1) {
-                        reject({ status: 'error', name_worker: 'binance_mysteryLastOrder' })
+                        reject({ status: 'error', name_worker: name })
                     }
                     
                    
@@ -468,23 +463,23 @@ var cloneProxySet;
 
 
 // module.exports = { init };
-module.exports = ({init_header, port, proxyArray}) => {
+module.exports = ({init_header, port, proxyArray, name}) => {
     return new Promise((resolve, reject) => {
-        console.log('Worker 1 init');
+        console.log(`Worker ${name} init`);
   
        
  
        
 
-        start(init_header, port).then((res) => {
-            console.log('Worker 1 finish');
+        start(init_header, port, name).then((res) => {
+            console.log(`Worker ${name} finish`);
             emitter.removeAllListeners('infinity_recursion');
 
             resolve(res);
             // init(init_header)
         }).catch(e => {
 
-            console.log('Worker 1');
+            console.log(`Worker ${name} error`);
             console.log(e);
             emitter.removeAllListeners('infinity_recursion');
 
