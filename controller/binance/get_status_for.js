@@ -178,7 +178,7 @@ async function start(init_header, port, name) {
 
                 i++
 
-                setTimeout(() => {
+                setTimeout(async () => {
                     await getInfoBinNFTMysteryBox(helper.proxyInit(proxyVar), i).then(res => {
                         breakSwitch = res;
                         if (indexLayer >= iteration - 1 || breakSwitch) {
