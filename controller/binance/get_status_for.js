@@ -178,19 +178,24 @@ async function start(init_header, port, name) {
 
                 i++
 
+                setTimeout(() => {
+                    await getInfoBinNFTMysteryBox(helper.proxyInit(proxyVar), i).then(res => {
+                        breakSwitch = res;
+                        if (indexLayer >= iteration - 1 || breakSwitch) {
+                            return resolve({ status: 'ok', name_worker: name })
+                        }
+                    }).catch(e => {
+    
+                        if (indexLayer >= iteration - 1) {
+                            return reject({ status: 'error', name_worker: name })
+                        }
+                        // process.exit(1)
+                    });
+                    
+                }, 10*i);
 
-                await getInfoBinNFTMysteryBox(helper.proxyInit(proxyVar), i).then(res => {
-                    breakSwitch = res;
-                    if (indexLayer >= iteration - 1 || breakSwitch) {
-                        return resolve({ status: 'ok', name_worker: name })
-                    }
-                }).catch(e => {
 
-                    if (indexLayer >= iteration - 1) {
-                        return reject({ status: 'error', name_worker: name })
-                    }
-                    // process.exit(1)
-                });
+                
                 if (breakSwitch) {
                     if (indexLayer >= iteration - 1) {
                         return reject({ status: 'error', name_worker: name })
