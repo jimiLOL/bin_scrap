@@ -67,11 +67,11 @@ const promiseWorker: any = [];
 const channel: channelType = {};
 const proxy: ProxyType = {};
 
-// worker.switchChangeOrderNft = new Piscina({
-//   filename: path.resolve('./controller/binance', 'switchChangeOrderNft.js'),
-//   maxQueue: 1,
-//   maxThreads: 1
-// });
+worker.switchChangeOrderNft = new Piscina({
+  filename: path.resolve('./controller/binance', 'switchChangeOrderNft.js'),
+  maxQueue: 1,
+  maxThreads: 1
+});
 
 worker.get_status_for_one = new Piscina({
   filename: path.resolve('./controller/binance', 'get_status_for.js'),
@@ -148,6 +148,7 @@ function init_workers() {
       Object.keys(worker).forEach((e) => {
         if (util.inspect(workers[e]).includes("Error")) {
           console.log("Deleting problem worker");
+          worker[e].destroy();
           delete workers[e];
           delete channel[e];
 
@@ -175,6 +176,7 @@ function init_workers() {
           // worker[e].destroy()
           // console.log(worker[e].threads);
           // workers[e] = 0;
+          worker[e].destroy();
 
           delete workers[e];
           promiseWorker.push({
