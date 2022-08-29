@@ -67,11 +67,11 @@ const promiseWorker: any = [];
 const channel: channelType = {};
 const proxy: ProxyType = {};
 
-worker.switchChangeOrderNft = new Piscina({
-  filename: path.resolve('./controller/binance', 'switchChangeOrderNft.js'),
-  maxQueue: 1,
-  maxThreads: 1
-});
+// worker.switchChangeOrderNft = new Piscina({
+//   filename: path.resolve('./controller/binance', 'switchChangeOrderNft.js'),
+//   maxQueue: 1,
+//   maxThreads: 1
+// });
 
 worker.get_status_for_one = new Piscina({
   filename: path.resolve('./controller/binance', 'get_status_for.js'),
