@@ -325,7 +325,7 @@ function addDB<
       console.log("!-!");
       // resolve();
 
-      getProductDetail(productBinance as productBinanceAll, agent, header)
+      return getProductDetail(productBinance as productBinanceAll, agent, header)
         .then(() => {
           console.log("!");
           productBinance = null;
