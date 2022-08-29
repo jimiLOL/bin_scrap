@@ -615,7 +615,13 @@ function getProductDetail<T extends productBinanceAll>(
       marketProductDetail(productBinance, agent, header)
         .then((res: resolve) => resolve(res))
         .catch((e) => reject(e));
-    } else {
+    } else if (productBinance.productId && productBinance?.nftType == undefined) {
+      marketProductDetail(productBinance, agent, header)
+     .then((res: resolve) => resolve(res))
+     .catch((e) => reject(e));
+     // нагрузка из базы
+
+   } else {
       mysteryBoxProductDetail(productBinance, agent, header)
         .then((res: resolve) => resolve(res))
         .catch((e) => reject(e));
