@@ -423,16 +423,7 @@ function marketProductDetail<T extends productBinanceProduct>(
               )
               .catch((e: any) => {
                 console.log("catch");
-                addDB(productBinance, productDetail, agent, header)
-                .then(() => {
-                  return resolve({ status: "ok", proxy: agent.proxyOptions.host });
-                })
-                .catch((e) => {
-                  return reject({
-                    status: "error",
-                    proxy: agent.proxyOptions.host,
-                  });
-                });
+                return reject({ status: "error", proxy: agent.proxyOptions.host });
               });
           } else {
             addDB(productBinance, null, agent, header)
