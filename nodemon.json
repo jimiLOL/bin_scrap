@@ -2,5 +2,5 @@
     "watch": ["./"],
     "ext": "ts, js",
     "ignore": ["src/**/*.spec.ts", "proxy/**"],
-    "exec": "node -r tsconfig-paths/register -r ts-node/register ./server.ts"
+    "exec": "node -r tsconfig-paths/register -r ts-node/register ./server.ts --heapsnapshot-near-heap-limit"
   }

@@ -30,10 +30,7 @@ import { getHeaders } from "./controller/binance/getHeaders";
 
 require("dotenv/config");
 
-
-require('node-oom-heapdump')({
-    path: path.resolve(__dirname, `dump_error_${Date.now()}`)
-});
+ 
 
 // app.use(cors());
 app.use(bodyParser.json());
