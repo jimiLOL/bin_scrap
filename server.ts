@@ -74,11 +74,11 @@ const v8 = require('v8');
  
 
 
-// worker.switchChangeOrderNft = new Piscina({
-//   filename: path.resolve('./controller/binance', 'switchChangeOrderNft.js'),
-//   maxQueue: 1,
-//   maxThreads: 1
-// }); // подозрение на утечку памяти
+worker.switchChangeOrderNft = new Piscina({
+  filename: path.resolve('./controller/binance', 'switchChangeOrderNft.js'),
+  maxQueue: 1,
+  maxThreads: 1
+}); // подозрение на утечку памяти
 
 worker.get_status_for_one = new Piscina({
   filename: path.resolve('./controller/binance', 'get_status_for.js'),
@@ -456,9 +456,9 @@ const destroyWorker = new CronJob("00 00 00 * * *", async function () {
     worker[e].destroy();
   });
   init_workers();
-  startCron(destroyWorker, 60)
+  startCron(destroyWorker, 20*60)
 });
-startCron(destroyWorker, 60)
+startCron(destroyWorker, 20*60)
 // destroyWorker.start();
 
 const dumpMemory = new CronJob("00 00 00 * * *", ()=> {
