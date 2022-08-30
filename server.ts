@@ -152,7 +152,7 @@ function init_workers() {
           console.log("Deleting problem worker");
           worker[e].destroy();
           delete workers[e];
-          delete channel[e];
+          // delete channel[e];
 
         }
       });
@@ -166,13 +166,13 @@ function init_workers() {
           !util.inspect(workers[e]).includes("pending")
         ) {
           console.log("Reload worker " + [e]);
-          if (channel[e] != undefined) {
-            delete channel[e];
-            channel[e] = new MessageChannel();
-          } else {
-            channel[e] = new MessageChannel();
+          // if (channel[e] != undefined) {
+          //   delete channel[e];
+          //   channel[e] = new MessageChannel();
+          // } else {
+          //   channel[e] = new MessageChannel();
 
-          }
+          // }
 
           // ee.emit('abort');
           // worker[e].destroy()
@@ -185,12 +185,14 @@ function init_workers() {
             [e]: (workers[e] = worker[e]
               .run(
                 {
-                  port: channel[e].port1,
+                  // port: channel[e].port1,
                   init_header: headers,
                   proxyArray: proxy[e],
                   name: e
                 },
-                { signal: ee[e], transferList: [channel[e].port1] }
+                { signal: ee[e], 
+                  // transferList: [channel[e].port1] 
+                }
               )
               .then((res: any) => {
                 console.log(res);
@@ -209,12 +211,12 @@ function init_workers() {
           });
         } else {
           console.log("Start new worker " + [e]);
-          if (channel[e] == undefined) {
-            channel[e] = new MessageChannel();
-          } else {
-            delete channel[e];
-            channel[e] = new MessageChannel();
-          }
+          // if (channel[e] == undefined) {
+          //   channel[e] = new MessageChannel();
+          // } else {
+          //   delete channel[e];
+          //   channel[e] = new MessageChannel();
+          // }
 
           // ee.emit('abort');
 
@@ -223,12 +225,14 @@ function init_workers() {
           workers[e] = worker[e]
             .run(
               {
-                port: channel[e].port1,
+                // port: channel[e].port1,
                 init_header: headers,
                 proxyArray: proxy[e],
                 name: e
               },
-              { signal: ee[e], transferList: [channel[e].port1] }
+              { signal: ee[e], 
+                // transferList: [channel[e].port1] 
+              }
               // [channel[e].port1],
               // ee[e]
             )

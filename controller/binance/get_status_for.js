@@ -6,7 +6,7 @@ const emitter = new Emitter();
 const { helper } = require('../helper/helper');
 
 
-async function start(init_header, port, name) {
+async function start(init_header, name) {
 
     //header - мы прокидываем при инциализации потока
     const { default: axios } = require("axios");
@@ -125,16 +125,16 @@ async function start(init_header, port, name) {
             }
 
         });
-        port.on('message', async (message) => {
-            if (Array.isArray(message)) {
-                console.log(message.length);
+        // port.on('message', async (message) => {
+        //     if (Array.isArray(message)) {
+        //         console.log(message.length);
 
-            } else {
-                console.log('message');
+        //     } else {
+        //         console.log('message');
 
-            }
-            // resolve(message)
-        }); // получаем сообщение из основного потока
+        //     }
+        //     // resolve(message)
+        // }); // получаем сообщение из основного потока
 
         // header = getNewHeaders(headers); // поток не имеет доступа к результату этой функции;
         header = init_header; // делаем header глобальным
@@ -446,7 +446,7 @@ function random() {
 var cloneProxySet;
 
 
-module.exports = ({ init_header, port, name }) => {
+module.exports = ({ init_header, name }) => {
     return new Promise((resolve, reject) => {
         console.log(`Worker ${name} init`);
         // console.log(proxyArray);
@@ -454,7 +454,7 @@ module.exports = ({ init_header, port, name }) => {
         // console.log(init_header);
 
         helper.timeout(helper.getRandomInt(500, 3000)).then(() => {
-            start(init_header, port, name).then((res) => {
+            start(init_header, name).then((res) => {
                 emitter.removeAllListeners('infinity_recursion');
 
                 return resolve(res);

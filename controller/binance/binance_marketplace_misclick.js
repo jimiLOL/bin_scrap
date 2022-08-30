@@ -197,7 +197,7 @@ function getlayerList() {
 
     })
 }
-async function start(init_header, port) {
+async function start(init_header) {
 
     return new Promise(async (resolve, reject) => {
         let layerList;
@@ -213,16 +213,16 @@ async function start(init_header, port) {
             }
 
         });
-        port.on('message', async (message) => {
-            if (Array.isArray(message)) {
-                console.log(message.length);
+        // port.on('message', async (message) => {
+        //     if (Array.isArray(message)) {
+        //         console.log(message.length);
              
 
-            } else { 
-                console.log('message');
+        //     } else { 
+        //         console.log('message');
 
-            }
-          }); // получаем сообщение из основного потока
+        //     }
+        //   }); // получаем сообщение из основного потока
 
         header = init_header; // делаем header глобальным
 
@@ -653,7 +653,7 @@ var cloneProxySet;
 
 // module.exports = { init }
 
-module.exports = ({init_header, port, proxyArray}) => {
+module.exports = ({init_header, proxyArray}) => {
     return new Promise((resolve, reject) => {
         console.log('Worker 3 init');
   
@@ -661,7 +661,7 @@ module.exports = ({init_header, port, proxyArray}) => {
  
        
 
-        start(init_header, port).then((res) => {
+        start(init_header).then((res) => {
             console.log('Worker 3 finish');
             emitter.removeAllListeners('infinity_recursion');
 

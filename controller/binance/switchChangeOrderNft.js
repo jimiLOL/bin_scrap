@@ -252,7 +252,7 @@ function getlayerList(arrayCollections, header) {
     })
 }
 
-function start(header, port) {
+function start(header) {
     return new Promise(async (resolve, reject) => {
         emitFunction = emitter.on('infinity_recursion', (message) => {
             let magicVal = 0; // что бы не долбитть в емитор по 100 раз
@@ -262,16 +262,16 @@ function start(header, port) {
             }
     
         });
-        port.on('message', async (message) => {
-            if (Array.isArray(message)) {
-                console.log(message.length);
+        // port.on('message', async (message) => {
+        //     if (Array.isArray(message)) {
+        //         console.log(message.length);
        
 
-            } else { 
-                console.log('message');
+        //     } else { 
+        //         console.log('message');
 
-            }
-          }); // получаем сообщение из основного потока
+        //     }
+        //   }); // получаем сообщение из основного потока
 
 
 
@@ -316,7 +316,7 @@ function start(header, port) {
 
 
 
-module.exports = ({init_header, port, proxyArray}) => {
+module.exports = ({init_header, proxyArray}) => {
     return new Promise((resolve, reject) => {
         console.log('Worker switchChangeOrderNft init');
   
@@ -324,7 +324,7 @@ module.exports = ({init_header, port, proxyArray}) => {
  
        
 
-        start(init_header, port).then((res) => {
+        start(init_header).then((res) => {
             console.log('Worker switchChangeOrderNft finish');
             emitter.removeAllListeners('infinity_recursion');
 

@@ -8,7 +8,7 @@ const emitter = new Emitter();
 let emitFunction;
 
 
-async function start(init_header, port, name) {
+async function start(init_header, name) {
     const { default: axios } = require("axios");
 const tunnel = require("tunnel");
  
@@ -140,18 +140,18 @@ const awaitArray = (val, length) => {
 }
  
     return new Promise(async (resolve, reject) => {
-        port.on('message', async (message) => {
-            if (Array.isArray(message)) {
-                console.log(message.length);
-                // proxy = message;
-                // proxyLength = message.length;
+        // port.on('message', async (message) => {
+        //     if (Array.isArray(message)) {
+        //         console.log(message.length);
+        //         // proxy = message;
+        //         // proxyLength = message.length;
 
-            } else { 
-                console.log('message');
+        //     } else { 
+        //         console.log('message');
 
-            }
-            // resolve(message)
-          }); // получаем сообщение из основного потока
+        //     }
+        //     // resolve(message)
+        //   }); // получаем сообщение из основного потока
         emitFunction = emitter.on('infinity_recursion', (message) => {
             let magicVal = 0; // что бы не долбитть в емитор по 100 раз
             if (message.status && magicVal < 2) {
@@ -471,13 +471,13 @@ var cloneProxySet;
 
 
 
-module.exports = ({init_header, port, proxyArray, name}) => {
+module.exports = ({init_header, proxyArray, name}) => {
     return new Promise((resolve, reject) => {
         console.log('Worker 4 init');
    
        
 
-        start(init_header, port, name).then((res) => {
+        start(init_header, name).then((res) => {
             console.log('Worker 4');
             emitter.removeAllListeners('infinity_recursion');
 

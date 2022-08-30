@@ -97,22 +97,22 @@ const awaitArray = (val, length) => {
 
     })
 }
-async function start(init_header, port) {
+async function start(init_header) {
 
     //header - мы прокидываем при инциализации потока
 
     return new Promise(async (resolve, reject) => {
-        port.on('message', async (message) => {
-            if (Array.isArray(message)) {
-                console.log(message.length);
+        // port.on('message', async (message) => {
+        //     if (Array.isArray(message)) {
+        //         console.log(message.length);
              
 
-            } else {
-                console.log('message');
+        //     } else {
+        //         console.log('message');
 
-            }
-            // resolve(message)
-        }); // получаем сообщение из основного потока
+        //     }
+        //     // resolve(message)
+        // }); // получаем сообщение из основного потока
         emitter.on('infinity_recursion', (message) => {
             let magicVal = 0; // что бы не долбитть в емитор по 100 раз
             if (message.status && magicVal < 2) {
@@ -450,13 +450,13 @@ function random() {
 // module.exports = { init };
 
 
-module.exports = ({ init_header, port, proxyArray }) => {
+module.exports = ({ init_header, proxyArray }) => {
     return new Promise((resolve, reject) => {
         console.log('Worker 2 init');
         console.log(proxyArray.length);
  
 
-        start(init_header, port).then((res) => {
+        start(init_header).then((res) => {
             console.log('Worker 2 finish');
             emitter.removeAllListeners('infinity_recursion');
 
