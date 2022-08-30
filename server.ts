@@ -465,7 +465,7 @@ const dumpMemory = new CronJob("00 00 00 * * *", ()=> {
 
 
 });
-startCron(dumpMemory, 60)
+// startCron(dumpMemory, 60)
 
 // binanceAdminCookies.find({ enable: true }, (err: any, call: any) => {
 //   if (err) console.log(err);
