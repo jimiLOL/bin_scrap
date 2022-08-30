@@ -50,7 +50,7 @@ function marketProductDetail<T extends productBinanceProduct>(
 
           if (productDetail != null) {
             header.Referer = `https://www.binance.com/ru/nft/goods/detail?productId=${productDetail.productDetail.id}&isProduct=1`;
-            axios
+            return axios
               .get(
                 `https://www.binance.com/bapi/nft/v1/public/nft/nft-info/event/simple/${productDetail.nftInfo.nftId}?page=1&pageSize=10&salesOnlyFlag=false`,
                 { headers: header, httpsAgent: agent, timeout: 9000 }
@@ -62,7 +62,7 @@ function marketProductDetail<T extends productBinanceProduct>(
                   productDetail.records = response.data.data.records;
                   productDetail.total = response.data.data.total;
 
-                  addDB(productBinance, productDetail, agent, header)
+                  return addDB(productBinance, productDetail, agent, header)
                     .then(() => {
                       return resolve({ status: "ok", proxy: agent.proxyOptions.host });
                     })
@@ -128,7 +128,7 @@ function mysteryBoxProductDetail<T extends productBinanceMystery>(
   agent: any,
   header: any
 ): Promise<resolve> {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     let t = helper.uuid();
     header["x-ui-request-trace"] = t;
     header["x-trace-id"] = t;
@@ -136,7 +136,7 @@ function mysteryBoxProductDetail<T extends productBinanceMystery>(
     // console.log(`https://www.binance.com/bapi/nft/v1/friendly/nft/nft-asset/asset-detail?nftInfoId=${productBinance.productId}`);
 
     try {
-      axios
+     await axios
         .get(
           `https://www.binance.com/bapi/nft/v1/friendly/nft/nft-asset/asset-detail?nftInfoId=${productBinance.productId}`,
           { headers: header, httpsAgent: agent, timeout: 5000 }
@@ -167,7 +167,7 @@ function mysteryBoxProductDetail<T extends productBinanceMystery>(
                   // console.log('get history Product Binance');
                   //   console.log(productDetail);
                   //   process.exit(0)
-                  addDB(productBinance, productDetail, agent, header)
+                 return addDB(productBinance, productDetail, agent, header)
                     .then(() => {
                       // productBinance = null;
                       return resolve({ status: "ok", proxy: agent.proxyOptions.host });
@@ -189,7 +189,7 @@ function mysteryBoxProductDetail<T extends productBinanceMystery>(
                 return reject({ status: "error", proxy: agent.proxyOptions.host });
               });
           } else {
-            addDB(productBinance, null, agent, header)
+            return addDB(productBinance, null, agent, header)
               .then(() => {
                 // productBinance = null;
                 return resolve({ status: "ok", proxy: agent.proxyOptions.host });
@@ -317,14 +317,11 @@ function addDB<
     } else {
       //   productBinance = null;
       if ((productBinance as T).nftType == 1) {
-        (productBinance as T).nftType = 2;
+        return resolve();
+ 
       } else {
         (productBinance as T).nftType = 1;
-      }
-      console.log("!-!");
-      // resolve();
-
-      return getProductDetail(productBinance as productBinanceAll, agent, header)
+        return getProductDetail(productBinance as productBinanceAll, agent, header)
         .then(() => {
           console.log("!");
           productBinance = null;
@@ -335,6 +332,11 @@ function addDB<
           productBinance = null;
           return resolve();
         });
+      }
+      console.log("!-!");
+      // resolve();
+
+   
       console.log("else");
       // process.exit(0)
     }
