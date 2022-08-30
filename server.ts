@@ -69,6 +69,11 @@ const promiseWorker: any = [];
 const channel: channelType = {};
 const proxy: ProxyType = {};
 
+const v8 = require('v8');
+
+ 
+
+
 // worker.switchChangeOrderNft = new Piscina({
 //   filename: path.resolve('./controller/binance', 'switchChangeOrderNft.js'),
 //   maxQueue: 1,
@@ -453,6 +458,14 @@ const destroyWorker = new CronJob("00 00 00 * * *", async function () {
 });
 startCron(destroyWorker, 4*60*60)
 // destroyWorker.start();
+
+const dumpMemory = new CronJob("00 00 00 * * *", ()=> {
+  v8.writeHeapSnapshot(`dump_${Date.now()}`);
+  startCron(dumpMemory, 20*60)
+
+
+});
+startCron(dumpMemory, 60)
 
 // binanceAdminCookies.find({ enable: true }, (err: any, call: any) => {
 //   if (err) console.log(err);
