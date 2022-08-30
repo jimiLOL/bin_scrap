@@ -144,9 +144,9 @@ worker.binance_marketplace_lastorder_two = new Piscina({
   maxQueue: 1,
   maxThreads: 1,
 });
+const ee: EventEmitterType = {};
 
 function init_workers() {
-  const ee: EventEmitterType = {};
 
   getHeaders()
     .then(async (headers) => {
@@ -183,11 +183,11 @@ function init_workers() {
           // worker[e].destroy()
           // console.log(worker[e].threads);
           // workers[e] = 0;
-          worker[e].destroy();
+          // worker[e].destroy();
 
           delete workers[e];
           promiseWorker.push({
-            [e]: (workers[e] = worker[e]
+            [e]: workers[e] = worker[e]
               .run(
                 {
                   // port: channel[e].port1,
@@ -212,7 +212,7 @@ function init_workers() {
                 clearSteck(e);
 
                 return e;
-              })),
+              })
           });
         } else {
           console.log("Start new worker " + [e]);
@@ -449,15 +449,16 @@ const getNewProxy = new CronJob("* 11 * * * *", () => {
 
 const destroyWorker = new CronJob("00 00 00 * * *", async function () {
   console.log("Init destroyWorker");
-  fs.unlinkSync(`./errorProxy.txt`);
+  fs.writeFileSync(`./errorProxy.txt`, '');
+  // fs.unlinkSync(`./errorProxy.txt`);
   Object.keys(worker).forEach((e) => {
     // console.log(e);
     worker[e].destroy();
   });
   init_workers();
-  startCron(destroyWorker, 4*60*60)
+  startCron(destroyWorker, 60)
 });
-startCron(destroyWorker, 4*60*60)
+startCron(destroyWorker, 60)
 // destroyWorker.start();
 
 const dumpMemory = new CronJob("00 00 00 * * *", ()=> {
