@@ -311,6 +311,7 @@ function init_workers() {
     if (res.status == "error" && ee.hasOwnProperty(res.name_worker)) {
       console.log("Worker " + res.name_worker + " will be destroy");
       ee[res.name_worker].emit("abort");
+      worker[res.name_worker].destroy();
     }
 
     if (index != -1) {
