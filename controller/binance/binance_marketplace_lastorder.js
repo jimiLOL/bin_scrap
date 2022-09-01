@@ -431,8 +431,9 @@ const awaitArray = (val, length) => {
                             console.log('Worker 4 -- Promisee array pending = ' + promiseArr.length);
 
                         }, 5000);
-                        proxy.push(cloneProxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
                         await Promise.allSettled(arrayPromise).then(() => {
+                        proxy.push(cloneProxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
+
                             let newDate = new Date();
 
                             console.log(newDate + ' Worker 4 -- Promisee array Fulfil = ' + arrayPromise.length);

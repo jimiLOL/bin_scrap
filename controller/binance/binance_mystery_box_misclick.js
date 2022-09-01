@@ -373,11 +373,12 @@ async function start(init_header) {
                             console.log('Worker 2 -- Promisee array pending = ' + promiseArr.length);
 
                         }, 5000);
-                        proxy.push(cloneProxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
 
 
                         await Promise.allSettled(arrayPromise).then(() => {
                             let newDate = new Date();
+                        proxy.push(cloneProxySet);// вернули прокси из глобального цикла. возвращаем именно в этот момент, что бы наш итерратор жадл весь цикл
+
                             console.log(newDate + ' Worker 2 -- Promisee array Fulfil = ' + arrayPromise.length);
 
 
