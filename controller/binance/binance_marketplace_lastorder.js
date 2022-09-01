@@ -190,6 +190,7 @@ const awaitArray = (val, length) => {
             statusList: [
                 1
             ],
+            networks: [],
             page: 1,
             rows: 16,
             orderBy: "list_time",
