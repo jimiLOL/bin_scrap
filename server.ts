@@ -458,7 +458,7 @@ const destroyWorker = new CronJob("00 00 00 * * *", async function () {
     worker[e].destroy();
   });
   startCron(destroyWorker, 20*60);
-  return init_workers();
+  // return init_workers();
 
 });
 startCron(destroyWorker, 20*60)
