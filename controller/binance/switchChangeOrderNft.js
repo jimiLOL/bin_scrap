@@ -257,7 +257,7 @@ function start(header) {
         emitFunction = emitter.on('infinity_recursion', (message) => {
             let magicVal = 0; // что бы не долбитть в емитор по 100 раз
             if (message.status && magicVal < 2) {
-                reject({ status: 'error', name_worker: 'binance_marketplace_lastorder', integer: message.integer })
+                reject({ status: 'error', name_worker: 'switchChangeOrderNft', integer: message.integer })
     
             }
     
@@ -278,9 +278,9 @@ function start(header) {
         let arrayCollections = await getListCollectionName('binance');
 
         await Promise.all([getlayerList(arrayCollections, header)]).then(() => {
-            resolve()
+            resolve({ status: 'ok', name_worker: 'switchChangeOrderNft', integer: message.integer })
         }).catch(() => {
-            reject()
+            reject({ status: 'error', name_worker: 'switchChangeOrderNft', integer: message.integer })
         });
 
 
