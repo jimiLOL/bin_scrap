@@ -473,19 +473,19 @@ var cloneProxySet;
 
 module.exports = ({init_header, proxyArray, name}) => {
     return new Promise((resolve, reject) => {
-        console.log('Worker 4 init');
+        console.log('Worker ' + name + ' init');
    
        
 
         start(init_header, name).then((res) => {
-            console.log('Worker 4');
+            console.log('Finish: Worker ' + name + ' init');
             emitter.removeAllListeners('infinity_recursion');
 
             resolve(res);
             // init(init_header)
         }).catch(e => {
 
-            console.log('Worker 4');
+            console.log('Error: Worker ' + name + ' init');
             console.log(e.message);
             emitter.removeAllListeners('infinity_recursion');
 

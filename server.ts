@@ -146,9 +146,9 @@ worker.binance_marketplace_lastorder_two = new Piscina({
 });
 const ee: EventEmitterType = {};
 
-function init_workers() {
+async function init_workers(): Promise<any> {
 
-  getHeaders()
+  return await getHeaders()
     .then(async (headers) => {
       let count = 0;
 
@@ -293,13 +293,13 @@ function init_workers() {
       console.log(res);
       
       clearSteck(res);
-      init_workers();
+      return init_workers();
     })
     .catch((e) => {
       console.log("Ошибка Worker");
       clearSteck(e);
 
-      init_workers();
+      return init_workers();
     }); // Парсинг маркетплейса
 
   function clearSteck(res: any) {
@@ -335,6 +335,7 @@ function init_workers() {
 
       promiseWorker.splice(index, 1);
     }
+    return
   }
 }
 
@@ -402,10 +403,10 @@ function getProxy() {
   });
 }
 
-const getNewProxy = new CronJob("* 11 * * * *", () => {
+const getNewProxy = new CronJob("* 11 * * * *", async () => {
   console.log("Cron start");
 
-  getProxy().then((res: any) => {
+  return await getProxy().then((res: any) => {
     // console.log(res.data);
     console.log(typeof res.data);
     let newArray = (res.data as string).split("\n", 4000);
@@ -443,6 +444,7 @@ const getNewProxy = new CronJob("* 11 * * * *", () => {
     // Object.keys(channel).forEach((e) => {
     //   channel[e].port2.postMessage(proxy[e]); // отправляем сообщение в воркер
     // });
+    return
   });
 });
 // getNewProxy.start();
@@ -455,8 +457,9 @@ const destroyWorker = new CronJob("00 00 00 * * *", async function () {
     // console.log(e);
     worker[e].destroy();
   });
-  init_workers();
-  startCron(destroyWorker, 20*60)
+  startCron(destroyWorker, 20*60);
+  return init_workers();
+
 });
 startCron(destroyWorker, 20*60)
 // destroyWorker.start();
