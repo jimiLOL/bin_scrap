@@ -583,19 +583,7 @@ function getProductDetail<T extends productBinanceAll>(
 ): Promise<resolve> {
   return new Promise((resolve, reject) => {
     // console.log('getProductDetail ' + productBinance.nftType);
-    if (!productBinance?.nftType) {
-      console.log("====\n");
-
-      console.log(productBinance);
-      console.log("====\n");
-      fs.appendFile(
-        `./errorGetProductDetail.txt`,
-        JSON.stringify(productBinance),
-        function (error) {
-          if (error) throw error;
-        }
-      );
-    }
+   
     // productBinance.nftType = 1;
 
     if (

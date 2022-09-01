@@ -89,7 +89,7 @@ function marketProductDetail<T extends productBinanceProduct>(
                 return reject({ status: "error", proxy: agent.proxyOptions.host });
               });
           } else {
-            addDB(productBinance, null, agent, header)
+            return addDB(productBinance, null, agent, header)
               .then(() => {
                 return resolve({ status: "ok", proxy: agent.proxyOptions.host });
               })
