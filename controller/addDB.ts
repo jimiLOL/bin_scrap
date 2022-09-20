@@ -14,6 +14,8 @@ import {productBinanceAll, orderSuccessAnnounces, productDetailAll, MysteryBox, 
  
 
 async function add_binance_db<T extends (productBinanceAll | orderSuccessAnnounces) & (productDetailAll | MysteryBox)>(ele: T, marketpalce: string) {
+  // console.log('-!-');
+  
   const contractAddress = (e: productDetailAll | MysteryBox): string => {
     if (e.hasOwnProperty('productDetail')) {
      return (e as productDetailAll).nftInfo.contractAddress

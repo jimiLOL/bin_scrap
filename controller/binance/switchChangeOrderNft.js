@@ -108,7 +108,7 @@ const awaitArray = (val, length) => {
 
 function iterationCollection(arrayDocument, header) {
     console.log('Worker cycle Change Order NFT');
-    return new Promise(async (resolve) => {
+    return new Promise(async (resolve, reject) => {
         if (arrayDocument.length == 0) {
             resolve()
         }
@@ -183,7 +183,7 @@ function iterationCollection(arrayDocument, header) {
 }
 
 function getlayerList(arrayCollections, header) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         let layerList = [];
         let iteration = 0;
 
