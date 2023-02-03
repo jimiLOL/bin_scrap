@@ -63,7 +63,7 @@ export type orderSuccessAnnounces = {
   productId: number;
 };
 export type productBinanceMystery = {
-  productId: string;
+  productId?: string;
   title?: string;
   coverUrl?: string;
   tradeType?: number;
@@ -79,7 +79,32 @@ export type productBinanceMystery = {
   verified?: number;
   collectionId?: string;
   collectionName?: string;
+  nftId?: null;
 };
+export type topActivities = {
+  productId?: null;
+  nftType?: null;
+  collectionId?: string;
+  collectionName?: string;
+  nftId?: string;
+  title?: string;
+  coverUrl: string;
+  network: string;
+  price: string;
+  currency: string;
+  type: number;
+  fromUserId: string;
+  fromAccount: string;
+  fromNickName: string;
+  toUserId: string;
+  toAccount: string;
+  toNickName: string;
+  eventTime: string;
+  createTime: number;
+  source: number;
+
+
+}
 interface ownerType {
   userId: string;
   avatarUrl: string;
@@ -91,7 +116,8 @@ interface approveType {
   approve: boolean;
 }
 export type productBinanceProduct = {
-  productId: string;
+  nftId?: null;
+  productId?: string;
   title?: string;
   coverUrl?: string;
   tradeType?: number;
@@ -460,7 +486,7 @@ function marketProductDetail<T extends productBinanceProduct>(
   });
 }
 
-function mysteryBoxProductDetail<T extends productBinanceMystery>(
+function mysteryBoxProductDetail<T extends productBinanceMystery | topActivities>(
   productBinance: T,
   agent: any,
   header: any
@@ -475,11 +501,13 @@ function mysteryBoxProductDetail<T extends productBinanceMystery>(
     try {
       return await axios
         .get(
-          `https://www.binance.com/bapi/nft/v1/friendly/nft/nft-asset/asset-detail?nftInfoId=${productBinance.productId}`,
+          `https://www.binance.com/bapi/nft/v1/friendly/nft/nft-asset/asset-detail?nftInfoId=${productBinance?.productId || productBinance.nftId}`,
           { headers: header, httpsAgent: agent, timeout: 5000 }
         )
         .then(async <T extends resData<MysteryBox>>(res: AxiosResponse<T>) => {
           let productDetail: MysteryBox = res.data.data;
+          // console.log(productDetail);
+          
 
           // if (res.data.code != '000000') {
 
@@ -526,7 +554,7 @@ function mysteryBoxProductDetail<T extends productBinanceMystery>(
                 return reject({ status: "error", proxy: agent.proxyOptions.host });
               });
           } else {
-            return marketProductDetail(productBinance, agent, header)
+            return marketProductDetail(productBinance as productBinanceProduct, agent, header)
               .then((res: resolve) =>
                 resolve({ status: "ok", proxy: agent.proxyOptions.host })
               )
@@ -576,7 +604,7 @@ function mysteryBoxProductDetail<T extends productBinanceMystery>(
   });
 }
 
-function getProductDetail<T extends productBinanceAll>(
+function getProductDetail<T extends productBinanceAll | topActivities>(
   productBinance: T,
   agent: any,
   header: any
@@ -588,12 +616,12 @@ function getProductDetail<T extends productBinanceAll>(
 
     if (
       productBinance.hasOwnProperty("owner") &&
-      productBinance.hasOwnProperty("approve")
+      productBinance.hasOwnProperty("approve") && productBinance?.productId
     ) {
       marketProductDetail(productBinance, agent, header)
         .then((res: resolve) => resolve(res))
         .catch((e) => reject(e));
-    } else if (productBinance.productId && productBinance?.nftType == undefined) {
+    } else if (productBinance?.productId && productBinance?.nftType == undefined) {
       marketProductDetail(productBinance, agent, header)
      .then((res: resolve) => resolve(res))
      .catch((e) => reject(e));
@@ -618,7 +646,7 @@ function getProductDetail<T extends productBinanceAll>(
 }
 
 function addDB<
-  T extends productBinanceAll,
+  T extends productBinanceAll | topActivities,
   P extends productDetailAll | MysteryBox
 >(
   productBinance: T | null,
@@ -628,7 +656,7 @@ function addDB<
 ): Promise<void> {
   return new Promise((resolve, reject) => {
     if (responseProductDetail != null) {
-      const newProduct: productBinanceAll & (productDetailAll | MysteryBox) =
+      const newProduct: (productBinanceAll | topActivities) & (productDetailAll | MysteryBox) =
         Object.assign({}, productBinance, responseProductDetail);
 
       add_binance_db(newProduct, "binance")
@@ -654,7 +682,7 @@ function addDB<
 
      
       console.log("!-!\n get_productDetali");
-      console.log(productBinance);
+      // console.log(productBinance);
       productBinance = null;
 
       return resolve();

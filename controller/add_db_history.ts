@@ -3,10 +3,10 @@ import {Schema, Types} from 'mongoose';
 
 import { getHistoryModelNFT, TypeHistoryModel, historyNFT } from "../model/nft_history";
 import fs from "fs";
-import {productBinanceAll, orderSuccessAnnounces, productDetailAll, MysteryBox, records} from "./../controller/binance/get_productDetali";
+import {productBinanceAll, orderSuccessAnnounces, productDetailAll, MysteryBox, records, topActivities} from "./../controller/binance/get_productDetali";
 
 
-async function add_history_binance_db<T extends (productBinanceAll | orderSuccessAnnounces) & (productDetailAll | MysteryBox)>(ele:T, marketpalce: string) {
+async function add_history_binance_db<T extends (productBinanceAll | orderSuccessAnnounces | topActivities) & (productDetailAll | MysteryBox)>(ele:T, marketpalce: string) {
     
     return new Promise(async (resolve, reject) => {
         const contractAddress = (e: productDetailAll | MysteryBox): string => {
@@ -160,6 +160,7 @@ async function add_history_binance_db<T extends (productBinanceAll | orderSucces
                             if (!ele.records.some(x => x.createTime == oldHistory.setStartTime)) {
 
                                 let newArray = ele.records.filter(xx => !(call as TypeHistoryModel).history.some(x => xx.createTime == x.setStartTime) && xx.eventType == 5);
+                                console.log("newArray");
                                 console.log(newArray);
                                 if (newArray.length != 0) {
                                     newArray.forEach(element => {

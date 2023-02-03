@@ -110,6 +110,7 @@ worker.binance_marketplace = new Piscina({
   maxQueue: 1,
   maxThreads: 1
 });
+
 worker.binance_mystery = new Piscina({
   filename: path.resolve(
     "./controller/binance",
@@ -140,6 +141,15 @@ worker.binance_marketplace_lastorder_two = new Piscina({
   filename: path.resolve(
     "./controller/binance",
     "binance_marketplace_lastorder.js"
+  ),
+  maxQueue: 1,
+  maxThreads: 1,
+});
+
+worker.binance_marketplace_top_activities = new Piscina({
+  filename: path.resolve(
+    "./controller/binance",
+    "binance_marketplace_top-activities.js"
   ),
   maxQueue: 1,
   maxThreads: 1,

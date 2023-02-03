@@ -8,7 +8,7 @@ const emitter = new Emitter();
 let emitFunction;
 
 
-async function start(init_header, name) {
+async function start(init_header, name, collectionId) {
     const { default: axios } = require("axios");
 const tunnel = require("tunnel");
  
@@ -16,23 +16,11 @@ const { getProductDetail } = require('./get_productDetali');
 const { getProxy } = require("../../get_proxyInit");
 const proxy = getProxy(name);
 const { UA } = require("../../ua");
-const {helper} = require('./../helper/helper');
+const {helper} = require('../helper/helper');
 
 let proxyLength = proxy.length;
 // const {arrayIterator, setConstant} = require('./arrayiterator.js') // надо перенести итератор в отдельный модуль
 const util = require("util");
-
-const Piscina = require('piscina');
-const path = require('path');
-
-const binance_marketplace_top_activities = new Piscina({
-    filename: path.resolve(
-      __dirname,
-      "binance_marketplace_top-activities.js"
-    ),
-    // maxQueue: 1,
-    // maxThreads: 1,
-  });
 
 
 // setConstant(proxy)
@@ -191,23 +179,32 @@ const awaitArray = (val, length) => {
         //     productIds: []
         // };
         let body = {
-            amountFrom: "",
-            currency: "BUSD",
-            amountTo: "",
-            categorys: [],
-            // currency: "",
-            mediaType: [],
-            tradeType: [],
-            collectionId: "",
-            statusList: [
-                1
-            ],
-            networks: [],
-            page: 1,
-            rows: 16,
-            orderBy: "list_time",
-            orderType: -1
-        }
+            limit: 200,
+            network: "",
+            offset: 0,
+            query: "",
+            type: -1,
+            collectionId: ""
+        };
+        body.collectionId = collectionId;
+        // let body = {
+        //     amountFrom: "",
+        //     currency: "BUSD",
+        //     amountTo: "",
+        //     categorys: [],
+        //     // currency: "",
+        //     mediaType: [],
+        //     tradeType: [],
+        //     collectionId: "",
+        //     statusList: [
+        //         1
+        //     ],
+        //     networks: [],
+        //     page: 1,
+        //     rows: 16,
+        //     orderBy: "list_time",
+        //     orderType: -1
+        // }
         // body.collectionId = layer.layerId;
         helper.shuffle(UA);
         let var_break = false;
@@ -244,7 +241,7 @@ const awaitArray = (val, length) => {
                     rejectUnauthorized: false,
                 });
 
-                body.page = index;
+                body.offset = (index-1)*100;
                 header["user-agent"] = UA[index];
                 // let t = helper.uuid();
                 // header['x-ui-request-trace'] = t;
@@ -253,19 +250,9 @@ const awaitArray = (val, length) => {
 
                 let n = 0;
 
-                axios.post('https://www.binance.com/bapi/nft/v1/friendly/nft/mgs/product-list', body, { headers: header, httpsAgent: agent }).then(res => {
-                    console.log(res.status + ' ' + index + ' total= ' + res.data.data.total);
+                axios.post('https://www.binance.com/bapi/nft/v1/public/nft/collection/top-activities', body, { headers: header, httpsAgent: agent }).then(async res => {
+                    console.log(res.status + ' ' + index + ' total= ' + res.data.data.list.length);
                 index++ // увеличиваем счетчик после прерывателя
-
-                const collectionIdArray = res.data.data.rows.map(x => x.collectionId);
-                const dubleCollectionIdArray = collectionIdArray.filter((item, index) => collectionIdArray.indexOf(item) !== index);
-
-                dubleCollectionIdArray.forEach((collectionId) => {
-                binance_marketplace_top_activities.run({init_header: init_header, proxyArray: [], name:`binance_marketplace_top_activities`, collectionId:collectionId })
-
-
-                })
-
 
 
                     // console.log('Send proxyVar ' + proxyVar);
@@ -274,26 +261,32 @@ const awaitArray = (val, length) => {
 
 
                     }
-                    if (res.data.data.rows != null) {
+                    if (res.data?.data?.list && Array.isArray(res.data.data.list) && res.data.data.list.length > 0) {
                         stackProxy[proxyVar].status = 'work';
-                        arrayIteration(res.data.data.rows, proxyVar).then(() => {
+                        await arrayIteration(res.data.data.list, proxyVar).then(() => {
                             stackProxy[proxyVar].status = 'off';
                             res = null;
+                            console.log('index ' + index);
 
-                            if (index >= 15) {
+                            if (index >= 10) {
                                 // stackProxy = 0;
                                 // init(init_header)
                                 resolve({ status: 'ok', name_worker: name, date: new Date() })
                             }
+                        }).catch((err) => {
+                            console.log(err);
                         });
 
                     } else {
-                        if (index >= 15) {
-                            console.log(res.data.data);
-                            // stackProxy = 0;
-                            // init(init_header)
-                            resolve({ status: 'ok', name_worker: name })
-                        }
+                        resolve({ status: 'ok', name_worker: name })
+
+                        // if (index >= 15) {
+                        //     console.log('else');
+                        //     console.log(res.data.data);
+                        //     // stackProxy = 0;
+                        //     // init(init_header)
+                        //     resolve({ status: 'ok', name_worker: name })
+                        // }
 
 
                     }
@@ -345,7 +338,7 @@ const awaitArray = (val, length) => {
                 //     // console.log('===========break==============');
                 //     // init(init_header)
 
-                //     reject({ status: 'error', name_worker: 'binance_marketplace_lastorder' })
+                //     reject({ status: 'error', name_worker: 'binance_binance_marketplace_top _lastorder' })
 
 
 
@@ -415,7 +408,7 @@ const awaitArray = (val, length) => {
 
                         proxy.push(`${proxyOptions.host}:${proxyOptions.port}`); // возвращаем прокси в обойму на дочернем цикле
 
-                        console.log('Function arrayIteration END MarketPlace lastOrder\nProxy length ' + proxy.length);
+                        // console.log('Function arrayIteration END binance_marketplace_top  lastOrder\n Proxy length ' + proxy.length);
                         return resolve();
 
 
@@ -431,7 +424,7 @@ const awaitArray = (val, length) => {
 
 
 
-                        console.log('Error: Function arrayIteration END MarketPlace lastOrder\nProxy length ' + proxy.length);
+                        console.log('Error: Function arrayIteration END binance_marketplace_top  lastOrder\nProxy length ' + proxy.length);
 
 
 
@@ -445,12 +438,12 @@ const awaitArray = (val, length) => {
                     if (array.length - 1 == i) {
                         let promiseArr = arrayPromise.filter(x => util.inspect(x).includes("pending"))
 
-                        console.log('Worker 4 -- Await Promisee array pending = ' + promiseArr.length);
+                        console.log('Worker binance_binance_marketplace_top _top-activities -- Await Promisee array pending = ' + promiseArr.length);
 
                         setTimeout(() => {
                             // console.log(arrayPromise);
                             let promiseArr = arrayPromise.filter(x => util.inspect(x).includes("pending"))
-                            console.log('Worker 4 -- Promisee array pending = ' + promiseArr.length);
+                            console.log('Worker binance_binance_marketplace_top _top-activities -- Promisee array pending = ' + promiseArr.length);
 
                         }, 5000);
                         await Promise.allSettled(arrayPromise).then(() => {
@@ -458,7 +451,7 @@ const awaitArray = (val, length) => {
 
                             let newDate = new Date();
 
-                            console.log(newDate + ' Worker 4 -- Promisee array Fulfil = ' + arrayPromise.length);
+                            console.log(newDate + ' Worker binance_binance_marketplace_top _top-activities -- Promisee array Fulfil = ' + arrayPromise.length);
 
                             return resolve()
                         }).catch(e => resolve())
@@ -495,13 +488,13 @@ var cloneProxySet;
 
 
 
-module.exports = ({init_header, proxyArray, name}) => {
+module.exports = ({init_header, proxyArray, name, collectionId = ""}) => {
     return new Promise((resolve, reject) => {
         console.log('Worker ' + name + ' init');
    
        
 
-        start(init_header, name).then((res) => {
+        start(init_header, name, collectionId).then((res) => {
             console.log('Finish: Worker ' + name + ' init');
             emitter.removeAllListeners('infinity_recursion');
 

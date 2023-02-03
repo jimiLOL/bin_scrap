@@ -6,14 +6,14 @@ const {getAddressModel} = require("../model/nft_detalii")
 // import { getAddressModel } from "../model/nft_detalii";
 // import coverModelBinance from "../model/nft_cover_binance.js";
 
-import {productBinanceAll, orderSuccessAnnounces, productDetailAll, MysteryBox, collection} from "./../controller/binance/get_productDetali";
+import {productBinanceAll, orderSuccessAnnounces, productDetailAll, MysteryBox, collection, topActivities} from "./../controller/binance/get_productDetali";
 
 
  
  
  
 
-async function add_binance_db<T extends (productBinanceAll | orderSuccessAnnounces) & (productDetailAll | MysteryBox)>(ele: T, marketpalce: string) {
+async function add_binance_db<T extends (productBinanceAll | orderSuccessAnnounces | topActivities) & (productDetailAll | MysteryBox)>(ele: T, marketpalce: string) {
   // console.log('-!-');
   
   const contractAddress = (e: productDetailAll | MysteryBox): string => {
